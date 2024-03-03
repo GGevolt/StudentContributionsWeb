@@ -56,7 +56,24 @@ namespace StudentContributions.Controllers
             }
 
             memoryStream.Position = 0;
-            return File(memoryStream, "application/zip", "bokita.zip");
+            return File(memoryStream, "application/zip", "btr.zip");
+        }
+
+        [HttpPost]
+        public IActionResult Index(List<IFormFile>? files)
+        {
+            string uploadPath = Path.Combine(this._webHostEnvironment.WebRootPath, "FilesTest");
+
+            foreach (var file in files)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(file.FileName)+"_"+ Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+            }
+
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()
