@@ -1,8 +1,22 @@
-﻿@{
+﻿@using StudentContributions.Models.ViewModels;
+@model List<HomeTestVM>
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <table>
+        <tr>
+            <th>Attachments</th>
+            <th><button class="btn btn-primary" onclick="location.href='@Url.Action("DownloadZip", "Home")'">Download As Zip</button></th>
+        </tr>
+        @foreach (HomeTestVM file in Model)
+        {
+            <tr>
+                <td><a asp-action="DownloadFile" asp-controller="Home" asp-route-fileName="@file.FileName">@file.FileName</a></td>
+            </tr>
+        }
+    </table>
 </div>
