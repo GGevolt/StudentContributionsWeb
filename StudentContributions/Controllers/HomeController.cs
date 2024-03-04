@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentContributions.Models;
 using StudentContributions.Models.ViewModels;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Compression;
-using Microsoft.AspNetCore.Hosting;
 
 namespace StudentContributions.Controllers
 {
