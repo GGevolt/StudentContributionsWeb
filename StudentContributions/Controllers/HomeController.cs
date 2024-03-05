@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using StudentContributions.Models;
+using StudentContributions.Models.Models;
 using System.Diagnostics;
 
 namespace StudentContributions.Controllers
