@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using SendGrid.Extensions.DependencyInjection;
 using StudentContributions.DataAccess;
 using StudentContributions.Models;
 using StudentContributions.Services;
-using StudentContributions.Settings;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,11 +11,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
-builder.Services.AddSendGrid(options => {
-    options.ApiKey = builder.Configuration.GetSection("SendGridSettings")
-    .GetValue<string>("ApiKey");
-});
 builder.Services.AddTransient<IEmailSender, EmailSenderService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();

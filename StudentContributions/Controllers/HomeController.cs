@@ -57,6 +57,19 @@ namespace StudentContributions.Controllers
             return File(memoryStream, "application/zip", "btr.zip");
         }
 
+        public IActionResult DeleteFile(string fileName)
+        {
+            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "FilesTest/") + fileName;
+
+            FileInfo file = new FileInfo(path);
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+
+            return RedirectToAction("Index");
+        }
+
         [HttpPost]
         public IActionResult Index(List<IFormFile>? files)
         {

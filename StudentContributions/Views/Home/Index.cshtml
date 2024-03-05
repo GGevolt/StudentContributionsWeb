@@ -16,6 +16,7 @@
         {
             <tr>
                 <td><a asp-action="DownloadFile" asp-controller="Home" asp-route-fileName="@file.FileName">@file.FileName</a></td>
+                <td><a asp-action="DeleteFile" asp-controller="Home" asp-route-fileName="@file.FileName">Delete</a></td>
             </tr>
         }
     </table>

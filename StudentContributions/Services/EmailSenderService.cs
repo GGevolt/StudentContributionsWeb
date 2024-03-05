@@ -1,30 +1,16 @@
-﻿using Microsoft.Extensions.Options;
-using SendGrid.Helpers.Mail;
-using SendGrid;
-using StudentContributions.Settings;
+﻿using System.Net.Mail;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace StudentContributions.Services
 {
     public class EmailSenderService : IEmailSender
     {
-        private readonly ISendGridClient _sendGridClient;
-        private readonly SendGridSettings _sendGridSettings;
-        public EmailSenderService(ISendGridClient sendGridClient, IOptions<SendGridSettings> sendGridSettings)
+        public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            _sendGridClient = sendGridClient;
-            _sendGridSettings = sendGridSettings.Value;
-        }
-        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
-        {
-            var msg = new SendGridMessage()
-            {
-                From = new EmailAddress(_sendGridSettings.FromEmail, _sendGridSettings.EmailName),
-                Subject = subject,
-                HtmlContent = htmlMessage
-            };
-            msg.AddTo(email);
-            await _sendGridClient.SendEmailAsync(msg);
+            SmtpClient smtpClient = new SmtpClient("127.0.0.1", 25);
+            MailMessage mail = new MailMessage("system@bulul.cunny", email, subject, htmlMessage);
+
+            return smtpClient.SendMailAsync(mail);
         }
     }
 }
