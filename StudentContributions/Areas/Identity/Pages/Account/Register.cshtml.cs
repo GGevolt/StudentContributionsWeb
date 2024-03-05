@@ -22,6 +22,7 @@ using NETCore.MailKit.Core;
 using StudentContributions.Models.Models;
 using IEmailService = StudentContributions.Utility.Interfaces.IEmailService;
 
+
 namespace StudentContributions.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
@@ -116,7 +117,6 @@ namespace StudentContributions.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -133,7 +133,6 @@ namespace StudentContributions.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
-
 
                     var emailSubject = "Please confirm your email";
                     var emailBody = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";

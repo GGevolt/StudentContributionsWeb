@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using StudentContributions.Models.Models;
 
+
 namespace StudentContributions.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel

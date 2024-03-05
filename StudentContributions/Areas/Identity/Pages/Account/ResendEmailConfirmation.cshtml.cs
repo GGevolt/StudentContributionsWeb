@@ -23,8 +23,6 @@ namespace StudentContributions.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
-
-
         public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailService emailService)
         {
             _userManager = userManager;
