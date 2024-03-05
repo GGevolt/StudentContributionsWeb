@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using StudentContributions.Models;
+using StudentContributions.Models.Models;
 
 namespace StudentContributions.Areas.Identity.Pages.Account
 {

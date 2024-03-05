@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using StudentContributions.Models;
+using StudentContributions.Models.Models;
+
 
 namespace StudentContributions.Areas.Identity.Pages.Account.Manage
 {

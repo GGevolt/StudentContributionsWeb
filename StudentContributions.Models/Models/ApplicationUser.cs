@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentContributions.Models
+namespace StudentContributions.Models.Models
 {
     public class ApplicationUser : IdentityUser
     {

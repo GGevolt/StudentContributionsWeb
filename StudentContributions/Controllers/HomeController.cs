@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using StudentContributions.Models;
 using StudentContributions.Models.ViewModels;
+using StudentContributions.Models.Models;
 using System.Diagnostics;
 using System.IO.Compression;
 
