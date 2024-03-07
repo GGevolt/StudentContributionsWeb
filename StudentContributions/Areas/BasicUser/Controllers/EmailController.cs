@@ -3,7 +3,7 @@ using StudentContributions.Models.Models;
 using StudentContributions.Utility.Interfaces;
 using System.Text.Encodings.Web;
 
-namespace StudentContributions.Controllers
+namespace StudentContributions.Areas.BasicUser.Controllers
 {
     //Class de tess thoi, ko co lam gi het nghe
     [ApiController]
@@ -13,7 +13,7 @@ namespace StudentContributions.Controllers
         public readonly IEmailService _emailService;
         public EmailController(IEmailService emailService)
         {
-            this._emailService = emailService;
+            _emailService = emailService;
         }
         [HttpPost]
         public async Task<IActionResult> Send([FromForm] EmailComponent emailComponent)
@@ -25,7 +25,7 @@ namespace StudentContributions.Controllers
             }
             catch (Exception ex)
             {
-                throw ex ;
+                throw ex;
             }
         }
     }

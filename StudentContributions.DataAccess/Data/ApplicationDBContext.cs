@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace StudentContributions.DataAccess
+namespace StudentContributions.DataAccess.Data
 {
     public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
     {

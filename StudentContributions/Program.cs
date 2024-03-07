@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using StudentContributions.DataAccess;
+using StudentContributions.DataAccess.Data;
 using StudentContributions.Models.Models;
 using StudentContributions.Utility.Interfaces;
 using StudentContributions.Utility.Services;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,12 @@ builder.Services.AddSwaggerGen(c =>
     });
 
 });
+builder.Services.ConfigureApplicationCookie(option =>
+{
+    option.LoginPath = $"/Identity/Account/Login";
+    option.LogoutPath = $"/Identity/Account/Logout";
+    option.AccessDeniedPath = @"/Identity/Account/AccessDenied";
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -66,7 +74,7 @@ app.UseAuthorization();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { "Admin", "Student", "Coordinator", "Manager" };
+    var roles = new[] { "Admin", "Student", "Coordinator", "Manager","BasicUser" };
     foreach (var role in roles)
     {
         if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
@@ -75,9 +83,8 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
-
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+name: "default",
+    pattern: "{area=BasicUser}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

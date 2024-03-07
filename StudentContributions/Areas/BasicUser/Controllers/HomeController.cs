@@ -4,8 +4,9 @@ using StudentContributions.Models.Models;
 using System.Diagnostics;
 using System.IO.Compression;
 
-namespace StudentContributions.Controllers
+namespace StudentContributions.Areas.BasicUser.Controllers
 {
+    [Area("BasicUser")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -19,7 +20,7 @@ namespace StudentContributions.Controllers
 
         public IActionResult Index()
         {
-            string[] paths = Directory.GetFiles(Path.Combine(this._webHostEnvironment.WebRootPath, "FilesTest/"));
+            string[] paths = Directory.GetFiles(Path.Combine(_webHostEnvironment.WebRootPath, "FilesTest/"));
 
             List<HomeTestVM> files = new List<HomeTestVM>();
             foreach (string file in paths)
@@ -32,7 +33,7 @@ namespace StudentContributions.Controllers
 
         public FileResult DownloadFile(string fileName)
         {
-            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "FilesTest/") + fileName;
+            string path = Path.Combine(_webHostEnvironment.WebRootPath, "FilesTest/") + fileName;
 
             byte[] bytes = System.IO.File.ReadAllBytes(path);
 
@@ -41,7 +42,7 @@ namespace StudentContributions.Controllers
 
         public FileResult DownloadZip(/*string fileName*/)
         {
-            string[] paths = Directory.GetFiles(Path.Combine(this._webHostEnvironment.WebRootPath, "FilesTest/"));
+            string[] paths = Directory.GetFiles(Path.Combine(_webHostEnvironment.WebRootPath, "FilesTest/"));
 
             MemoryStream memoryStream = new MemoryStream();
 
@@ -59,7 +60,7 @@ namespace StudentContributions.Controllers
 
         public IActionResult DeleteFile(string fileName)
         {
-            string path = Path.Combine(this._webHostEnvironment.WebRootPath, "FilesTest/") + fileName;
+            string path = Path.Combine(_webHostEnvironment.WebRootPath, "FilesTest/") + fileName;
 
             FileInfo file = new FileInfo(path);
             if (file.Exists)
@@ -73,11 +74,11 @@ namespace StudentContributions.Controllers
         [HttpPost]
         public IActionResult Index(List<IFormFile>? files)
         {
-            string uploadPath = Path.Combine(this._webHostEnvironment.WebRootPath, "FilesTest");
+            string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "FilesTest");
 
             foreach (var file in files)
             {
-                string fileName = Path.GetFileNameWithoutExtension(file.FileName)+"_"+ Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
                 {
                     file.CopyTo(fileStream);
