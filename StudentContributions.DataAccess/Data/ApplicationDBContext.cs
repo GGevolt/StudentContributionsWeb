@@ -12,6 +12,11 @@ namespace StudentContributions.DataAccess.Data
 {
     public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<Magazine> Magazines { get; set; }
+        public DbSet<Semester> Semesters { get; set; }
+        public DbSet<Contribution> Contributions { get; set; }
+
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> option) : base(option)
         {
 
