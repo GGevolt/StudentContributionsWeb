@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using StudentContributions.DataAccess.Data;
-using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.DataAccess.Repository;
+using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using StudentContributions.Utility.Interfaces;
 using StudentContributions.Utility.Services;
@@ -20,7 +20,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
 builder.Services.AddTransient<IEmailService, EmailService>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWorks>();
+builder.Services.AddScoped<IUnitOfWork,UnitOfWorks>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddRazorPages();
 builder.Services.Configure<IdentityOptions>(options =>
@@ -73,18 +73,18 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-//    var roles = new[] { "Admin", "Student", "Coordinator", "Manager","BasicUser" };
-//    foreach (var role in roles)
-//    {
-//        if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
-//        {
-//            roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
-//        }
-//    }
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roles = new[] { "Admin", "Student", "Coordinator", "Manager","BasicUser" };
+    foreach (var role in roles)
+    {
+        if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
+        {
+           roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+       }
+   }
+}
 app.MapControllerRoute(
 name: "default",
     pattern: "{area=BasicUser}/{controller=Home}/{action=Index}/{id?}");
