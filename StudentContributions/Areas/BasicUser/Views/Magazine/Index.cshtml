@@ -1,20 +1,23 @@
 ﻿@model IEnumerable<StudentContributions.Models.Models.Magazine>
 
 @{
-    ViewData["Title"] = "Magazines";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Magazines</h1>
+<h1>Index</h1>
 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
             <th>ID</th>
             <th>Magazine Name</th>
             <th>Closure Date</th>
-            <th>FacultyID</th>
-            <th>SemesterID</th>
-            <th>Actions</th>
+            <th>Faculty ID</th>
+            <th>Semester ID</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -27,13 +30,11 @@
                 <td>@Html.DisplayFor(modelItem => item.FacultyID)</td>
                 <td>@Html.DisplayFor(modelItem => item.SemesterID)</td>
                 <td>
-                    <a href="@Url.Action("Edit", "Magazine", new { id = item.ID })">Edit</a> |
-                    <a href="@Url.Action("Details", "Magazine", new { id = item.ID })">Details</a> |
-                    <a href="@Url.Action("Delete", "Magazine", new { id = item.ID })">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<a class="btn btn-primary" href="@Url.Action("Create", "Magazine")">Create New</a>

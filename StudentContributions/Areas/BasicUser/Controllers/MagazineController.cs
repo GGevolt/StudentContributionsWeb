@@ -44,7 +44,7 @@ namespace StudentContributions.Areas.BasicUser.Controllers
             {
                 return NotFound();
             }
-            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id);
+            var magazine = _unitOfWork.MagazineRepository.Get(m => m.ID == id);
             if (magazine == null)
             {
                 return NotFound();
@@ -71,7 +71,7 @@ namespace StudentContributions.Areas.BasicUser.Controllers
             {
                 return NotFound();
             }
-            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id);
+            var magazine = _unitOfWork.MagazineRepository.Get(m => m.ID == id);
             if (magazine == null)
             {
                 return NotFound();
@@ -83,7 +83,7 @@ namespace StudentContributions.Areas.BasicUser.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id);
+            var magazine = _unitOfWork.MagazineRepository.Get(m => m.ID == id);
             if (magazine != null)
             {
                 _unitOfWork.MagazineRepository.Remove(magazine);
