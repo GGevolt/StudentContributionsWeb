@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<StudentContributions.Models.Models.Magazine>
-
 @{
     ViewData["Title"] = "Index";
 }
@@ -12,11 +11,18 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Magazine Name</th>
-            <th>Closure Date</th>
-            <th>Faculty ID</th>
-            <th>Semester ID</th>
+            <th>
+                @Html.DisplayNameFor(model => model.MagazineName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClosureDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FacultyID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SemesterID)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -24,11 +30,18 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.ID)</td>
-                <td>@Html.DisplayFor(modelItem => item.MagazineName)</td>
-                <td>@Html.DisplayFor(modelItem => item.ClosureDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.FacultyID)</td>
-                <td>@Html.DisplayFor(modelItem => item.SemesterID)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MagazineName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClosureDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FacultyID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SemesterID)
+                </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.ID">Details</a> |

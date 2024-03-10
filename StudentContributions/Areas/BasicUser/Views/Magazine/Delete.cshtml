@@ -1,5 +1,4 @@
 ﻿@model StudentContributions.Models.Models.Magazine
-
 @{
     ViewData["Title"] = "Delete";
 }
@@ -10,19 +9,34 @@
 <div>
     <h4>Magazine</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>ID</dt>
-        <dd>@Html.DisplayFor(model => model.ID)</dd>
-        <dt>Magazine Name</dt>
-        <dd>@Html.DisplayFor(model => model.MagazineName)</dd>
-        <dt>Closure Date</dt>
-        <dd>@Html.DisplayFor(model => model.ClosureDate)</dd>
-        <dt>Faculty ID</dt>
-        <dd>@Html.DisplayFor(model => model.FacultyID)</dd>
-        <dt>Semester ID</dt>
-        <dd>@Html.DisplayFor(model => model.SemesterID)</dd>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MagazineName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MagazineName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ClosureDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ClosureDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FacultyID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FacultyID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SemesterID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SemesterID)
+        </dd>
     </dl>
-    <form asp-action="DeleteConfirmed" method="post">
+
+    <form asp-action="DeleteConfirmed">
         <input type="hidden" asp-for="ID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
