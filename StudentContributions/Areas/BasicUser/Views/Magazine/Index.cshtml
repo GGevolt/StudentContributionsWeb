@@ -1,0 +1,39 @@
+﻿@model IEnumerable<StudentContributions.Models.Models.Magazine>
+
+@{
+    ViewData["Title"] = "Magazines";
+}
+
+<h1>Magazines</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Magazine Name</th>
+            <th>Closure Date</th>
+            <th>FacultyID</th>
+            <th>SemesterID</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                <td>@Html.DisplayFor(modelItem => item.MagazineName)</td>
+                <td>@Html.DisplayFor(modelItem => item.ClosureDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.FacultyID)</td>
+                <td>@Html.DisplayFor(modelItem => item.SemesterID)</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Magazine", new { id = item.ID })">Edit</a> |
+                    <a href="@Url.Action("Details", "Magazine", new { id = item.ID })">Details</a> |
+                    <a href="@Url.Action("Delete", "Magazine", new { id = item.ID })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="@Url.Action("Create", "Magazine")">Create New</a>

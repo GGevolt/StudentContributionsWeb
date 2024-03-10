@@ -5,19 +5,19 @@ using StudentContributions.Models.Models;
 namespace StudentContributions.Areas.BasicUser.Controllers
 {
     [Area("BasicUser")]
-    public class FacultyController : Controller
+    public class MagazineController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public FacultyController(IUnitOfWork unitOfWork)
+        public MagazineController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var faculties = _unitOfWork.FacultyRepository.GetAll();
-            return View(faculties);
+            var magazines = _unitOfWork.MagazineRepository.GetAll();
+            return View(magazines);
         }
 
         public IActionResult Create()
@@ -27,15 +27,15 @@ namespace StudentContributions.Areas.BasicUser.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Faculty faculty)
+        public IActionResult Create(Magazine magazine)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.FacultyRepository.Add(faculty);
+                _unitOfWork.MagazineRepository.Add(magazine);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(faculty);
+            return View(magazine);
         }
 
         public IActionResult Edit(int? id)
@@ -44,25 +44,25 @@ namespace StudentContributions.Areas.BasicUser.Controllers
             {
                 return NotFound();
             }
-            var faculty = _unitOfWork.FacultyRepository.Get(c => c.ID == id);
-            if (faculty == null)
+            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id);
+            if (magazine == null)
             {
                 return NotFound();
             }
-            return View(faculty);
+            return View(magazine);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Faculty faculty)
+        public IActionResult Edit(Magazine magazine)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.FacultyRepository.Update(faculty);
+                _unitOfWork.MagazineRepository.Update(magazine);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(faculty);
+            return View(magazine);
         }
 
         public IActionResult Delete(int? id)
@@ -71,22 +71,22 @@ namespace StudentContributions.Areas.BasicUser.Controllers
             {
                 return NotFound();
             }
-            var faculty = _unitOfWork.FacultyRepository.Get(c => c.ID == id);
-            if (faculty == null)
+            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id);
+            if (magazine == null)
             {
                 return NotFound();
             }
-            return View(faculty);
+            return View(magazine);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var faculty = _unitOfWork.FacultyRepository.Get(c => c.ID == id);
-            if (faculty != null)
+            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id);
+            if (magazine != null)
             {
-                _unitOfWork.FacultyRepository.Remove(faculty);
+                _unitOfWork.MagazineRepository.Remove(magazine);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }

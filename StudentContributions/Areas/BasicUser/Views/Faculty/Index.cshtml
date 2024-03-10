@@ -1,5 +1,32 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<StudentContributions.Models.Models.Faculty>
+
 @{
+    ViewData["Title"] = "Faculty List";
 }
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th> <!-- Adjust based on your Faculty model properties -->
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var faculty in Model)
+        {
+            <tr>
+                <td>@faculty.ID</td>
+                <td>@faculty.Name</td> <!-- Adjust based on your Faculty model properties -->
+                <td>
+                    <a asp-action="Edit" asp-route-id="@faculty.ID">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@faculty.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Create New Faculty</a>

@@ -15,15 +15,15 @@ namespace StudentContributions.Models.Models
         public int ID { get; set; }
         public string MagazineName { get; set; }
         public DateTime ClosureDate { get; set; }
-        public virtual ICollection<Contribution>? Contributions { get; set; }
-        [ForeignKey("FacutyID")]
+        public virtual ICollection<Contribution> Contributions { get; set; }
+        [ForeignKey("FacultyID")]
         [ValidateNever]
         public Faculty Faculty { get; set; }
-        public int FacutyID { get; set; }
-        [ForeignKey("SemsterID")]
+        public int FacultyID { get; set; }
+        [ForeignKey("SemesterID")]
         [ValidateNever]
         public Semester Semester { get; set; }
-        public int SemsterID { get; set; }
+        public int SemesterID { get; set; }
 
     }
 }
