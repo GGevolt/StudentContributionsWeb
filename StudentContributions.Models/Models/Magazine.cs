@@ -18,11 +18,12 @@ namespace StudentContributions.Models.Models
         public virtual ICollection<Contribution> Contributions { get; set; }
         [ForeignKey("FacultyID")]
         [ValidateNever]
-        public Faculty Faculty { get; set; }
+        public Faculty? Faculty { get; set; }
+        
         public int FacultyID { get; set; }
         [ForeignKey("SemesterID")]
         [ValidateNever]
-        public Semester Semester { get; set; }
+        public Semester? Semester { get; set; }
         public int SemesterID { get; set; }
 
     }

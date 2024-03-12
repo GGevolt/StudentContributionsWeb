@@ -29,13 +29,10 @@ namespace StudentContributions.Areas.BasicUser.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Magazine magazine)
         {
-            if (ModelState.IsValid)
-            {
+
                 _unitOfWork.MagazineRepository.Add(magazine);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(magazine);
         }
 
         public IActionResult Edit(int? id)
@@ -56,13 +53,13 @@ namespace StudentContributions.Areas.BasicUser.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Magazine magazine)
         {
-            if (ModelState.IsValid)
-            {
+            
+            
                 _unitOfWork.MagazineRepository.Update(magazine);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(magazine);
+            
+            
         }
 
         public IActionResult Delete(int? id)
