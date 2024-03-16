@@ -12,8 +12,8 @@ using StudentContributions.DataAccess.Data;
 namespace StudentContributions.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240310132945_SuaMagazine")]
-    partial class SuaMagazine
+    [Migration("20240316095338_sead")]
+    partial class sead
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

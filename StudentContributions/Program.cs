@@ -12,6 +12,10 @@ using StudentContributions.Utility.Services;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.ConfigureKestrel(c =>
+{
+    c.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(30);
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -76,14 +80,14 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { "Admin", "Student", "Coordinator", "Manager","BasicUser" };
+    var roles = new[] { "Admin", "Student", "Coordinator", "Manager", "BasicUser" };
     foreach (var role in roles)
     {
         if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
         {
-           roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
-       }
-   }
+            roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+        }
+    }
 }
 app.MapControllerRoute(
 name: "default",
