@@ -2,22 +2,22 @@
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 
-namespace StudentContributions.Areas.BasicUser.Controllers
+namespace StudentContributions.Areas.Coordinator.Controllers
 {
     [Area("BasicUser")]
-    public class SemesterController : Controller
+    public class ContributionController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public SemesterController(IUnitOfWork unitOfWork)
+        public ContributionController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var semesters = _unitOfWork.SemesterRepository.GetAll();
-            return View(semesters);
+            var contributions = _unitOfWork.ContributionRepository.GetAll();
+            return View(contributions);
         }
 
         public IActionResult Create()
@@ -27,15 +27,15 @@ namespace StudentContributions.Areas.BasicUser.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Semester semester)
+        public IActionResult Create(Contribution contribution)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.SemesterRepository.Add(semester);
+                _unitOfWork.ContributionRepository.Add(contribution);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(semester);
+            return View(contribution);
         }
 
         public IActionResult Edit(int? id)
@@ -44,25 +44,25 @@ namespace StudentContributions.Areas.BasicUser.Controllers
             {
                 return NotFound();
             }
-            var semester = _unitOfWork.SemesterRepository.Get(c => c.ID == id);
-            if (semester == null)
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            if (contribution == null)
             {
                 return NotFound();
             }
-            return View(semester);
+            return View(contribution);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Semester semester)
+        public IActionResult Edit(Contribution contribution)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.SemesterRepository.Update(semester);
+                _unitOfWork.ContributionRepository.Update(contribution);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(semester);
+            return View(contribution);
         }
 
         public IActionResult Delete(int? id)
@@ -71,22 +71,22 @@ namespace StudentContributions.Areas.BasicUser.Controllers
             {
                 return NotFound();
             }
-            var semester = _unitOfWork.SemesterRepository.Get(c => c.ID == id);
-            if (semester == null)
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            if (contribution == null)
             {
                 return NotFound();
             }
-            return View(semester);
+            return View(contribution);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id) 
+        public IActionResult DeleteConfirmed(int id)
         {
-            var semester = _unitOfWork.SemesterRepository.Get(c => c.ID == id);
-            if (semester != null)
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            if (contribution != null)
             {
-                _unitOfWork.SemesterRepository.Remove(semester);
+                _unitOfWork.ContributionRepository.Remove(contribution);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
