@@ -4,7 +4,7 @@ using StudentContributions.Models.Models;
 
 namespace StudentContributions.Areas.BasicUser.Controllers
 {
-    [Area("BasicUser,Student")]
+    [Area("BasicUser")]
     public class MagazineController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
