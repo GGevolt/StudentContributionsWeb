@@ -1,23 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 
-namespace StudentContributions.Areas.BasicUser.Controllers
+namespace StudentContributions.Areas.Student.Controllers
 {
-    [Area("BasicUser")]
-    public class FacultyController : Controller
+    [Area("Student")]
+    [Authorize(Roles = "Student,Coordinator")]
+    public class ContributionController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public FacultyController(IUnitOfWork unitOfWork)
+        public ContributionController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var faculties = _unitOfWork.FacultyRepository.GetAll();
-            return View(faculties);
+            var contributions = _unitOfWork.ContributionRepository.GetAll();
+            return View(contributions);
         }
 
         public IActionResult Create()
@@ -27,15 +29,15 @@ namespace StudentContributions.Areas.BasicUser.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Faculty faculty)
+        public IActionResult Create(Contribution contribution)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.FacultyRepository.Add(faculty);
+                _unitOfWork.ContributionRepository.Add(contribution);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(faculty);
+            return View(contribution);
         }
 
         public IActionResult Edit(int? id)
@@ -44,49 +46,50 @@ namespace StudentContributions.Areas.BasicUser.Controllers
             {
                 return NotFound();
             }
-            var faculty = _unitOfWork.FacultyRepository.Get(c => c.ID == id);
-            if (faculty == null)
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            if (contribution == null)
             {
                 return NotFound();
             }
-            return View(faculty);
+            return View(contribution);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Faculty faculty)
+        public IActionResult Edit(Contribution contribution)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.FacultyRepository.Update(faculty);
+                _unitOfWork.ContributionRepository.Update(contribution);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(faculty);
+            return View(contribution);
         }
-
+        [Authorize(Roles = "Student")]
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            var faculty = _unitOfWork.FacultyRepository.Get(c => c.ID == id);
-            if (faculty == null)
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            if (contribution == null)
             {
                 return NotFound();
             }
-            return View(faculty);
+            return View(contribution);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var faculty = _unitOfWork.FacultyRepository.Get(c => c.ID == id);
-            if (faculty != null)
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            if (contribution != null)
             {
-                _unitOfWork.FacultyRepository.Remove(faculty);
+                _unitOfWork.ContributionRepository.Remove(contribution);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
