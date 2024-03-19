@@ -44,7 +44,7 @@ namespace StudentContributions.Utility.Services
             using (MailKit.Net.Smtp.SmtpClient mailClient = new MailKit.Net.Smtp.SmtpClient())
             {
                 mailClient.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-                mailClient.Connect(_mailSettings.Server, _mailSettings.Port, SecureSocketOptions.StartTls);
+                mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
                 mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
                 mailClient.Send(email);
                 mailClient.Disconnect(true);

@@ -9,7 +9,6 @@ using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using StudentContributions.Utility.Interfaces;
 using StudentContributions.Utility.Services;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureKestrel(c =>
@@ -32,22 +31,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.SignIn.RequireConfirmedEmail = true;
 });
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Example API",
-        Version = "v1",
-        Description = "An example of an ASP.NET Core Web API",
-        Contact = new OpenApiContact
-        {
-            Name = "Example Contact",
-            Email = "example@example.com",
-            Url = new Uri("https://example.com/contact"),
-        },
-    });
-
-});
 builder.Services.ConfigureApplicationCookie(option =>
 {
     option.LoginPath = $"/Identity/Account/Login";
@@ -57,17 +40,11 @@ builder.Services.ConfigureApplicationCookie(option =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
-    //app.UseExceptionHandler("/Home/Error");
-    // // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    //app.UseHsts();
-    app.UseSwagger();
-
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    });
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -76,6 +53,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
+app.MapControllerRoute(
+name: "default",
+    pattern: "{area=BasicUser}/{controller=Home}/{action=Index}/{id?}");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -85,12 +65,25 @@ using (var scope = app.Services.CreateScope())
     {
         if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
         {
-            roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+           roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
         }
+   }
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    string AD_email = "admin@email.com";
+    string AD_pass = "!Admin123";
+    if (userManager.FindByEmailAsync(AD_email).GetAwaiter().GetResult() == null)
+    {
+        var user = new ApplicationUser();
+        user.Email = AD_email;
+        user.EmailConfirmed = true;
+        user.UserName = AD_email;
+        userManager.CreateAsync(user, AD_pass).GetAwaiter().GetResult();
+        userManager.AddToRoleAsync(user, "Admin").GetAwaiter().GetResult();
     }
 }
-app.MapControllerRoute(
-name: "default",
-    pattern: "{area=BasicUser}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
