@@ -6,9 +6,11 @@
 
 <h2>Contributions</h2>
 
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -62,8 +64,16 @@
                     @Html.DisplayFor(modelItem => item.MagazineID)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    @if (this.User.IsInRole("Student,Coordinator"))
+                    {
+
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                    
+                        @if(this.User.IsInRole("Student"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                        }
+                    }
                 </td>
             </tr>
         }

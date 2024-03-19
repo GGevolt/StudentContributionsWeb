@@ -12,7 +12,11 @@ using StudentContributions.DataAccess.Data;
 namespace StudentContributions.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
+<<<<<<<< HEAD:StudentContributions.DataAccess/Migrations/20240316095338_sead.Designer.cs
     [Migration("20240316095338_sead")]
+========
+    [Migration("20240319011324_sead")]
+>>>>>>>> Brown:StudentContributions.DataAccess/Migrations/20240319011324_sead.Designer.cs
     partial class sead
     {
         /// <inheritdoc />
