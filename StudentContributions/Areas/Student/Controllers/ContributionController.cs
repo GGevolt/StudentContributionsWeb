@@ -6,7 +6,7 @@ using StudentContributions.Models.Models;
 namespace StudentContributions.Areas.Student.Controllers
 {
     [Area("Student")]
-    [Authorize(Roles = "Student,Coordinator")]
+    //[Authorize(Roles = "Student,Coordinator")]
     public class ContributionController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -6,7 +6,7 @@ using StudentContributions.Models.Models;
 namespace StudentContributions.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class FacultyController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
