@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using StudentContributions.Models.ViewModels;
 
@@ -11,11 +12,11 @@ namespace StudentContributions.Areas.Admin.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly IUnitOfWork _unitOfWork;
+        public AccountController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
@@ -51,6 +52,26 @@ namespace StudentContributions.Areas.Admin.Controllers
             else
             {
                 TempData["error"] = "Failed to assign role";
+            }
+            return RedirectToAction("Index");
+        }
+       
+        public IActionResult AssignFaculty(string userId)
+        {
+            AssignFacultyVM assign = new AssignFacultyVM() { 
+                User = _unitOfWork.ApplicationUserRepository.Get(u=>u.Id == userId),
+                Faculties = _unitOfWork.FacultyRepository.GetAll().ToList()
+            };
+            return View(assign);
+        }
+        [HttpPost]
+        public IActionResult AssignFaculty(string userID, int FacultyID)
+        {
+            var user = _userManager.FindByIdAsync(userID).GetAwaiter().GetResult();
+            if(user!=null)
+            {
+                user.FacultyID = FacultyID;
+                _userManager.UpdateAsync(user).GetAwaiter().GetResult();
             }
             return RedirectToAction("Index");
         }

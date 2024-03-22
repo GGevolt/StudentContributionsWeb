@@ -174,6 +174,9 @@ namespace StudentContributions.DataAccess.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("FacultyID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -209,6 +212,8 @@ namespace StudentContributions.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FacultyID");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -229,6 +234,7 @@ namespace StudentContributions.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Comment")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Contribution_Status")
@@ -372,6 +378,15 @@ namespace StudentContributions.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("StudentContributions.Models.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("StudentContributions.Models.Models.Faculty", "Faculty")
+                        .WithMany("ApplicationUsers")
+                        .HasForeignKey("FacultyID");
+
+                    b.Navigation("Faculty");
+                });
+
             modelBuilder.Entity("StudentContributions.Models.Models.Contribution", b =>
                 {
                     b.HasOne("StudentContributions.Models.Models.Magazine", "Magazine")
@@ -404,6 +419,8 @@ namespace StudentContributions.DataAccess.Migrations
 
             modelBuilder.Entity("StudentContributions.Models.Models.Faculty", b =>
                 {
+                    b.Navigation("ApplicationUsers");
+
                     b.Navigation("Magazines");
                 });
 

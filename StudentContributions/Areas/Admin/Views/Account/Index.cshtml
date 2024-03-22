@@ -10,6 +10,8 @@
 				<tr>
 					<th>Email</th>
 					<th>Role</th>
+					<th>Assign Role</th>
+					<th>Assign Facluty/th>
 				</tr>
 			</thead>
 			<tbody>
@@ -22,9 +24,6 @@
 							{
 								@role
 							}
-						</td>
-						<td>
-							<a asp-controller="Account" asp-action="ChangePassword" asp-route-id="@account.User.Id" class="btn btn-primary"><i class="bi bi-pencil"></i> Reset Password</a>
 						</td>
 						<td>
 							<div class="btn-group">
@@ -67,6 +66,7 @@
 								</ul>
 							</div>
 						</td>
+							<td><a asp-controller="Account" asp-action="AssignFaculty" asp-route-userId="@account.User.Id" class="btn btn-primary">Assign Faculty</a></td>
 					</tr>
 				}
 			</tbody>
