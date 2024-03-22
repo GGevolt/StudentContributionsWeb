@@ -4,7 +4,7 @@ using StudentContributions.Models.Models;
 using System.Diagnostics;
 using System.IO.Compression;
 
-namespace StudentContributions.Areas.BasicUser.Controllers
+namespace StudentContributions.Areas.Student.Controllers
 {
     [Area("BasicUser")]
     public class HomeController : Controller
