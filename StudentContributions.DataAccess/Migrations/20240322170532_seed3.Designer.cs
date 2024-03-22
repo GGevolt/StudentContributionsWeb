@@ -12,8 +12,8 @@ using StudentContributions.DataAccess.Data;
 namespace StudentContributions.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240322134915_sead")]
-    partial class sead
+    [Migration("20240322170532_seed3")]
+    partial class seed3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -177,7 +177,7 @@ namespace StudentContributions.DataAccess.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("FacultyID")
+                    b.Property<int?>("FacultyID")
                         .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
@@ -384,10 +384,8 @@ namespace StudentContributions.DataAccess.Migrations
             modelBuilder.Entity("StudentContributions.Models.Models.ApplicationUser", b =>
                 {
                     b.HasOne("StudentContributions.Models.Models.Faculty", "Faculty")
-                        .WithMany("ApplicationUser")
-                        .HasForeignKey("FacultyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("ApplicationUsers")
+                        .HasForeignKey("FacultyID");
 
                     b.Navigation("Faculty");
                 });
@@ -424,7 +422,7 @@ namespace StudentContributions.DataAccess.Migrations
 
             modelBuilder.Entity("StudentContributions.Models.Models.Faculty", b =>
                 {
-                    b.Navigation("ApplicationUser");
+                    b.Navigation("ApplicationUsers");
 
                     b.Navigation("Magazines");
                 });

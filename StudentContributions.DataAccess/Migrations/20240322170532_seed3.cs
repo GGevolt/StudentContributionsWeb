@@ -5,7 +5,7 @@
 namespace StudentContributions.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class _1234 : Migration
+    public partial class seed3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

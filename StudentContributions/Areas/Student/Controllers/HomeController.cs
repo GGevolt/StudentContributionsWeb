@@ -6,7 +6,7 @@ using System.IO.Compression;
 
 namespace StudentContributions.Areas.Student.Controllers
 {
-    [Area("BasicUser")]
+    [Area("Student")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

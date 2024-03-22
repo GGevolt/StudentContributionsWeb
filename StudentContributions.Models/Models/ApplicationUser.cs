@@ -9,5 +9,8 @@ namespace StudentContributions.Models.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public Faculty Faculty { get; set; }
+
+        public int? FacultyID { get; set; }
     }
 }
