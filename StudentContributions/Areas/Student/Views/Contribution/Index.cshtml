@@ -49,6 +49,20 @@
                     }
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Contribution_Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MagazineID)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a>
+                </td>
+                @if (this.User.IsInRole("Coordinator"))
+                {
+                    <td>
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                }
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a>
                     <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                     @if (this.User.IsInRole("Student,Coordinator"))
