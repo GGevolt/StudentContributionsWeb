@@ -4,9 +4,9 @@ using StudentContributions.Models.Models;
 using System.Diagnostics;
 using System.IO.Compression;
 
-namespace StudentContributions.Areas.BasicUser.Controllers
+namespace StudentContributions.Areas.Student.Controllers
 {
-    [Area("BasicUser")]
+    [Area("Student")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
