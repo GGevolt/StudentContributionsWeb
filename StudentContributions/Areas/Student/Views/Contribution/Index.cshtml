@@ -1,15 +1,12 @@
 ﻿@model IEnumerable<StudentContributions.Models.Models.Contribution>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "My articles";
 }
 
-<h2>Contributions</h2>
-
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h2>My articles</h2>
+<p>Closure date: XX/XX/XXXX</p>
+<p>Final closure date: XX/XX/XXXX</p>
 
 <table class="table">
     <thead>
@@ -18,16 +15,10 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SubmissionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Contribution_Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MagazineID)
+                @Html.DisplayNameFor(model => model.Comment)
             </th>
             <th></th>
         </tr>
@@ -40,7 +31,7 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SubmissionDate)
+                    @Html.DisplayFor(modelItem => item.Contribution_Status)
                 </td>
                 <td>
                     @if (item.Comment != null && item.Comment.Any())
@@ -58,18 +49,12 @@
                     }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Contribution_Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MagazineID)
-                </td>
-                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                     @if (this.User.IsInRole("Student,Coordinator"))
                     {
-
                         <a asp-action="Edit" asp-route-id="@item.ID">Edit</a>
-                    
-                        @if(this.User.IsInRole("Student"))
+                        @if (this.User.IsInRole("Student"))
                         {
                             <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                         }

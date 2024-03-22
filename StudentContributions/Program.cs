@@ -60,7 +60,7 @@ name: "default",
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { "Admin", "Student", "Coordinator", "Manager", "BasicUser" };
+    var roles = new[] { "Admin", "Student", "Coordinator", "Manager" };
     foreach (var role in roles)
     {
         if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())

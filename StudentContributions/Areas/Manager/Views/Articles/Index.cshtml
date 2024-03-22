@@ -1,0 +1,26 @@
+﻿@model IEnumerable<StudentContributions.Models.Models.Contribution>
+
+@{
+    ViewData["Title"] = "Articles";
+}
+<button type="button">Download!</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

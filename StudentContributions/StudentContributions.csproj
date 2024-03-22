@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Coordinator\Controllers\" />
-    <Folder Include="Areas\Manager\Controllers\" />
   </ItemGroup>
 
 </Project>
