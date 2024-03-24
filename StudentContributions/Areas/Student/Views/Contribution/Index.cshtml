@@ -64,17 +64,14 @@
                     @Html.DisplayFor(modelItem => item.MagazineID)
                 </td>
                 <td>
-                    @if (this.User.IsInRole("Student,Coordinator"))
-                    {
-
-                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a>
-                    
-                        @if(this.User.IsInRole("Student"))
-                        {
-                            <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                        }
-                    }
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a>
                 </td>
+                @if (this.User.IsInRole("Coordinator"))
+                {
+                    <td>
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>
