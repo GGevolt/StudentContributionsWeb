@@ -12,5 +12,6 @@ namespace StudentContributions.Models.Models
         public Faculty Faculty { get; set; }
 
         public int? FacultyID { get; set; }
+        public virtual ICollection<Contribution>? Contributions { get; set; }
     }
 }
