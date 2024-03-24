@@ -3,33 +3,36 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="col-md-8 offset-md-2">
+    <div style="display: flex; justify-content: space-between;">
+        <h2>Semesters</h2>
+        <a asp-action="Create" class="btn btn-primary" style="margin-bottom: 5px">Create New Semester</a>
+    </div>
 
-<h2>Index</h2>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.StartDate)</th>
-            <th>@Html.DisplayNameFor(model => model.EndDate)</th>
-            <th>@Html.DisplayNameFor(model => model.IsActive)</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table table-active">
+        <table class="table table-striped border-shadow" style="border: 1px solid #000;">
+            <thead>
+                <tr>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Is Active?</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

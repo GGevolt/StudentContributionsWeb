@@ -2,52 +2,37 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MagazineName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ClosureDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FacultyID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SemesterID)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MagazineName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ClosureDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FacultyID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SemesterID)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-             
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="col-md-8 offset-md-2">
+    <div style="display: flex; justify-content: space-between;">
+        <h2>Magazine list</h2>
+        <a asp-action="Create" class="btn btn-primary" style="margin-bottom: 5px">Create New Magazine</a>
+    </div>
+    <div class="table table-active">
+        <table class="table table-striped border-shadow " style="border: 1px solid #000;">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.MagazineName)</th>
+                    <th>@Html.DisplayNameFor(model => model.ClosureDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.FacultyID)</th>
+                    <th>@Html.DisplayNameFor(model => model.SemesterID)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="word-wrap">@Html.DisplayFor(modelItem => item.MagazineName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ClosureDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FacultyID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SemesterID)</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
