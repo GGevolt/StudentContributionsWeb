@@ -1,25 +1,27 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
-using StudentContributions.Models.ViewModels;
-using System.IO;
-using System.IO.Compression;
+using StudentContributions.Utility.Interfaces;
+using System.Text.Encodings.Web;
 
 namespace StudentContributions.Areas.Student.Controllers
 {
     [Area("Student")]
-    //[Authorize(Roles = "Student,Coordinator")]
+    [Authorize(Roles = "Student,Coordinator")]
     public class ContributionController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
-        private IWebHostEnvironment _webHost;
+        private readonly IEmailService _emailService;
 
-        public ContributionController(IUnitOfWork unitOfWork, IWebHostEnvironment webHost)
+        public ContributionController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
-            _webHost = webHost;
+            _userManager = userManager;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -37,25 +39,53 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Contribution contribution, List<IFormFile>? files)
         {
-            if (ModelState.IsValid)
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user != null)
             {
-                _unitOfWork.ContributionRepository.Add(contribution);
-                _unitOfWork.Save();
-
-                string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
-                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
-                foreach (var file in files)
+                contribution.UserID = user.Id;
+                var facultyID = _unitOfWork.MagazineRepository.Get(m => m.ID == contribution.MagazineID).FacultyID;
+                var usersInFaculty = _unitOfWork.ApplicationUserRepository.GetAll(u => u.FacultyID == facultyID);
+                var usersAsCoordinator = _userManager.GetUsersInRoleAsync("Coordinator").GetAwaiter().GetResult();
+                bool coordinatorFound = false;
+                foreach (var coordinator in usersInFaculty)
                 {
-                    string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    if (usersAsCoordinator.Any(u => u.Id == coordinator.Id))
                     {
-                        file.CopyTo(fileStream);
+                        coordinatorFound = true; 
+                        var emailTo = coordinator.Email;
+                        if (emailTo == null)
+                        {
+                            TempData["error"] = "There currently no coordinator in faculty. Please check with admin.";
+                            return View(contribution);
+                        }
+                        var emailSubject = "Please check the new submitted contribution.";
+                        var emailBody = $"Please check the new submitted contribution made by {user.Email}.";
+                        var emailComponent = new EmailComponent
+                        {
+                            To = emailTo,
+                            Subject = emailSubject,
+                            Body = emailBody
+                        };
+                        _emailService.SendEmailAsync(emailComponent).GetAwaiter().GetResult();
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                if (coordinatorFound)
+                {
+                    _unitOfWork.ContributionRepository.Add(contribution);
+                    _unitOfWork.Save();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["error"] = "There currently no coordinator in faculty. Please check with admin.";
+                    return View(contribution);
+                }
             }
-            return View(contribution);
+            else
+            {
+                TempData["error"] = "Please login";
+                return View(contribution);
+            }
         }
 
         public IActionResult Details(int? id)
