@@ -153,7 +153,7 @@ body {
     @foreach (var magazine in Model)
     {
         <div class="ag-courses_item">
-            <a href="@Url.Action("Index", "Contribution" , new { area="Student" })" class="ag-courses-item_link">
+            <a href="@Url.Action("Details", "Home" , new { id= magazine.ID })" class="ag-courses-item_link">
                 <div class="ag-courses-item_bg"></div>
 
                 <div class="ag-courses-item_title">
