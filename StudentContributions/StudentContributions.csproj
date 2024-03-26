@@ -29,8 +29,4 @@
     <ProjectReference Include="..\StudentContributions.Utility\StudentContributions.Utility.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Coordinator\Controllers\" />
-  </ItemGroup>
-
 </Project>
