@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
+using StudentContributions.Models.ViewModels;
 using StudentContributions.Utility.Interfaces;
+using System.IO.Compression;
 using System.Text.Encodings.Web;
 
 namespace StudentContributions.Areas.Student.Controllers
@@ -16,12 +18,14 @@ namespace StudentContributions.Areas.Student.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailService _emailService;
+        private readonly IWebHostEnvironment _webHost;
 
-        public ContributionController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IEmailService emailService)
+        public ContributionController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IEmailService emailService, IWebHostEnvironment webhost)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _emailService = emailService;
+            _webHost = webhost;
         }
 
         public IActionResult Index()
