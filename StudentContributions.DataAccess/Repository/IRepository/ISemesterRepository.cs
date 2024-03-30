@@ -10,5 +10,7 @@ namespace StudentContributions.DataAccess.Repository.IRepository
     public interface ISemesterRepository : IRepository<Semester>
     {
         void Update(Semester semester);
+      
+        DateTime? GetClosureDate();
     }
 }

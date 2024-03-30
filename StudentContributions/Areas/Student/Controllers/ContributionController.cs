@@ -30,8 +30,16 @@ namespace StudentContributions.Areas.Student.Controllers
 
         public IActionResult Index()
         {
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            var magazineClosureDate = activeSemester?.Magazines?.FirstOrDefault()?.ClosureDate;
+            var semesterClosureDate = activeSemester?.EndDate;
+
+            ViewBag.Timestamp1 = magazineClosureDate;
+            ViewBag.Timestamp2 = semesterClosureDate;
+
             var contributions = _unitOfWork.ContributionRepository.GetAll();
             return View(contributions);
+
         }
 
         public IActionResult Create()
@@ -75,6 +83,14 @@ namespace StudentContributions.Areas.Student.Controllers
                 }
                 if (coordinatorFound)
                 {
+                    var magazine = _unitOfWork.MagazineRepository.GetById(contribution.MagazineID);
+
+                    if (magazine == null || DateTime.Now > magazine.ClosureDate)
+                    {
+                        ModelState.AddModelError("Error: ", "The contribution period for the selected magazine has ended.");
+                        return View(contribution);
+                    }
+
                     _unitOfWork.ContributionRepository.Add(contribution);
                     _unitOfWork.Save();
 
@@ -197,11 +213,16 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 return NotFound();
             }
+
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
-            if (contribution == null)
+
+            if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
             {
-                return NotFound();
+                TempData["error"] = "The editing period has ended or the contribution does not exist.";
+                return RedirectToAction(nameof(Index));
             }
+
             return View(contribution);
         }
 
@@ -209,6 +230,14 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Contribution contribution)
         {
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            if (activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            {
+                ModelState.AddModelError("", "The editing period has ended.");
+                return View(contribution);
+            }
+
+
             if (ModelState.IsValid)
             {
                 _unitOfWork.ContributionRepository.Update(contribution);
@@ -217,6 +246,8 @@ namespace StudentContributions.Areas.Student.Controllers
             }
             return View(contribution);
         }
+
+
         [Authorize(Roles = "Student")]
         public IActionResult Delete(int? id)
         {
@@ -224,12 +255,18 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 return NotFound();
             }
+
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
-            if (contribution == null)
+
+            if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
             {
-                return NotFound();
+                TempData["error"] = "The deletion period has ended or the contribution does not exist.";
+                return RedirectToAction(nameof(Index));
             }
+
             return View(contribution);
+
         }
 
         [HttpPost, ActionName("Delete")]
@@ -237,14 +274,24 @@ namespace StudentContributions.Areas.Student.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult DeleteConfirmed(int id)
         {
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            if (activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            {
+                TempData["error"] = "The deletion period has ended.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
             if (contribution != null)
             {
                 _unitOfWork.ContributionRepository.Remove(contribution);
                 _unitOfWork.Save();
+                TempData["success"] = "Contribution deleted successfully.";
                 return RedirectToAction(nameof(Index));
             }
+            TempData["error"] = "Contribution not found.";
             return NotFound();
+
         }
     }
 }

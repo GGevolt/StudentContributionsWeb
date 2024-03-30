@@ -1,4 +1,5 @@
-﻿using StudentContributions.DataAccess.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentContributions.DataAccess.Data;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using System;
@@ -20,6 +21,15 @@ namespace StudentContributions.DataAccess.Repository
         public void Update(Magazine magazine)
         {
             _dbContext.Update(magazine);
+        }
+        public DateTime? GetClosureDate()
+        {
+            return _dbContext.Magazines.Select(m => m.ClosureDate).FirstOrDefault();
+        }
+        public Magazine GetById(int id)
+        {
+            
+            return _dbContext.Magazines.Find(id);
         }
     }
 }

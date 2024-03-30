@@ -10,5 +10,7 @@ namespace StudentContributions.DataAccess.Repository.IRepository
     public interface IMagazineRepository : IRepository<Magazine>
     {
         void Update(Magazine magazine);
+        DateTime? GetClosureDate();
+        Magazine GetById(int id);
     }
 }
