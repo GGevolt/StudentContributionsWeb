@@ -230,24 +230,14 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Contribution contribution)
         {
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
-            if (activeSemester == null || DateTime.Now > activeSemester.EndDate)
-            {
-                ModelState.AddModelError("", "The editing period has ended.");
-                return View(contribution);
-            }
-
-
             if (ModelState.IsValid)
             {
+                contribution.UserID = user.Id;
                 _unitOfWork.ContributionRepository.Update(contribution);
                 _unitOfWork.Save();
-                return RedirectToAction(nameof(Index));
             }
             return View(contribution);
         }
-
-
         [Authorize(Roles = "Student")]
         public IActionResult Delete(int? id)
         {
