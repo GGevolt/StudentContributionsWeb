@@ -7,15 +7,21 @@
     bool canEdit = DateTime.Now <= timestamp2; // Allow edits until the semester closure date
     bool canCreate = DateTime.Now <= timestamp1; // Allow creation until the magazine closure date
 }
-<head>
-    <title>Table 09</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<h2>My articles</h2>
-<p>Closure date: XX/XX/XXXX</p>
-<p>Final closure date: XX/XX/XXXX</p>
-<a class="nav-link text-dark" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
+<h2>My Articles</h2>
+@if (timestamp1 != null && timestamp2 != null)
+{
+    <p>Closure Date for New Contributions (Timestamp1): @timestamp1?.ToString("dd/MM/yyyy HH:mm")</p>
+    <p>Final Closure Date for Updates (Timestamp2): @timestamp2?.ToString("dd/MM/yyyy HH:mm")</p>
+}
+else
+{
+    <p>Closure dates not available</p>
+}
+@if (canCreate)
+{
+    <a class="nav-link text-dark" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
+}
 <table class="table">
     <thead>
         <tr>
@@ -28,7 +34,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
             </th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -42,40 +48,25 @@
                     @Html.DisplayFor(modelItem => item.Contribution_Status)
                 </td>
                 <td>
-                    @if (item.Comment != null && item.Comment.Any())
-                    {
-                        <ul>
-                            @foreach (var comment in item.Comment)
-                            {
-                                <li>@comment</li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p>No comments</p>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MagazineID)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a>
-                </td>
-                @if (this.User.IsInRole("Coordinator"))
-                {
-                    <td>
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                    </td>
-                }
-                    @if (this.User.IsInRole("Student,Coordinator"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a>
-                        @if (this.User.IsInRole("Student"))
+                    @{
+                        var comment = item.Comment;
+                        var maxLength = 200;
+                        if (comment != null && comment.Length > 0)
                         {
-                            <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                            var words = comment.Split(new[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                            var shortenedComment = string.Join(" ", words.Take(maxLength));
+                            <p>@shortenedComment@(words.Length > maxLength ? "..." : "")</p>
+                        }
+                        else
+                        {
+                            <p>No comments</p>
                         }
                     }
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
