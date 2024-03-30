@@ -24,11 +24,6 @@ namespace StudentContributions.Areas.Student.Controllers
 
         public IActionResult Index()
         {
-            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
-            if (user != null)
-            {
-                return View(_unitOfWork.MagazineRepository.GetAll().Where(m => m.FacultyID == user.FacultyID));
-            }
             return View(_unitOfWork.MagazineRepository.GetAll());
         }
 

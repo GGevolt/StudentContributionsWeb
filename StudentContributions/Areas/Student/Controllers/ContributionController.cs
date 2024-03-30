@@ -196,13 +196,19 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Contribution contribution)
         {
-            if (ModelState.IsValid)
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user != null)
             {
+                contribution.UserID = user.Id;
                 _unitOfWork.ContributionRepository.Update(contribution);
                 _unitOfWork.Save();
-                return RedirectToAction(nameof(Index));
             }
-            return View(contribution);
+            else
+            {
+                TempData["error"] = "Please login";
+                return View(contribution);
+            }
+            return RedirectToAction(nameof(Index));
         }
         [Authorize(Roles = "Student")]
         public IActionResult Delete(int? id)
