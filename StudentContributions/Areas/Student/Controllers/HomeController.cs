@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO.Compression;
 using StudentContributions.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
+using System.Data;
 
 namespace StudentContributions.Areas.Student.Controllers
 {
@@ -20,6 +21,7 @@ namespace StudentContributions.Areas.Student.Controllers
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+
         }
 
         public IActionResult Index()
@@ -27,7 +29,32 @@ namespace StudentContributions.Areas.Student.Controllers
             return View(_unitOfWork.MagazineRepository.GetAll());
         }
 
-
+        public IActionResult Details(int id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id);
+            if (magazine == null)
+            {
+                return NotFound();
+            }
+            ConOfMagVM conOfMagVM = new ConOfMagVM();
+            conOfMagVM.Magazine = magazine;
+            var contributions = _unitOfWork.ContributionRepository.GetAll().Where(c => c.MagazineID == id);
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null)
+            {
+                contributions = contributions.Where(c => c.Contribution_Status.Contains("Approved"));
+            }
+            else if (_userManager.IsInRoleAsync(user, "Student").GetAwaiter().GetResult())
+            {
+                contributions = contributions.Where(c => c.Contribution_Status.Contains("Approved") || c.UserID.Equals(user.Id));
+            }
+            conOfMagVM.Contributions = contributions;
+            return View(conOfMagVM);
+        }
 
         public IActionResult Privacy()
         {

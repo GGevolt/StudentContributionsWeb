@@ -8,25 +8,20 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="text-center">Student Contributions</h2>
-        <div class="row">
-            @foreach (var magazine in Model)
-            {
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">@magazine.MagazineName</h5>
-                            <a href="@Url.Action("Index", "Contribution" , new { area="Student" })" class="btn btn-primary">Go to Contributions</a>
-                        </div>
-                    </div>
+    
+    @foreach (var magazine in Model)
+    {
+        <div class="ag-courses_item">
+            <a href="@Url.Action("Index", "Contribution" , new { area="Student" })" class="ag-courses-item_link">
+                <div class="ag-courses-item_bg"></div>
+
+                <div class="ag-courses-item_title">
+                    @magazine.MagazineName
                 </div>
-            }
+            </a>
         </div>
+        
+    }
     </div>
-    <!-- Add Bootstrap and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

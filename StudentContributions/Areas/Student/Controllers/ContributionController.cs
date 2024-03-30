@@ -12,7 +12,7 @@ using System.Text.Encodings.Web;
 namespace StudentContributions.Areas.Student.Controllers
 {
     [Area("Student")]
-    [Authorize(Roles = "Student,Coordinator")]
+    //[Authorize(Roles = "Student,Coordinator")]
     public class ContributionController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -77,7 +77,20 @@ namespace StudentContributions.Areas.Student.Controllers
                 {
                     _unitOfWork.ContributionRepository.Add(contribution);
                     _unitOfWork.Save();
-                    return RedirectToAction(nameof(Index));
+
+                    string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
+                    if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                    foreach (var file in files)
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+                    }
+
+                    return RedirectToAction("Details", new {id = contribution.ID});
                 }
                 else
                 {
