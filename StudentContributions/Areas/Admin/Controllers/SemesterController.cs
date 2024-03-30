@@ -24,8 +24,17 @@ namespace StudentContributions.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var latestSemester = _unitOfWork.SemesterRepository.GetAll().OrderByDescending(s => s.EndDate).FirstOrDefault();
+            var newSemester = new Semester();
+            if (latestSemester != null)
+            {
+                // Đề xuất StartDate là ngày tiếp theo của EndDate semester gần nhất
+                newSemester.StartDate = latestSemester.EndDate.AddDays(1);
+            }
+
+            return View(newSemester); // Truyền đối tượng newSemester với StartDate được đề xuất vào View
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -33,6 +42,24 @@ namespace StudentContributions.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Kiểm tra xem có semester nào đang active không
+                var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+                if (activeSemester != null)
+                {
+                    // Nếu có, semester mới không được active
+                    semester.IsActive = false;
+                }
+                else
+                {
+                    // Nếu không, đây là semester đầu tiên hoặc không có semester nào khác đang active
+                    semester.IsActive = true;
+                }
+                var latestSemester = _unitOfWork.SemesterRepository.GetAll().OrderByDescending(s => s.EndDate).FirstOrDefault();
+                if (latestSemester != null && semester.StartDate <= latestSemester.EndDate)
+                {
+                    ModelState.AddModelError("StartDate", "StartDate phải sau ngày kết thúc của semester gần nhất.");
+                }
+
                 _unitOfWork.SemesterRepository.Add(semester);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
@@ -66,6 +93,8 @@ namespace StudentContributions.Areas.Admin.Controllers
             }
             return View(semester);
         }
+
+
 
         public IActionResult Delete(int? id)
         {
