@@ -230,6 +230,7 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Contribution contribution)
         {
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
             if (ModelState.IsValid)
             {
                 contribution.UserID = user.Id;
