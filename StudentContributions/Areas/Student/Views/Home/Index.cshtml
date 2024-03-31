@@ -5,10 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Contributions</title>
     <!-- Add Bootstrap 5 CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
-    
+<body id="myPage">
+  <div class="w3-display-container w3-animate-opacity">
+        <img src="~/img/412312413_353803377352101_3573509045879812506_n.jpg" alt="boat" style="width:100%;min-height:350px;max-height:600px;">
+  <div class="w3-container w3-display-bottomleft w3-margin-bottom">  
+    <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-xlarge w3-theme w3-hover-teal" title="Contact Us">Contact Us</button>
+        </div>
+        <div id="id01" class="w3-modal">
+            <div class="w3-modal-content w3-card-4 w3-animate-top">
+                <header class="w3-container w3-teal w3-display-container">
+                    <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-teal w3-display-topright"><i class="fa fa-remove"></i></span>
+                    <h4>Here is our information</h4>
+                    <h5>We are BuKhuHoi<i class="fa fa-smile-o"></i></h5>
+                </header>
+                <div class="w3-container">
+                    <p>ABC</p>
+                    <p>ABC</p>
+                </div>
+                <footer class="w3-container w3-teal">
+                    <p>Everything for education<i class="fa fa-smile-o"></i></p>
+                </footer>
+            </div>
+        </div>
+</div>  
     @foreach (var magazine in Model)
     {
         <div class="ag-courses_item">
@@ -23,5 +48,14 @@
         
     }
     </div>
+
 </body>
+<div style="position:relative;bottom:100px;z-index:1;" class="w3-tooltip w3-right">
+    <span class="w3-text w3-padding w3-teal w3-hide-small">Go To Top</span>
+    <a class="w3-button w3-theme" href="#myPage">
+        <span class="w3-xlarge">
+            <i class="fa fa-chevron-circle-up"></i>
+        </span>
+    </a>
+</div>
 </html>

@@ -4,7 +4,7 @@
     ViewData["Title"] = "My articles";
 }
 <head>
-    <title>Table 09</title>
+    <title>My Article</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -19,7 +19,7 @@
 <h2>My articles</h2>
 <p>Closure date: XX/XX/XXXX</p>
 <p>Final closure date: XX/XX/XXXX</p>
-<a class="nav-link text-dark" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
+<a class="btn btn-primary" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
 <!doctype html>
 <html lang="en">
 <head>
@@ -87,15 +87,15 @@
                                             @Html.DisplayFor(modelItem => item.MagazineID)
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-primary asp-action="Details" asp-route-id="@item.ID">Details</button>
+                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a>
                                         </td>
                                         @if (this.User.IsInRole("Student") || this.User.IsInRole("Coordinator"))
                                         {
                                             <td>
-                                                <button type="button" class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</button>
+                                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ID">Edit</button>
+                                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
                                             </td>
                                         }
                                     </tr>
@@ -111,7 +111,7 @@
         window.onload = function () {
             var p = document.getElementById('myText');
             var text = p.innerText;
-            var maxLength = 50; // Đặt giới hạn kí tự tại đây
+            var maxLength = 80 ; // Đặt giới hạn kí tự tại đây
             var newText = '';
             var lines = text.split('\n');
             for (var i = 0; i < lines.length; i++) {
