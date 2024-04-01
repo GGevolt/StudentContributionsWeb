@@ -26,3 +26,10 @@ body {
     height: 30px;
     border: none;
 }
+#p {
+    white-space: pre-wrap;
+}
+#myButton {
+    display: flex;
+    justify-content: flex-end;
+}

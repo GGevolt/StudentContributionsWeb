@@ -3,56 +3,78 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+<head>
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
 <h1>Contribution Details</h1>
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Article name
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Contribution.Title
-        </dd>
-        <dt class = "col-sm-2">
-            Status
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Contribution.Contribution_Status
-        </dd>
-        <dt class = "col-sm-2">
-            Comment
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.Contribution.Comment
-        </dd>
-        <table>
+<div class="container mt-4">
+    <ul class="list-group">
+    <dt class="col-sm-2">
+        Article name
+    </dt>
+    <h6></h6>
+        <li class="list-group-item">
+@Model.Contribution.Title</li>
+<p></p>
+    <dt class="col-sm-2">
+        Status
+    </dt>
+    <h6></h6>
+        <li class="list-group-item">
+    @Model.Contribution.Contribution_Status</li>
+    <p></p>
+    <dt class="col-sm-2">
+        Comment
+    </dt>
+    <h6></h6>
+        <li class="list-group-item">
+@Model.Contribution.Comment</li>
+    <p></p>
+
+
+    </ul>
+    <th>
+        @if (Model.Filenames.Count != 0)
+        {
+            <button  id="myButton" class="btn btn-primary" style="margin-right" onclick="location.href='@Url.Action("DownloadZip", "Contribution", new { id = Model.Contribution.ID })'">Download As Zip</button>
+        }
+    </th>
+    <table class="table table-striped">
+        <thead>
             <tr>
                 <th>Attachments</th>
-                <th>
-                    @if (Model.Filenames.Count != 0)
-                    {
-                        <button class="btn btn-primary" onclick="location.href='@Url.Action("DownloadZip", "Contribution", new { id = Model.Contribution.ID })'">Download As Zip</button>
-                    }
-                </th>
+                <th>Actions</th>
             </tr>
+        </thead>
+        <tbody>
+
             @foreach (var file in Model.Filenames)
             {
+
                 <tr>
                     <td><a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file">@file</a></td>
-                    <td><a asp-action="DeleteFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file">Delete</a></td>
+                    <td>
+                        <a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-primary btn-sm">Download</a>
+                        @* <a asp-action="DeleteFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-danger btn-sm">Delete</a> *@
+                    </td>
                 </tr>
             }
-        </table>
-        <form method="post" asp-action="Details" asp-route-id="@Model.Contribution.ID" enctype="multipart/form-data">
-            <input type="file" name="files" class="form-control" multiple>
-            <button type="submit" class="btn btn-primary">Upload</button>
-        </form>
-</div>
-<div>
-    <a asp-controller="Contribution" asp-action="Index">Back to List</a>
-    <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@Model.Contribution.ID" class="btn btn-warning">Edit Info</a>
+        </tbody>
+    </table>
+
+@*     <form method="post" asp-action="Details" asp-route-id="@Model.Contribution.ID" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="fileInput" class="form-label">Choose File(s)</label>
+            <input type="file" id="fileInput" name="files" class="form-control" multiple>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form> *@
+
+    <div class="mt-3">
+        <a asp-controller="Contribution" asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@Model.Contribution.ID" class="btn btn-warning">Edit Info</a>
+    </div>
 </div>
 
 @section Scripts{

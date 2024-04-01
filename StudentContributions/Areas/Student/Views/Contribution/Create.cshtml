@@ -9,24 +9,21 @@
     <h2 class="text-center">Create Contribution</h2>
 
     <form asp-action="Create" enctype="multipart/form-data" method="post" class="mt-4">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <div class="form-group">
-            <label asp-for="Title" class="form-label"></label>
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label"><b>Title</b></label>
             <input asp-for="Title" class="form-control" />
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
-            <label asp-for="Comment" class="form-label"></label>
+        <div class="mb-3">
+            <label asp-for="Comment" class="form-label"><b>Comment</b></label>
             <textarea asp-for="Comment" class="form-control"></textarea>
             <span asp-validation-for="Comment" class="text-danger"></span>
         </div>
-        @if (this.User.IsInRole("Coordinator"))
-        {
-            <div class="form-group">
-                <label asp-for="Contribution_Status" class="form-label"></label>
-            <select asp-for="Contribution_Status" class="form-control">
+
+        <div class="mb-3">
+            <label asp-for="Contribution_Status" class="form-label"><b>Contribution Status</b></label>
+            <select asp-for="Contribution_Status" class="form-select">
                 <option value="">-- Select Status --</option>
                 <option value="Submitted">Wait for Approval</option>
                 <option value="Approved">Approved</option>
@@ -34,24 +31,24 @@
             </select>
             <span asp-validation-for="Contribution_Status" class="text-danger"></span>
         </div>
-        }
-        <div class="form-group">
-            <label asp-for="MagazineID" class="form-label"></label>
+
+        <div class="mb-3">
+            <label asp-for="MagazineID" class="form-label"><b>Magazine ID</b></label>
             <input asp-for="MagazineID" class="form-control" />
             <span asp-validation-for="MagazineID" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
-            <label for="files" class="form-label">Upload Files</label>
+        <div class="mb-3">
+            <label for="files" class="form-label"><b>Upload Files</b></label>
             <input type="file" name="files" id="files" class="form-control" multiple>
         </div>
 
-        <div class="form-group form-check">
+        <div class="form-check mb-3">
             <input id="check" name="checkbox" type="checkbox" class="form-check-input" />
-            <label for="checkbox" class="form-check-label">I agree to the Terms of Service and Privacy Policy</label>
+            <label for="checkbox" class="form-check-label"><b>I agree to the Terms of Service and Privacy Policy</b></label>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
             <input id="checkSubmit" type="submit" value="Create" class="btn btn-primary" />
         </div>
     </form>

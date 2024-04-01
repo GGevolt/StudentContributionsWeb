@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<StudentContributions.Models.Models.Contribution>
-
 @{
     ViewData["Title"] = "My Articles";
     DateTime? timestamp1 = ViewBag.Timestamp1;
@@ -8,7 +7,18 @@
     bool canCreate = DateTime.Now <= timestamp1; // Allow creation until the magazine closure date
 }
 
-<h2>My Articles</h2>
+<head>
+    <title>Table 09</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
 @if (timestamp1 != null && timestamp2 != null)
 {
     <p>Closure Date for New Contributions (Timestamp1): @timestamp1?.ToString("dd/MM/yyyy HH:mm")</p>
@@ -22,52 +32,101 @@ else
 {
     <a class="nav-link text-dark" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contribution_Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Contribution_Status)
-                </td>
-                <td>
-                    @{
-                        var comment = item.Comment;
-                        var maxLength = 200;
-                        if (comment != null && comment.Length > 0)
-                        {
-                            var words = comment.Split(new[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                            var shortenedComment = string.Join(" ", words.Take(maxLength));
-                            <p>@shortenedComment@(words.Length > maxLength ? "..." : "")</p>
-                        }
-                        else
-                        {
-                            <p>No comments</p>
-                        }
-                    }
-                </td>
-                <td>
-                    <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
-                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                </td>
-            </tr>
+
+<body>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">My Article</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-wrap">
+                        <table class="table table-success table-striped">
+                            <tr>
+                                <th scope="col">
+                                    @Html.DisplayNameFor(model => model.Title)
+                                </th>
+                                <th scope="col">
+                                    @Html.DisplayNameFor(model => model.Contribution_Status)
+                                </th>
+                                <th scope="col">
+                                    @Html.DisplayNameFor(model => model.Comment)
+                                </th>
+                                <th scope="col">Magazine_ID</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td scope="row">
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Contribution_Status)
+                                        </td>
+                                        <td>
+                                            @if (item.Comment != null && item.Comment.Any())
+                                            {
+                                                <p id="myText">@item.Comment</p>
+                                            }
+                                            else
+                                            {
+                                                <p>No comments</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.MagazineID)
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a>
+                                        </td>
+                                        @if (this.User.IsInRole("Student") || this.User.IsInRole("Coordinator"))
+                                        {
+                                            <td>
+                                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        window.onload = function () {
+            var p = document.getElementById('myText');
+            var text = p.innerText;
+            var maxLength = 80; // Đặt giới hạn kí tự tại đây
+            var newText = '';
+            var lines = text.split('\n');
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                while (line.length > maxLength) {
+                    newText += line.substring(0, maxLength) + '\n';
+                    line = line.substring(maxLength);
+                }
+                newText += line + '\n';
+            }
+            p.innerText = newText;
         }
-    </tbody>
-</table>
+    </script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
