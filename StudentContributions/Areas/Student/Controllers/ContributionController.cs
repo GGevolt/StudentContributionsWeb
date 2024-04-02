@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using StudentContributions.Models.ViewModels;
-using System.IO;
+using StudentContributions.Utility.Interfaces;
 using System.IO.Compression;
+using System.Text.Encodings.Web;
 
 namespace StudentContributions.Areas.Student.Controllers
 {
@@ -13,19 +15,31 @@ namespace StudentContributions.Areas.Student.Controllers
     //[Authorize(Roles = "Student,Coordinator")]
     public class ContributionController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
-        private IWebHostEnvironment _webHost;
+        private readonly IEmailService _emailService;
+        private readonly IWebHostEnvironment _webHost;
 
-        public ContributionController(IUnitOfWork unitOfWork, IWebHostEnvironment webHost)
+        public ContributionController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IEmailService emailService, IWebHostEnvironment webhost)
         {
             _unitOfWork = unitOfWork;
-            _webHost = webHost;
+            _userManager = userManager;
+            _emailService = emailService;
+            _webHost = webhost;
         }
 
         public IActionResult Index()
         {
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            var magazineClosureDate = activeSemester?.Magazines?.FirstOrDefault()?.ClosureDate;
+            var semesterClosureDate = activeSemester?.EndDate;
+
+            ViewBag.Timestamp1 = magazineClosureDate;
+            ViewBag.Timestamp2 = semesterClosureDate;
+
             var contributions = _unitOfWork.ContributionRepository.GetAll();
             return View(contributions);
+
         }
 
         public IActionResult Create()
@@ -37,25 +51,74 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Contribution contribution, List<IFormFile>? files)
         {
-            if (ModelState.IsValid)
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user != null)
             {
-                _unitOfWork.ContributionRepository.Add(contribution);
-                _unitOfWork.Save();
-
-                string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
-                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
-                foreach (var file in files)
+                contribution.UserID = user.Id;
+                var facultyID = _unitOfWork.MagazineRepository.Get(m => m.ID == contribution.MagazineID).FacultyID;
+                var usersInFaculty = _unitOfWork.ApplicationUserRepository.GetAll(u => u.FacultyID == facultyID);
+                var usersAsCoordinator = _userManager.GetUsersInRoleAsync("Coordinator").GetAwaiter().GetResult();
+                bool coordinatorFound = false;
+                foreach (var coordinator in usersInFaculty)
                 {
-                    string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    if (usersAsCoordinator.Any(u => u.Id == coordinator.Id))
                     {
-                        file.CopyTo(fileStream);
+                        coordinatorFound = true; 
+                        var emailTo = coordinator.Email;
+                        if (emailTo == null)
+                        {
+                            TempData["error"] = "There currently no coordinator in faculty. Please check with admin.";
+                            return View(contribution);
+                        }
+                        var emailSubject = "Please check the new submitted contribution.";
+                        var emailBody = $"Please check the new submitted contribution made by {user.Email}.";
+                        var emailComponent = new EmailComponent
+                        {
+                            To = emailTo,
+                            Subject = emailSubject,
+                            Body = emailBody
+                        };
+                        _emailService.SendEmailAsync(emailComponent).GetAwaiter().GetResult();
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                if (coordinatorFound)
+                {
+                    var magazine = _unitOfWork.MagazineRepository.GetById(contribution.MagazineID);
+
+                    if (magazine == null || DateTime.Now > magazine.ClosureDate)
+                    {
+                        ModelState.AddModelError("Error: ", "The contribution period for the selected magazine has ended.");
+                        return View(contribution);
+                    }
+
+                    _unitOfWork.ContributionRepository.Add(contribution);
+                    _unitOfWork.Save();
+
+                    string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
+                    if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                    foreach (var file in files)
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+                    }
+
+                    return RedirectToAction("Details", new {id = contribution.ID});
+                }
+                else
+                {
+                    TempData["error"] = "There currently no coordinator in faculty. Please check with admin.";
+                    return View(contribution);
+                }
             }
-            return View(contribution);
+            else
+            {
+                TempData["error"] = "Please login";
+                return View(contribution);
+            }
         }
 
         public IActionResult Details(int? id)
@@ -150,11 +213,16 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 return NotFound();
             }
+
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
-            if (contribution == null)
+
+            if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
             {
-                return NotFound();
+                TempData["error"] = "The editing period has ended or the contribution does not exist.";
+                return RedirectToAction(nameof(Index));
             }
+
             return View(contribution);
         }
 
@@ -162,11 +230,12 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Contribution contribution)
         {
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
             if (ModelState.IsValid)
             {
+                contribution.UserID = user.Id;
                 _unitOfWork.ContributionRepository.Update(contribution);
                 _unitOfWork.Save();
-                return RedirectToAction(nameof(Index));
             }
             return View(contribution);
         }
@@ -177,12 +246,18 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 return NotFound();
             }
+
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
-            if (contribution == null)
+
+            if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
             {
-                return NotFound();
+                TempData["error"] = "The deletion period has ended or the contribution does not exist.";
+                return RedirectToAction(nameof(Index));
             }
+
             return View(contribution);
+
         }
 
         [HttpPost, ActionName("Delete")]
@@ -190,14 +265,24 @@ namespace StudentContributions.Areas.Student.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult DeleteConfirmed(int id)
         {
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            if (activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            {
+                TempData["error"] = "The deletion period has ended.";
+                return RedirectToAction(nameof(Index));
+            }
+
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
             if (contribution != null)
             {
                 _unitOfWork.ContributionRepository.Remove(contribution);
                 _unitOfWork.Save();
+                TempData["success"] = "Contribution deleted successfully.";
                 return RedirectToAction(nameof(Index));
             }
+            TempData["error"] = "Contribution not found.";
             return NotFound();
+
         }
     }
 }

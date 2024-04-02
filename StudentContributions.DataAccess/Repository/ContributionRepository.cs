@@ -1,9 +1,11 @@
-﻿using StudentContributions.DataAccess.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using StudentContributions.DataAccess.Data;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,5 +23,7 @@ namespace StudentContributions.DataAccess.Repository
         {
             _dbContext.Update(contribution);
         }
+
+        
     }
 }

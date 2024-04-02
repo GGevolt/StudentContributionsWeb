@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\css_2\.DS_Store" />
+    <None Include="wwwroot\css_2\bootstrap\.DS_Store" />
+    <None Include="wwwroot\css_2\bootstrap\mixins\.DS_Store" />
+    <None Include="wwwroot\js_2\.DS_Store" />
+    <None Include="wwwroot\scss\.DS_Store" />
+    <None Include="wwwroot\scss\bootstrap\.DS_Store" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
@@ -27,11 +36,6 @@
     <ProjectReference Include="..\StudentContributions.DataAccess\StudentContributions.DataAccess.csproj" />
     <ProjectReference Include="..\StudentContributions.Models\StudentContributions.Models.csproj" />
     <ProjectReference Include="..\StudentContributions.Utility\StudentContributions.Utility.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Coordinator\Controllers\" />
-    <Folder Include="Areas\Manager\Controllers\" />
   </ItemGroup>
 
 </Project>

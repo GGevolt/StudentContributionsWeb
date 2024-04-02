@@ -15,12 +15,15 @@ namespace StudentContributions.Models.Models
         public int ID { get; set; }
         public DateTime SubmissionDate { get; set; } = DateTime.Now;
         public string Title { get; set; }
-        public List<string>? Comment { get; set; }
+        public string Comment { get; set; }
         public string Contribution_Status { get; set; }
         [ForeignKey("MagazineID")]
         [ValidateNever]
         public Magazine Magazine { get; set; }
         
         public int MagazineID { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+        public string UserID { get; set; }
+
     }
 }

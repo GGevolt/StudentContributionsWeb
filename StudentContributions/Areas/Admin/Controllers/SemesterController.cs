@@ -24,8 +24,17 @@ namespace StudentContributions.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var latestSemester = _unitOfWork.SemesterRepository.GetAll().OrderByDescending(s => s.EndDate).FirstOrDefault();
+            var newSemester = new Semester();
+            if (latestSemester != null)
+            {
+               
+                newSemester.StartDate = latestSemester.EndDate.AddDays(1);
+            }
+
+            return View(newSemester); 
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -33,6 +42,24 @@ namespace StudentContributions.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+               
+                var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+                if (activeSemester != null)
+                {
+                   
+                    semester.IsActive = false;
+                }
+                else
+                {
+                   
+                    semester.IsActive = true;
+                }
+                var latestSemester = _unitOfWork.SemesterRepository.GetAll().OrderByDescending(s => s.EndDate).FirstOrDefault();
+                if (latestSemester != null && semester.StartDate <= latestSemester.EndDate)
+                {
+                    ModelState.AddModelError("StartDate", "StartDate phải sau ngày kết thúc của semester gần nhất.");
+                }
+
                 _unitOfWork.SemesterRepository.Add(semester);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
@@ -66,6 +93,8 @@ namespace StudentContributions.Areas.Admin.Controllers
             }
             return View(semester);
         }
+
+
 
         public IActionResult Delete(int? id)
         {

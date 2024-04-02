@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-size: 14px;
 }
 
@@ -26,14 +26,10 @@ body {
     height: 30px;
     border: none;
 }
-
-.word-wrap {
-    max-width: 200px;
-    word-wrap: break-word;
+#p {
+    white-space: pre-wrap;
 }
-
-.border-shadow {
-    border: 1px solid black;
-    box-shadow: 2px 2px 5px gray;
-    padding: 10px;
+#myButton {
+    display: flex;
+    justify-content: flex-end;
 }

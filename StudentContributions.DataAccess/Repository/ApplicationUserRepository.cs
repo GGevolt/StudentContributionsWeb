@@ -12,5 +12,9 @@ namespace StudentContributions.DataAccess.Repository
         {
             _dbContext = dBContext;
         }
+        public void Update(ApplicationUser applicationUser)
+        {
+            _dbContext.Update(applicationUser);
+        }
     }
 }

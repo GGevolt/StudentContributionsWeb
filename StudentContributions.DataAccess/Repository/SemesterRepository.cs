@@ -21,5 +21,10 @@ namespace StudentContributions.DataAccess.Repository
         {
             _dbContext.Update(semester);
         }
+
+        public DateTime? GetClosureDate()
+        {
+            return _dbContext.Semesters.Select(s => s.EndDate).FirstOrDefault();
+        }
     }
 }
