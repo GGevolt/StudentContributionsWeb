@@ -2,32 +2,33 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h1>Edit</h1>
-
-<form asp-action="Edit">
-    <input type="hidden" asp-for="ID" />
-    <div class="form-group">
-        <label asp-for="MagazineName" class="control-label"></label>
-        <input asp-for="MagazineName" class="form-control" />
-        <span asp-validation-for="MagazineName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ClosureDate" class="control-label"></label>
-        <input asp-for="ClosureDate" class="form-control" />
-        <span asp-validation-for="ClosureDate" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="FacultyID" class="control-label"></label>
-        <input asp-for="FacultyID" class="form-control" />
-        <span asp-validation-for="FacultyID" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="SemesterID" class="control-label"></label>
-        <input asp-for="SemesterID" class="form-control" />
-        <span asp-validation-for="SemesterID" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-    </div>
-</form>
+<div class="col-md-8 offset-md-2 border-shadow">
+    <h1>Edit</h1>
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="ID" />
+        <div class="form-group">
+            <label asp-for="MagazineName" class="control-label">Magazine name:</label>
+            <input asp-for="MagazineName" class="form-control" maxlength="75" />
+            <span asp-validation-for="MagazineName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ClosureDate" class="control-label">Closure date:</label>
+            <input asp-for="ClosureDate" class="form-control" />
+            <span asp-validation-for="ClosureDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="FacultyID" class="control-label">Faculty:</label>
+            <select asp-for="FacultyID" asp-items="ViewBag.FacultyList" class="form-control"></select>
+            <span asp-validation-for="FacultyID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SemesterID" class="control-label">Semester:</label>
+            <select asp-for="SemesterID" asp-items="ViewBag.SemesterList" class="form-control"></select>
+            <span asp-validation-for="SemesterID" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="display: flex; justify-content: space-between; padding-top:5px">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <input type="submit" value="Save" class="btn btn-success"/>
+        </div>
+    </form>
+</div>
