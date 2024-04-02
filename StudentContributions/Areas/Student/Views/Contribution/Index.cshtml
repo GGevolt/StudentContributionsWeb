@@ -43,8 +43,8 @@ else
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="table-wrap">
-                        <table class="table table-success table-striped">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
                             <tr>
                                 <th scope="col">
                                     @Html.DisplayNameFor(model => model.Title)
@@ -65,7 +65,7 @@ else
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td scope="row">
+                                        <td scope="col">
                                             @Html.DisplayFor(modelItem => item.Title)
                                         </td>
                                         <td>
