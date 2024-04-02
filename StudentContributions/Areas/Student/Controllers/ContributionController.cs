@@ -7,6 +7,7 @@ using StudentContributions.Models.Models;
 using StudentContributions.Models.ViewModels;
 using StudentContributions.Utility.Interfaces;
 using System.IO.Compression;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 
 namespace StudentContributions.Areas.Student.Controllers
@@ -37,7 +38,8 @@ namespace StudentContributions.Areas.Student.Controllers
             ViewBag.Timestamp1 = magazineClosureDate;
             ViewBag.Timestamp2 = semesterClosureDate;
 
-            var contributions = _unitOfWork.ContributionRepository.GetAll();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var contributions = _unitOfWork.ContributionRepository.GetAll().Where(c => c.UserID.Equals(userId));
             return View(contributions);
 
         }
