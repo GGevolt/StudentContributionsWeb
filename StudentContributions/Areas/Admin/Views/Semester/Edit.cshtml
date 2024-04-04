@@ -5,7 +5,7 @@
 }
 <div class="col-md-8 offset-md-2 border-shadow">
     <h2>Edit semester</h2>
-    <hr />
+    <div class="container shadow" style="padding-bottom:5px">
     <form asp-action="Edit">
         <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" asp-for="ID" />
@@ -28,6 +28,7 @@
             <input type="submit" value="Save" class="btn btn-success" />
         </div>
     </form>
+    </div>
 </div>
 
 @section Scripts {

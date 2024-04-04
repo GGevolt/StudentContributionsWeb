@@ -3,15 +3,14 @@
 @{
     ViewData["Title"] = "Index";
 }
-<div class="col-md-8 offset-md-2">
+<div class="col-md-8 offset-md-2" style="padding-top:5px">
     <div style="display: flex; justify-content: space-between;">
         <h2>Semesters</h2>
         <a asp-action="Create" class="btn btn-primary" style="margin-bottom: 5px">Create New Semester</a>
     </div>
 
-    <div class="table table-active">
-        <table class="table table-striped border-shadow" style="border: 1px solid #000;">
-            <thead>
+    <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
+            <thead class="table-active">
                 <tr>
                     <th>Start Date</th>
                     <th>End Date</th>
@@ -35,4 +34,3 @@
             </tbody>
         </table>
     </div>
-</div>

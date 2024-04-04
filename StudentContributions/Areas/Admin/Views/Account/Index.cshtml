@@ -1,18 +1,16 @@
 ﻿@model IEnumerable<AccountVM>
 <partial name="_Notification" />
-<div class="container">
-	<div class="row pt-4 pb-4">
-		<div class="col-9">
-			<h2>List of Customer account</h2>
-		</div>
+<div class="col-md-8 offset-md-2">
+	<h2>List of Customer account</h2>
+
 	<div>
-		<table class="table table-bordered">
-			<thead>
+		<table class="table table-borderless table-hover rounded-table border shadow">
+			<thead class="table-active">
 				<tr>
 					<th>Email</th>
 					<th>Role</th>
 					<th>Assign Role</th>
-					<th>Assign Facluty/th>
+					<th>Assign Faculty</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -28,7 +26,7 @@
 						</td>
 						<td>
 							<div class="btn-group">
-								<button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+								<button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
 									Assign Role
 								</button>
 								<ul class="dropdown-menu">
@@ -36,16 +34,16 @@
 									{
 										<li>
 											<input type="hidden" name="userId" value="@account.User.Id" />
-												<input type="hidden" name="newrole" value="Coordinator" />
-												<button type="submit" class="dropdown-item">Coordinator</button>
+											<input type="hidden" name="newrole" value="Coordinator" />
+											<button type="submit" class="dropdown-item">Coordinator</button>
 										</li>
 									}
 									@using (Html.BeginForm("AssignRole", "Account"))
 									{
 										<li>
 											<input type="hidden" name="userId" value="@account.User.Id" />
-												<input type="hidden" name="newrole" value="Student" />
-												<button type="submit" class="dropdown-item">Student</button>
+											<input type="hidden" name="newrole" value="Student" />
+											<button type="submit" class="dropdown-item">Student</button>
 										</li>
 									}
 									@using (Html.BeginForm("AssignRole", "Account"))
@@ -67,10 +65,11 @@
 								</ul>
 							</div>
 						</td>
-							<td><a asp-controller="Account" asp-action="AssignFaculty" asp-route-userId="@account.User.Id" class="btn btn-primary">Assign Faculty</a></td>
+						<td><a asp-controller="Account" asp-action="AssignFaculty" asp-route-userId="@account.User.Id" class="btn btn-primary">Assign Faculty</a></td>
 					</tr>
 				}
 			</tbody>
 		</table>
 	</div>
+
 </div>
