@@ -4,14 +4,13 @@
     ViewData["Title"] = "Faculty list";
 }
 
-<div class="col-md-8 offset-md-2">
+<div class="col-md-8 offset-md-2" style="padding-top:5px">
     <div style="display: flex; justify-content: space-between;">
         <h2>@ViewData["Title"]</h2>
         <a asp-action="Create" class="btn btn-primary" style="margin-bottom: 5px">Create New Faculty</a>
     </div>
-    <div class="table table-active">
-        <table class="table table-striped border-shadow" style="border: 1px solid #000;">
-            <thead>
+    <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
+        <thead class="table-active">
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
@@ -33,4 +32,3 @@
             </tbody>
         </table>
     </div>
-</div>
