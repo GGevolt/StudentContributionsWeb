@@ -233,12 +233,13 @@ namespace StudentContributions.Areas.Student.Controllers
         public IActionResult Edit(Contribution contribution)
         {
             var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
-            if (ModelState.IsValid)
-            {
-                contribution.UserID = user.Id;
+            
+            
+            
+                
                 _unitOfWork.ContributionRepository.Update(contribution);
                 _unitOfWork.Save();
-            }
+            
             return View(contribution);
         }
         [Authorize(Roles = "Student")]
