@@ -16,18 +16,9 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="~css/style.css">
 
 </head>
-@if (timestamp1 != null && timestamp2 != null)
-{
-    <p>Closure Date for New Contributions (Timestamp1): @timestamp1?.ToString("dd/MM/yyyy HH:mm")</p>
-    <p>Final Closure Date for Updates (Timestamp2): @timestamp2?.ToString("dd/MM/yyyy HH:mm")</p>
-}
-else
-{
-    <p>Closure dates not available</p>
-}
 @if (canCreate)
 {
     <a class="nav-link text-dark" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
