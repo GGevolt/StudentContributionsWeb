@@ -31,7 +31,7 @@ namespace StudentContributions.Areas.Student.Controllers
 
         public IActionResult Index()
         {
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
             var magazineClosureDate = activeSemester?.Magazines?.FirstOrDefault()?.ClosureDate;
             var semesterClosureDate = activeSemester?.EndDate;
 
@@ -39,7 +39,7 @@ namespace StudentContributions.Areas.Student.Controllers
             ViewBag.Timestamp2 = semesterClosureDate;
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var contributions = _unitOfWork.ContributionRepository.GetAll().Where(c => c.UserID.Equals(userId));
+            var contributions = _unitOfWork.ContributionRepository.GetAll().Where(c => c.UserID.Equals(userId)).ToList();
             return View(contributions);
 
         }
@@ -58,7 +58,7 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 contribution.UserID = user.Id;
                 var facultyID = _unitOfWork.MagazineRepository.Get(m => m.ID == contribution.MagazineID).FacultyID;
-                var usersInFaculty = _unitOfWork.ApplicationUserRepository.GetAll(u => u.FacultyID == facultyID);
+                var usersInFaculty = _unitOfWork.ApplicationUserRepository.GetAll(u => u.FacultyID == facultyID).ToList();
                 var usersAsCoordinator = _userManager.GetUsersInRoleAsync("Coordinator").GetAwaiter().GetResult();
                 bool coordinatorFound = false;
                 foreach (var coordinator in usersInFaculty)
@@ -216,7 +216,7 @@ namespace StudentContributions.Areas.Student.Controllers
                 return NotFound();
             }
 
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
 
             if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
@@ -250,7 +250,7 @@ namespace StudentContributions.Areas.Student.Controllers
                 return NotFound();
             }
 
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
 
             if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
@@ -268,7 +268,7 @@ namespace StudentContributions.Areas.Student.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
             if (activeSemester == null || DateTime.Now > activeSemester.EndDate)
             {
                 TempData["error"] = "The deletion period has ended.";

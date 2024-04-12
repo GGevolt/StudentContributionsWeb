@@ -13,7 +13,7 @@ namespace StudentContributions.Models.Models
         public int ID { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Magazine>? Magazines { get; set; }
-        public virtual ICollection<ApplicationUser>? ApplicationUsers { get; set; }
+        public virtual ICollection<Magazine> Magazines { get; set; }
+        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

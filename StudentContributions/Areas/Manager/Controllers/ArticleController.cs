@@ -17,7 +17,7 @@ namespace StudentContributions.Areas.Manager.Controllers
 
         public IActionResult Index()
         {
-            var contributions = _unitOfWork.ContributionRepository.GetAll();
+            var contributions = _unitOfWork.ContributionRepository.GetAll().ToList();
             return View(contributions);
         }
     }
