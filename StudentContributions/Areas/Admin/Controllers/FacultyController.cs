@@ -31,7 +31,7 @@ namespace StudentContributions.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Faculty faculty)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _unitOfWork.FacultyRepository.Add(faculty);
                 _unitOfWork.Save();
