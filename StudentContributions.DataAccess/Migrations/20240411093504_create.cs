@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StudentContributions.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Test1 : Migration
+    public partial class create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -228,11 +228,18 @@ namespace StudentContributions.DataAccess.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contribution_Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MagazineID = table.Column<int>(type: "int", nullable: false)
+                    MagazineID = table.Column<int>(type: "int", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserID = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contributions", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Contributions_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Contributions_Magazines_MagazineID",
                         column: x => x.MagazineID,
@@ -284,6 +291,11 @@ namespace StudentContributions.DataAccess.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contributions_ApplicationUserId",
+                table: "Contributions",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contributions_MagazineID",

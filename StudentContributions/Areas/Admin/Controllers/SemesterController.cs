@@ -18,13 +18,13 @@ namespace StudentContributions.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var semesters = _unitOfWork.SemesterRepository.GetAll();
+            var semesters = _unitOfWork.SemesterRepository.GetAll().ToList();
             return View(semesters);
         }
 
         public IActionResult Create()
         {
-            var latestSemester = _unitOfWork.SemesterRepository.GetAll().OrderByDescending(s => s.EndDate).FirstOrDefault();
+            var latestSemester = _unitOfWork.SemesterRepository.GetAll().ToList().OrderByDescending(s => s.EndDate).FirstOrDefault();
             var newSemester = new Semester();
             if (latestSemester != null)
             {
@@ -43,7 +43,7 @@ namespace StudentContributions.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                
-                var activeSemester = _unitOfWork.SemesterRepository.GetAll().FirstOrDefault(s => s.IsActive);
+                var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
                 if (activeSemester != null)
                 {
                    
@@ -54,7 +54,7 @@ namespace StudentContributions.Areas.Admin.Controllers
                    
                     semester.IsActive = true;
                 }
-                var latestSemester = _unitOfWork.SemesterRepository.GetAll().OrderByDescending(s => s.EndDate).FirstOrDefault();
+                var latestSemester = _unitOfWork.SemesterRepository.GetAll().ToList().OrderByDescending(s => s.EndDate).FirstOrDefault();
                 if (latestSemester != null && semester.StartDate <= latestSemester.EndDate)
                 {
                     ModelState.AddModelError("StartDate", "StartDate phải sau ngày kết thúc của semester gần nhất.");
