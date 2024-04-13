@@ -44,9 +44,26 @@ namespace StudentContributions.Areas.Student.Controllers
 
         }
 
-        public IActionResult Create()
+        /*public IActionResult Create()
         {
             return View();
+        }*/
+        public IActionResult Create(int? magID)
+        {
+            if (magID == null || magID == 0)
+            {
+                return NotFound();
+            }
+            var mag = _unitOfWork.MagazineRepository.Get(m => m.ID == magID);
+            if (mag == null)
+            {
+                return NotFound();
+            }
+            Contribution con = new Contribution();
+            con.MagazineID = (int) magID;
+            con.SubmissionDate = DateTime.Now;
+            //con.Contribution_Status = "Pending";
+            return View(con);
         }
 
         [HttpPost]

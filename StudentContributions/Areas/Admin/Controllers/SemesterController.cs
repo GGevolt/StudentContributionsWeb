@@ -40,6 +40,7 @@ namespace StudentContributions.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Semester semester)
         {
+            ModelState.Remove("Magazines");
             if (ModelState.IsValid)
             {
                
