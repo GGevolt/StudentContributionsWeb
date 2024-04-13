@@ -1,0 +1,20 @@
+﻿@model List<Faculty>
+<table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
+    <thead class="table-active">
+        <tr>
+            <th>Faculty name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a asp-action="AcademicYear" asp-route-id="@item.ID" class="btn btn-primary">Academic Year of faculty</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

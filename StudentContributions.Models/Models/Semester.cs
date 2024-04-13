@@ -14,6 +14,6 @@ namespace StudentContributions.Models.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
-        public virtual ICollection<Magazine>? Magazines { get; set; }
+        public virtual ICollection<Magazine> Magazines { get; set; }
     }
 }

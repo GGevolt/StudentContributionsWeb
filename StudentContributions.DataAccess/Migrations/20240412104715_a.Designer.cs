@@ -12,15 +12,15 @@ using StudentContributions.DataAccess.Data;
 namespace StudentContributions.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240324094217_Test1")]
-    partial class Test1
+    [Migration("20240412104715_a")]
+    partial class a
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -236,6 +236,9 @@ namespace StudentContributions.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -254,7 +257,13 @@ namespace StudentContributions.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("MagazineID");
 
@@ -392,11 +401,17 @@ namespace StudentContributions.DataAccess.Migrations
 
             modelBuilder.Entity("StudentContributions.Models.Models.Contribution", b =>
                 {
+                    b.HasOne("StudentContributions.Models.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Contributions")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("StudentContributions.Models.Models.Magazine", "Magazine")
                         .WithMany("Contributions")
                         .HasForeignKey("MagazineID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Magazine");
                 });
@@ -418,6 +433,11 @@ namespace StudentContributions.DataAccess.Migrations
                     b.Navigation("Faculty");
 
                     b.Navigation("Semester");
+                });
+
+            modelBuilder.Entity("StudentContributions.Models.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Contributions");
                 });
 
             modelBuilder.Entity("StudentContributions.Models.Models.Faculty", b =>

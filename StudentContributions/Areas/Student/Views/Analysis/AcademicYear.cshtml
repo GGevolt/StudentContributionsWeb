@@ -1,0 +1,24 @@
+﻿@model IEnumerable<AcademicYearVM>
+<table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
+    <thead class="table-active">
+        <tr>
+            <th>Faculty ID</th>
+            <th>Semester</th>
+            <th>Number of contributor</th>
+            <th>Number of Contribution</th>
+            <th>Percentage of Contribution</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FacultyId</td>
+                <td>@item.semester.StartDate to @item.semester.EndDate</td>
+                <td>@item.ContributorNum</td> 
+                <td>@item.ContributionNum</td>
+                <td>@item.Percentage %</td>
+            </tr>
+        }
+    </tbody>
+</table>
