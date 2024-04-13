@@ -21,7 +21,7 @@
             @Model.Magazine.ClosureDate
         </dd>
     </dl>
-    <a class="text-dark btn btn-info" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
+    <a class="text-dark btn btn-info" asp-area="Student" asp-controller="Contribution" asp-action="Create" asp-route-magID="@Model.Magazine.ID">New Article</a>
     <a class="text-dark btn btn-info" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
 </div>
 
