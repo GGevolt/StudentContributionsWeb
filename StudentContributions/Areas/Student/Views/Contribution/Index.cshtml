@@ -32,75 +32,47 @@
                     <h2 class="heading-section">My Article</h2>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table align-middle">
-                            <tr>
-                                <th scope="col">
-                                    @Html.DisplayNameFor(model => model.Title)
-                                </th>
-                                <th scope="col">
-                                    @Html.DisplayNameFor(model => model.Contribution_Status)
-                                </th>
-                                <th scope="col">
-                                    @Html.DisplayNameFor(model => model.Comment)
-                                </th>
-                                <th scope="col">Magazine_ID</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
+        <div class="container">
+            <h2>Responsive Tables Using LI <small>Triggers on 767px</small></h2>
+            <ul class="responsive-table">
+                <li class="table-header">
+                    <div class="col col-1">Tittle</div>
+                    <div class="col col-1">Status</div>
+                    <div class="col col-4">Comment</div>
+                    <div class="col col-3">Magazine_ID</div>
+                        <div class="col col-1"></div>
+                        <div class="col col-1"></div>
+                        <div class="col col-1"></div>
+                </li>
+                @foreach (var item in Model)
+                {
+                    <li class="table-row">
+                        <div class="col col-1">@Html.DisplayFor(modelItem => item.Title)</div>
+                        <div class="col col-1">@Html.DisplayFor(modelItem => item.Contribution_Status)</div>
+                        <div class="col col-4" id="myText">
+                            @if (item.Comment != null && item.Comment.Any())
+                            {
+                                    @item.Comment;
+                             }
+                                else
                                 {
-                                    <tr>
-                                        <td scope="col">
-                                            @Html.DisplayFor(modelItem => item.Title)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Contribution_Status)
-                                        </td>
-                                        <td>
-                                            @if (item.Comment != null && item.Comment.Any())
-                                            {
-                                                <p id="myText">@item.Comment</p>
-                                            }
-                                            else
-                                            {
-                                                <p>No comments</p>
-                                            }
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.MagazineID)
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a>
-                                        </td>
-                                        @if (this.User.IsInRole("Student") || this.User.IsInRole("Coordinator"))
-                                        {
-                                            <td>
-                                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                                            </td>
-                                            <td>
-                                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
-                                            </td>
-                                        }
-                                    </tr>
+                                    <p>No comment</p>
                                 }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                        </div>
+                        <div class="col col-3">@Html.DisplayFor(modelItem => item.MagazineID)</div>
+                         <div class="col col-1"><a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a></div>
+                            <div class="col col-1"><a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a></div>
+                            <div class="col col-1"><a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ID">Edit</a></div>
+                    </li>
+                }
+            </ul>
         </div>
     </section>
     <script>
         window.onload = function () {
             var p = document.getElementById('myText');
             var text = p.innerText;
-            var maxLength = 80; // Đặt giới hạn kí tự tại đây
+            var maxLength = 30; // Đặt giới hạn kí tự tại đây
             var newText = '';
             var lines = text.split('\n');
             for (var i = 0; i < lines.length; i++) {

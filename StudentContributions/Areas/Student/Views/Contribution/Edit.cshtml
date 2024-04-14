@@ -50,7 +50,7 @@
 
     <div class="form-group action-buttons">
 
-        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-primary" asp-action="Details" asp-route-id="@Model.ID"  type="submit">Save</button>
         <a asp-controller="Contribution" asp-action="Details" asp-route-id="@Model.ID" class="btn btn-secondary">Cancel</a>
     </div>
 </form>

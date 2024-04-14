@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.ViewModels;
 
-namespace StudentContributions.Areas.Student.Controllers
+namespace StudentContributions.Areas.Manager.Controllers
 {
-    [Area("Student")]
+    [Area("Manager")]
     public class AnalysisController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
