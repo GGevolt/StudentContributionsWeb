@@ -8,54 +8,52 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StudentContributions.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body style="background-color:ghostwhite">
     <header>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
             <div class="container-fluid">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                            <i class="fa fa-home w3-margin-right">Home</i>
-                        </a>
-                    </li>
-                    @if (User.IsInRole("Student"))
-                    {
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="Student" asp-controller="Contribution" asp-action="Index">My Articles</a>
-                        </li>
-                    }
-                    @if (User.IsInRole("Coordinator"))
-                    {
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="Student" asp-controller="Contribution" asp-action="Index">The Article</a>
-                        </li>
-                    }
-                    @if (User.IsInRole("Manager"))
-                    {
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Statistic</a>
-                        </li>
-                    }
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="Admin" asp-controller="Account" asp-action="Index">Account Management</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="Admin" asp-controller="Semester" asp-action="Index">Semester Management</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="Admin" asp-controller="Faculty" asp-action="Index">Faculty Management</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="navbar-brand" asp-area="Admin" asp-controller="Magazine" asp-action="Index"> Magazine Management</a>
-                        </li>
-                    }
-                    <li class="nav-item">
-                        <a class="navbar-brand" asp-area="Student" asp-controller="Analysis" asp-action="Index">Analysis</a>
-                    </li>
-            </div>
-            <partial name="_LoginPartial" />
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggler">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        @if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="Student" asp-controller="Contribution" asp-action="Index">My Articles</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Coordinator"))
+                        {
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="Student" asp-controller="Contribution" asp-action="Index">The Article</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Statistic</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="Admin" asp-controller="Account" asp-action="Index">Account Management</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="Admin" asp-controller="Semester" asp-action="Index">Semester Management</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="Admin" asp-controller="Faculty" asp-action="Index">Faculty Management</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="Admin" asp-controller="Magazine" asp-action="Index"> Magazine Management</a>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
             </div>
         </nav>
     </header>
