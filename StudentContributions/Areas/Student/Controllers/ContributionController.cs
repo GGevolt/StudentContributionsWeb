@@ -62,7 +62,7 @@ namespace StudentContributions.Areas.Student.Controllers
             Contribution con = new Contribution();
             con.MagazineID = (int) magID;
             con.SubmissionDate = DateTime.Now;
-            //con.Contribution_Status = "Pending";
+           
             return View(con);
         }
 
@@ -250,13 +250,9 @@ namespace StudentContributions.Areas.Student.Controllers
         public IActionResult Edit(Contribution contribution)
         {
             var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
-
-
             contribution.UserID = user.Id;
-
             _unitOfWork.ContributionRepository.Update(contribution);
-                _unitOfWork.Save();
-            
+            _unitOfWork.Save();
             return View(contribution);
         }
         [Authorize(Roles = "Student")]
