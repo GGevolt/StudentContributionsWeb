@@ -60,7 +60,7 @@ namespace StudentContributions.Areas.Manager.Controllers
 			ExceptionReportVM ERvm = new ExceptionReportVM
 			{
 				NullComment = contribution.Where(c => c.Comment == null),
-                NullCommentfor14day = contribution.Where(c => c.Comment == null && c.SubmissionDate >= c.SubmissionDate.AddDays(14))
+                NullCommentfor14day = contribution.Where(c => c.Comment == null && c.SubmissionDate >= c.SubmissionDate.AddDays(-14))
 			};
 			return View(ERvm);
         }
