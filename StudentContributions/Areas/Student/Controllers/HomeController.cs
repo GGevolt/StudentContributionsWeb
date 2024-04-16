@@ -26,7 +26,13 @@ namespace StudentContributions.Areas.Student.Controllers
 
         public IActionResult Index()
         {
-            return View(_unitOfWork.MagazineRepository.GetAll().ToList());
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user != null && _userManager.IsInRoleAsync(user, "Coordinator").GetAwaiter().GetResult()) {
+
+                return View(_unitOfWork.MagazineRepository.GetAll(m => m.FacultyID == user.FacultyID).ToList());
+            }
+
+                return View(_unitOfWork.MagazineRepository.GetAll().ToList());
         }
 
         public IActionResult Details(int id)
@@ -43,15 +49,15 @@ namespace StudentContributions.Areas.Student.Controllers
             ConOfMagVM conOfMagVM = new ConOfMagVM();
             conOfMagVM.Magazine = magazine;
             var contributions = _unitOfWork.ContributionRepository.GetAll().ToList().Where(c => c.MagazineID == id);
-            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
-            if (user == null)
-            {
+            //var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            //if (user == null)
+            //{
                 contributions = contributions.Where(c => c.Contribution_Status.Contains("Approved"));
-            }
-            else if (_userManager.IsInRoleAsync(user, "Student").GetAwaiter().GetResult())
-            {
-                contributions = contributions.Where(c => c.Contribution_Status.Contains("Approved") || c.UserID.Equals(user.Id));
-            }
+            //}
+            //else if (_userManager.IsInRoleAsync(user, "Student").GetAwaiter().GetResult())
+            //{
+            //    contributions = contributions.Where(c => c.Contribution_Status.Contains("Approved") && c.UserID.Equals(user.Id));
+            //}
             conOfMagVM.Contributions = contributions;
             return View(conOfMagVM);
         }
