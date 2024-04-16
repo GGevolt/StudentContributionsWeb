@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentContributions.DataAccess.Repository.IRepository;
+using StudentContributions.Models.Models;
 using StudentContributions.Models.ViewModels;
 
 namespace StudentContributions.Areas.Manager.Controllers
@@ -52,6 +53,17 @@ namespace StudentContributions.Areas.Manager.Controllers
             }
             return View(academics);
         }
-    }
+		public IActionResult ExceptionReport(int id)
+        {
+			var magazinesInF = _unitOfWork.MagazineRepository.GetAllWithContributions(id);
+            var contribution = magazinesInF.Where(m=>m.Contributions !=null).SelectMany(m=>m.Contributions).ToList();
+			ExceptionReportVM ERvm = new ExceptionReportVM
+			{
+				NullComment = contribution.Where(c => c.Comment == null),
+                NullCommentfor14day = contribution.Where(c => c.Comment == null && c.SubmissionDate >= c.SubmissionDate.AddDays(14))
+			};
+			return View(ERvm);
+        }
+	}
 }
 

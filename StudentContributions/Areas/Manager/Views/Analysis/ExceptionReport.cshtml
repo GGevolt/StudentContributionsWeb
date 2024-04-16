@@ -1,0 +1,41 @@
+﻿@model ExceptionReportVM
+<h2>Null comment</h2>
+<table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
+    <thead class="table-active">
+        <tr>
+            <th>Contribution ID</th>
+            <th>Titlte</th>
+            <th>Made By</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contri in Model.NullComment)
+        {
+            <tr>
+                <td>@contri.ID</td>
+                <td>@contri.Title</td>
+                <td>@contri.UserID</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h2>Null comment after 14 days</h2>
+<table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
+    <thead class="table-active">
+        <tr>
+            <th>Contribution ID</th>
+            <th>Titlte</th>
+            <th>Made By</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contri in Model.NullCommentfor14day)
+        {
+            <tr>
+                <td>@contri.ID</td>
+                <td>@contri.Title</td>
+                <td>@contri.UserID</td>
+            </tr>
+        }
+    </tbody>
+</table>
