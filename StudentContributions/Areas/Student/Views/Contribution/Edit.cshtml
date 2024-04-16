@@ -5,7 +5,23 @@
 }
 
 <h2 class="page-title">@ViewData["Title"]</h2>
-
+<head>
+    <style>
+        /* Style for notification */
+        .notification {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+    </style>
+</head>
 <form asp-action="Edit" asp-area="Student" asp-controller="Contribution" method="post" class="edit-form">
     <input type="hidden" asp-for="ID" />
     <div class="form-group">
@@ -50,7 +66,23 @@
 
     <div class="form-group action-buttons">
 
-        <button class="btn btn-primary" asp-action="Details" asp-route-id="@Model.ID"  type="submit">Save</button>
+        <button class="btn btn-primary" id="saveBtn" type="submit">Save</button>
         <a asp-controller="Contribution" asp-action="Details" asp-route-id="@Model.ID" class="btn btn-secondary">Cancel</a>
+        <a asp-controller="Contribution" asp-action="Details" asp-route-id="@Model.ID" class="btn btn-secondary">Back to List</a>
     </div>
+    <div id="notification" class="notification"></div>
+
+    <script>
+        document.getElementById("saveBtn").addEventListener("click", function () {
+            // Show notification
+            var notification = document.getElementById("notification");
+            notification.style.display = "block";
+            notification.innerHTML = "Save successful";
+
+            // Hide notification after 2 seconds
+            setTimeout(function () {
+                notification.style.display = "none";
+            }, 30000);
+        });
+    </script>
 </form>

@@ -1,62 +1,88 @@
-﻿@model StudentContributions.Models.ViewModels.ConOfMagVM;
-
-@{
-    ViewData["Title"] = "Details";
-}
-
-<h1>Magazine Details</h1>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Magazine name
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Magazine.MagazineName
-        </dd>
-        <dt class="col-sm-2">
-            New contribution deadline
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Magazine.ClosureDate
-        </dd>
-    </dl>
-    <a class="text-dark btn btn-info" asp-area="Student" asp-controller="Contribution" asp-action="Create" asp-route-magID="@Model.Magazine.ID">New Article</a>
-    <a class="text-dark btn btn-info" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
-</div>
-
-<div class="row pt-4 pb-4">
-    <div class="col-6">
-        <h3>Contributions of Magazine</h3>
-    </div>
-</div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Article name</th>
-            @if (User.IsInRole("Coordinator"))
-                {
-                    <th>Comment</th>
-                    <th>Status</th>
-                }
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Contributions)
-        {
-            <tr>
-                <td>@item.Title</td>
-                @if (User.IsInRole("Coordinator"))
-                {
-                    <td>@item.Comment</td>
-                    <th>@item.Contribution_Status</th>
-                }
-                <td><a asp-controller="Contribution" asp-action="Details" asp-area="Student" asp-route-id="@item.ID" class="btn btn-info">Details</a></td>
-            </tr>
+﻿<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/css/site.css" rel="stylesheet" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Css for page details */
+        .magazine-details-container {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; 
         }
-    </tbody>
-</table>
-<div class="text-right mt-4">
-    <a asp-controller="Home" asp-action="Index" asp-area="Student" class="btn btn-secondary">Back to List</a>
-</div>
+
+        .magazine-details-title {
+            color: #343a40;
+            font-weight: bold;
+        }
+
+        .magazine-details-button {
+            background-color: #007bff; 
+            color: #fff; 
+            border: none;
+        }
+
+            .magazine-details-button:hover {
+                background-color: #0056b3; 
+            }
+
+        .magazine-details-table {
+            background-color: #fff;
+            border-radius: 10px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container magazine-details-container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1 class="mt-4 magazine-details-title">Magazine Details</h1>
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-4">Magazine name</dt>
+                    <dd class="col-sm-8">@Model.Magazine.MagazineName</dd>
+                    <dt class="col-sm-4">New contribution deadline</dt>
+                    <dd class="col-sm-8">@Model.Magazine.ClosureDate</dd>
+                </dl>
+                <a class="btn btn-info magazine-details-button" asp-area="Student" asp-controller="Contribution" asp-action="Create" asp-route-magID="@Model.Magazine.ID">New Article</a>
+                <a class="btn btn-info magazine-details-button" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
+            </div>
+            <div class="col-md-6">
+                <h1 class="mt-4 magazine-details-title">Contributions of Magazine</h1>
+                <hr />
+                <table class="table magazine-details-table">
+                    <thead>
+                        <tr>
+                            <th>Article name</th>
+                            @if (User.IsInRole("Coordinator"))
+                            {
+                                <th>Comment</th>
+                                <th>Status</th>
+                            }
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Contributions)
+                        {
+                            <tr>
+                                <td>@item.Title</td>
+                                @if (User.IsInRole("Coordinator"))
+                                {
+                                    <td>@item.Comment</td>
+                                    <td>@item.Contribution_Status</td>
+                                }
+                                <td><a class="btn btn-info" asp-controller="Contribution" asp-action="Details" asp-area="Student" asp-route-id="@item.ID">Details</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-right mt-4">
+            <a class="btn btn-secondary" asp-controller="Home" asp-action="Index" asp-area="Student">Back to List</a>
+        </div>
+    </div>
+</body>

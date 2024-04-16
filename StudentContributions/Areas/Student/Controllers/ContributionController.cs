@@ -250,11 +250,11 @@ namespace StudentContributions.Areas.Student.Controllers
         public IActionResult Edit(Contribution contribution)
         {
             var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
-            
-            
-            
-                
-                _unitOfWork.ContributionRepository.Update(contribution);
+
+
+            contribution.UserID = user.Id;
+
+            _unitOfWork.ContributionRepository.Update(contribution);
                 _unitOfWork.Save();
             
             return View(contribution);
