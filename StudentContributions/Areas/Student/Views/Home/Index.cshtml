@@ -6,32 +6,30 @@
     <title>Student Contributions</title>
     <!-- Add Bootstrap 5 CSS -->
     <meta charset="UTF-8">
-    <meta name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="~/css/site.css" rel="stylesheet" />
 </head>
-<body id="myPage">
-    <div class="w3-display-container w3-animate-opacity">
-        <img src="~/img/412312413_353803377352101_3573509045879812506_n.jpg" alt="boat" style="width:100%;min-height:350px;max-height:600px;">
-        <div class="w3-container w3-display-bottomleft w3-margin-bottom">
-            <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-xlarge w3-theme w3-hover-teal" title="Contact Us">Contact Us</button>
+<body>
+    <div class="container-fluid">
+        <div class="position-relative">
+            <img src="~/img/412312413_353803377352101_3573509045879812506_n.jpg" alt="boat" style="width:100%; height:auto; max-width:100%; max-height:600px; min-width:200px; min-height:200px;">
+            <button class="btn btn-success button position-absolute bottom-0 start-0" style="margin-bottom: 20px; margin-left:20px" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us</button>
         </div>
-        <div id="id01" class="w3-modal">
-            <div class="w3-modal-content w3-card-4 w3-animate-top">
-                <header class="w3-container w3-teal w3-display-container">
-                    <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-teal w3-display-topright"><i class="fa fa-remove"></i></span>
-                    <h4>Here is our information</h4>
-                    <h5>We are BuKhuHoi<i class="fa fa-smile-o"></i></h5>
-                </header>
-                <div class="w3-container">
-                    <p>ABC</p>
-                    <p>ABC</p>
+    </div>
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">Contacts:</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <footer class="w3-container w3-teal">
-                    <p>Everything for education<i class="fa fa-smile-o"></i></p>
-                </footer>
+                <div class="modal-body">
+                    <p>Phone: 123456789</p>
+                    <p>Email: Buku@gmail.com</p>
+                </div>
             </div>
         </div>
     </div>
@@ -52,52 +50,6 @@
             }
         </div>
     </div>
-    <button onclick="topFunction()" id="myBtn" title="Go to top">
-        <i class="fa fa-arrow-up"></i>
-    </button>
 </body>
-<style>
-    #myBtn {
-        display: none; /* Hidden by default */
-        position: fixed; /* Fixed/sticky position */
-        bottom: 20px; /* Place the button at the bottom of the page */
-        right: 30px; /* Place the button 30px from the right */
-        z-index: 99; /* Make sure it does not overlap */
-        border: none; /* Remove borders */
-        outline: none; /* Remove outline */
-        background-color: brown; /* Set a background color */
-        color: white; /* Text color */
-        cursor: pointer; /* Add a mouse pointer on hover */
-        padding: 15px; /* Some padding */
-        border-radius: 50%; /* Rounded corners */
-        font-size: 18px; /* Increase font size */
-    }
-
-        #myBtn:hover {
-            background-color: #555; /* Add a dark-grey background on hover */
-        }
-</style>
-
-<script>
-    //Get the button
-    var mybutton = document.getElementById("myBtn");
-
-    // When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function () { scrollFunction() };
-
-    function scrollFunction() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            mybutton.style.display = "block";
-        } else {
-            mybutton.style.display = "none";
-        }
-    }
-
-    // When the user clicks on the button, scroll to the top of the document
-    function topFunction() {
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    }
-</script>
 </html>
 
