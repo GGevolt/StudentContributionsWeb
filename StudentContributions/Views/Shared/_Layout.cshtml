@@ -33,7 +33,7 @@
                         @if (User.IsInRole("Manager"))
                         {
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Statistic</a>
+                                <a class="navbar-brand" asp-area="Manager" asp-controller="Analysis" asp-action="Index">Statistic</a>
                             </li>
                         }
                         @if (User.IsInRole("Admin"))
