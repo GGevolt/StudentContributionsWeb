@@ -1,5 +1,42 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<StudentContributions.Models.Models.Contribution>
+
 @{
+    ViewData["Title"] = "Contributions";
 }
+
+<h2 class="page-title">@ViewData["Title"]</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Submission Date</th>
+                <th>Comments</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contribution in Model)
+            {
+                <tr>
+                    <td>@contribution.Title</td>
+                    <td>@contribution.SubmissionDate.ToShortDateString()</td>
+                    <td>@contribution.Comment</td>
+                    <td>@contribution.Contribution_Status</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Contribution Actions">
+                            <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@contribution.ID" class="btn btn-primary">Edit</a>
+                            <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
+                                <input type="hidden" name="id" value="@contribution.ID" />
+                                <button type="submit" name="newStatus" value="Approve" class="btn btn-success">Approve</button>
+                                <button type="submit" name="newStatus" value="Deny" class="btn btn-danger">Deny</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
