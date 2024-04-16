@@ -62,7 +62,7 @@ namespace StudentContributions.Areas.Student.Controllers
             Contribution con = new Contribution();
             con.MagazineID = (int) magID;
             con.SubmissionDate = DateTime.Now;
-            //con.Contribution_Status = "Pending";
+           
             return View(con);
         }
 

@@ -27,7 +27,7 @@
                         @if (User.IsInRole("Coordinator"))
                         {
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Student" asp-controller="Contribution" asp-action="Index">The Article</a>
+                                <a class="navbar-brand" asp-area="Coordinator" asp-controller="Contribution" asp-action="Index">The Article</a>
                             </li>
                         }
                         @if (User.IsInRole("Manager"))

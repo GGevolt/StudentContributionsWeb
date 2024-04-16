@@ -16,16 +16,7 @@
         </div>
 
         <!-- Whoever do submission approval please remember to remove status select in article creation -->
-        <div class="mb-3">
-            <label asp-for="Contribution_Status" class="form-label"><b>Contribution Status</b></label>
-            <select asp-for="Contribution_Status" class="form-select">
-                <option value="">-- Select Status --</option>
-                <option value="Submitted">Wait for Approval</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-            </select>
-            <span asp-validation-for="Contribution_Status" class="text-danger"></span>
-        </div>
+       
         <!-- ------------------------------------------------------------------------------------------ -->
             <input asp-for="MagazineID" class="form-control" hidden/>
             <span asp-validation-for="MagazineID" class="text-danger"></span>
