@@ -61,7 +61,7 @@ namespace StudentContributions.Areas.Coordinator.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangeStatus(int id, string newStatus)
         {
-            if (newStatus != "Approve" && newStatus != "Deny")
+            if (newStatus != "Approved" && newStatus != "Deny")
             {
                 TempData["error"] = "Invalid status.";
                 return RedirectToAction("Index");

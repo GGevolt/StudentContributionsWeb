@@ -30,7 +30,7 @@
                             <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@contribution.ID" class="btn btn-primary">Edit</a>
                             <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
                                 <input type="hidden" name="id" value="@contribution.ID" />
-                                <button type="submit" name="newStatus" value="Approve" class="btn btn-success">Approve</button>
+                                <button type="submit" name="newStatus" value="Approved" class="btn btn-success">Approved</button>
                                 <button type="submit" name="newStatus" value="Deny" class="btn btn-danger">Deny</button>
                             </form>
                         </div>
