@@ -73,7 +73,7 @@
     </form> *@
 
     <div class="mt-3">
-        <a asp-controller="Contribution" asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.Contribution.MagazineID" class="btn btn-secondary">Back to List</a>
         <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@Model.Contribution.ID" class="btn btn-warning">Edit Info</a>
     </div>
 </div>
