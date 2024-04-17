@@ -105,7 +105,7 @@ namespace StudentContributions.Areas.Student.Controllers
                         ModelState.AddModelError("Error: ", "The contribution period for the selected magazine has ended.");
                         return View(contribution);
                     }
-
+                    contribution.Contribution_Status = "Pending";
                     _unitOfWork.ContributionRepository.Add(contribution);
                     _unitOfWork.Save();
 

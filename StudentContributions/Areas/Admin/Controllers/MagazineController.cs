@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Protocol.Plugins;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
+using StudentContributions.Models.ViewModels;
 
 namespace StudentContributions.Areas.Admin.Controllers
 {
@@ -20,7 +21,7 @@ namespace StudentContributions.Areas.Admin.Controllers
 
 		public IActionResult Index()
 		{
-			var magazines = _unitOfWork.MagazineRepository.GetAll().ToList();
+			var magazines = _unitOfWork.MagazineRepository.MagazinesIncludeFacultySemester().ToList();
 			return View(magazines);
 		}
 
