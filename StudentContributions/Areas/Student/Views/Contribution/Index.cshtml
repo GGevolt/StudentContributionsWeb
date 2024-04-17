@@ -8,13 +8,12 @@
 }
 
 <head>
-    <title>Table 09</title>
+    <title>My Article</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="~css/style.css">
 
@@ -25,49 +24,60 @@
 }
 
 <body>
-    <section class="ftco-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center mb-5">
-                    <h2 class="heading-section">My Article</h2>
+    <section class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 text-center mb-4">
+                <h2 class="fw-bold">My Articles</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-header">
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Comment</th>
+                                <th scope="col">Magazine ID</th>
+                                <th scope="col">Submission Date</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Contribution_Status)</td>
+                                    <td>
+                                        @if (item.Comment != null && item.Comment.Any())
+                                        {
+                                            @item.Comment
+                                            ;
+                                        }
+                                        else
+                                        {
+                                            <p>No comment</p>
+                                        }
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.MagazineID)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SubmissionDate)</td>
+                                    <td>
+                                        <a class="btn btn-primary" href="~/Student/Contribution/Details/@item.ID">Details</a>
+                                        @if (canEdit)
+                                        {
+                                            <a class="btn btn-warning" href="~/Student/Contribution/Edit/@item.ID">Edit</a>
+                                            <a class="btn btn-danger" href="~/Student/Contribution/Delete/@item.ID">Delete</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        <div class="container">
-            <h2>Responsive Tables Using LI <small>Triggers on 767px</small></h2>
-            <ul class="responsive-table">
-                <li class="table-header">
-                    <div class="col col-1">Tittle</div>
-                    <div class="col col-1">Status</div>
-                    <div class="col col-4">Comment</div>
-                    <div class="col col-3">Magazine_ID</div>
-                        <div class="col col-3">SubmissionDate</div>
-                        <div class="col col-1"></div>
-                        <div class="col col-1"></div>
-                        <div class="col col-1"></div>
-                </li>
-                @foreach (var item in Model)
-                {
-                    <li class="table-row">
-                        <div class="col col-1">@Html.DisplayFor(modelItem => item.Title)</div>
-                        <div class="col col-1">@Html.DisplayFor(modelItem => item.Contribution_Status)</div>
-                        <div class="col col-4" id="myText">
-                            @if (item.Comment != null && item.Comment.Any())
-                            {
-                                    @item.Comment;
-                             }
-                                else
-                                {
-                                    <p>No comment</p>
-                                }
-                        </div>
-                        <div class="col col-3">@Html.DisplayFor(modelItem => item.MagazineID)</div>
-                            <div class="col col-3">@Html.DisplayFor(modelItem => item.SubmissionDate)</div>
-                         <div class="col col-1"><a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a></div>
-                            <div class="col col-1"><a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a></div>
-                            <div class="col col-1"><a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ID">Edit</a></div>
-                    </li>
-                }
-            </ul>
         </div>
     </section>
     <script>
