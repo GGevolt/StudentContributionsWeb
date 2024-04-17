@@ -11,6 +11,7 @@ namespace StudentContributions.DataAccess.Repository.IRepository
     public interface IContributionRepository : IRepository<Contribution>
     {
         void Update(Contribution contribution);
-        
+        IEnumerable<Contribution> IncludeUserToCon(IEnumerable<Contribution> contributions);
+
     }
 }

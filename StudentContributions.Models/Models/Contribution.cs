@@ -22,6 +22,8 @@ namespace StudentContributions.Models.Models
         public Magazine Magazine { get; set; }
         
         public int MagazineID { get; set; }
+        [ForeignKey("UserID")]
+        [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
         public string UserID { get; set; }
 
