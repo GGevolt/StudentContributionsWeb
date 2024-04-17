@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StudentContributions.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Renew_database : Migration
+    public partial class sead : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

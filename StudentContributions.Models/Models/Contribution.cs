@@ -16,7 +16,7 @@ namespace StudentContributions.Models.Models
         public DateTime SubmissionDate { get; set; } = DateTime.Now;
         public string Title { get; set; }
         public string? Comment { get; set; }
-        public string Contribution_Status { get; set; } = "Pending";
+        public string Contribution_Status { get; set; }
         [ForeignKey("MagazineID")]
         [ValidateNever]
         public Magazine Magazine { get; set; }

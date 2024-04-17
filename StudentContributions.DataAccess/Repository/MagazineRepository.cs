@@ -45,5 +45,9 @@ namespace StudentContributions.DataAccess.Repository
                    Contributions = m.Contributions.ToList()
                }).ToList();
         }
+        public IEnumerable<Magazine> MagazinesIncludeFacultySemester()
+        {
+            return _dbContext.Magazines.Include(m => m.Faculty).Include(m => m.Semester).ToList();
+        }
     }
 }

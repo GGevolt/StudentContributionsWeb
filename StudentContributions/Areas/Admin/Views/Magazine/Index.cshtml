@@ -36,10 +36,10 @@
                         @Html.DisplayFor(modelItem => item.ClosureDate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.FacultyID)
+                        @item.Faculty.Name
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SemesterID)
+                        @item.Semester.EndDate
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary">Edit</a>

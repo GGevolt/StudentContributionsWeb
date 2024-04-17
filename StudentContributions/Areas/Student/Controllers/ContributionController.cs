@@ -105,7 +105,7 @@ namespace StudentContributions.Areas.Student.Controllers
                         ModelState.AddModelError("Error: ", "The contribution period for the selected magazine has ended.");
                         return View(contribution);
                     }
-
+                    contribution.Contribution_Status = "Pending";
                     _unitOfWork.ContributionRepository.Add(contribution);
                     _unitOfWork.Save();
 
@@ -230,11 +230,17 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 return NotFound();
             }
-
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
+            var contri = _unitOfWork.ContributionRepository.Get(c=>c.ID == id);
+            var SemesID = _unitOfWork.MagazineRepository.Get(m=>m.ID== contri.MagazineID).SemesterID;
+            var Semes = _unitOfWork.SemesterRepository.Get(s=>s.ID==SemesID);
+            if (Semes.IsActive== false || Semes == null)
+            {
+                TempData["error"] = "The semester is not active or don't exist.";
+                return RedirectToAction(nameof(Index));
+            }
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
 
-            if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            if (contribution == null || DateTime.Now > Semes.EndDate)
             {
                 TempData["error"] = "The editing period has ended or the contribution does not exist.";
                 return RedirectToAction(nameof(Index));
