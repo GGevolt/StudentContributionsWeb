@@ -59,8 +59,8 @@ namespace StudentContributions.Areas.Manager.Controllers
             var contribution = magazinesInF.Where(m=>m.Contributions !=null).SelectMany(m=>m.Contributions).ToList();
 			ExceptionReportVM ERvm = new ExceptionReportVM
 			{
-				NullComment = contribution.Where(c => c.Comment == null),
-                NullCommentfor14day = contribution.Where(c => c.Comment == null && DateTime.Now > c.SubmissionDate.AddDays(14))
+				NullComment = _unitOfWork.ContributionRepository.IncludeUserToCon(contribution.Where(c => c.Comment == null)),
+                NullCommentfor14day = _unitOfWork.ContributionRepository.IncludeUserToCon(contribution.Where(c => c.Comment == null && DateTime.Now > c.SubmissionDate.AddDays(14)))
 			};
 			return View(ERvm);
         }

@@ -57,33 +57,33 @@ app.MapControllerRoute(
 name: "default",
     pattern: "{area=Student}/{controller=Home}/{action=Index}/{id?}");
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var roles = new[] { "Admin", "Student", "Coordinator", "Manager" };
-    foreach (var role in roles)
-    {
-        if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
-        {
-           roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
-        }
-   }
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//    var roles = new[] { "Admin", "Student", "Coordinator", "Manager" };
+//    foreach (var role in roles)
+//    {
+//        if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
+//        {
+//           roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+//        }
+//   }
+//}
 
-using (var scope = app.Services.CreateScope())
-{
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    string AD_email = "admin@email.com";
-    string AD_pass = "!Admin123";
-    if (userManager.FindByEmailAsync(AD_email).GetAwaiter().GetResult() == null)
-    {
-        var user = new ApplicationUser();
-        user.Email = AD_email;
-        user.EmailConfirmed = true;
-        user.UserName = AD_email;
-        userManager.CreateAsync(user, AD_pass).GetAwaiter().GetResult();
-        userManager.AddToRoleAsync(user, "Admin").GetAwaiter().GetResult();
-    }
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+//    string AD_email = "admin@email.com";
+//    string AD_pass = "!Admin123";
+//    if (userManager.FindByEmailAsync(AD_email).GetAwaiter().GetResult() == null)
+//    {
+//        var user = new ApplicationUser();
+//        user.Email = AD_email;
+//        user.EmailConfirmed = true;
+//        user.UserName = AD_email;
+//        userManager.CreateAsync(user, AD_pass).GetAwaiter().GetResult();
+//        userManager.AddToRoleAsync(user, "Admin").GetAwaiter().GetResult();
+//    }
+//}
 
 app.Run();
