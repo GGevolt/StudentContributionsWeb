@@ -44,10 +44,6 @@ namespace StudentContributions.Areas.Student.Controllers
 
         }
 
-        /*public IActionResult Create()
-        {
-            return View();
-        }*/
         public IActionResult Create(int? magID)
         {
             if (magID == null || magID == 0)
@@ -154,6 +150,8 @@ namespace StudentContributions.Areas.Student.Controllers
             ConDetails details = new ConDetails();
             details.Filenames = new List<string>();
             details.Contribution = contribution;
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            details.IsSubmitPerson = user != null && user.Id == contribution.UserID;
             string path = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
             if (Directory.Exists(path))
             {
