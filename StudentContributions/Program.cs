@@ -75,10 +75,6 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     string AD_email = "admin@email.com";
     string AD_pass = "!Admin123";
-    string user1_email = "student1@email.com";
-    string user1_pass = "!Student123";
-    string user2_email = "student2@email.com";
-    string user2_pass = "!Student123";
     if (userManager.FindByEmailAsync(AD_email).GetAwaiter().GetResult() == null)
     {
         var user = new ApplicationUser();
@@ -87,24 +83,6 @@ using (var scope = app.Services.CreateScope())
         user.UserName = AD_email;
         userManager.CreateAsync(user, AD_pass).GetAwaiter().GetResult();
         userManager.AddToRoleAsync(user, "Admin").GetAwaiter().GetResult();
-    }
-    if (userManager.FindByEmailAsync(user1_email).GetAwaiter().GetResult() == null)
-    {
-        var user = new ApplicationUser();
-        user.Email = user1_email;
-        user.EmailConfirmed = true;
-        user.UserName = user1_email;
-        userManager.CreateAsync(user, user1_pass).GetAwaiter().GetResult();
-        userManager.AddToRoleAsync(user, "Student").GetAwaiter().GetResult();
-    }
-    if (userManager.FindByEmailAsync(user2_email).GetAwaiter().GetResult() == null)
-    {
-        var user = new ApplicationUser();
-        user.Email = user2_email;
-        user.EmailConfirmed = true;
-        user.UserName = user2_email;
-        userManager.CreateAsync(user, user2_pass).GetAwaiter().GetResult();
-        userManager.AddToRoleAsync(user, "Student").GetAwaiter().GetResult();
     }
 }
 
