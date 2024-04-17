@@ -39,7 +39,7 @@ namespace StudentContributions.Areas.Student.Controllers
             ViewBag.Timestamp2 = semesterClosureDate;
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var contributions = _unitOfWork.ContributionRepository.GetAll().Where(c => c.UserID.Equals(userId)).ToList();
+            var contributions = _unitOfWork.ContributionRepository.IncludeMaga().Where(c => c.UserID.Equals(userId)).ToList();
             return View(contributions);
 
         }
