@@ -12,5 +12,6 @@ namespace StudentContributions.Models.ViewModels
     {
         public Contribution Contribution { get; set; }
         public List<string> Filenames { get; set; }
+        public bool IsSubmitPerson { get; set; }
     }
 }
