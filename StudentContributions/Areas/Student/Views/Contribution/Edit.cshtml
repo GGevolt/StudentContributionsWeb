@@ -53,11 +53,7 @@
     <input type="hidden" asp-for="UserID" />
     <input type="hidden" asp-for="Contribution_Status" />
     }
-    <div class="form-group">
-        <label asp-for="MagazineID" class="control-label">Magazine ID</label>
-        <input asp-for="MagazineID" class="form-control" />
-        <span asp-validation-for="MagazineID" class="text-danger"></span>
-    </div>
+        <input asp-for="MagazineID" class="form-control" hidden/>
 
     <div class="form-group action-buttons">
 
