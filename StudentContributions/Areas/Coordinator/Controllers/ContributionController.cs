@@ -53,7 +53,7 @@ namespace StudentContributions.Areas.Coordinator.Controllers
             {
                 return NotFound();
             }
-            contribution.Contribution_Status = "Pending";
+
             _unitOfWork.ContributionRepository.Update(contribution);
             _unitOfWork.Save();
             TempData["success"] = "Contribution updated successfully.";
