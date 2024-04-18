@@ -3,67 +3,66 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Magazine Details</h1>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Magazine name
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Magazine.MagazineName
-        </dd>
-        <dt class="col-sm-2">
-            New contribution deadline
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Magazine.ClosureDate
-        </dd>
-    </dl>
-    @if (User.IsInRole("Student"))
-    {
-        <a class="text-dark btn btn-info mb-2" asp-area="Student" asp-controller="Contribution" asp-action="Create" asp-route-magID="@Model.Magazine.ID">New Article</a>
-    }
-    <a class="text-dark btn btn-info mb-2" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
-</div>
-
-<div class="row pt-4 pb-4">
+<div class="row" style="margin-inline:10%;">
     <div class="col-md-6">
-        <h3>Contributions of Magazine</h3>
+        <h1>Magazine Details</h1>
+        <hr class="border-dark" style="margin:5px"/>
+        <dl class="row">
+            <dt class="col-sm-4">
+                Magazine name
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Magazine.MagazineName
+            </dd>
+            <dt class="col-sm-4">
+                New contribution deadline
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Magazine.ClosureDate
+            </dd>
+        </dl>
+        @if (User.IsInRole("Student"))
+        {
+            <a class="text-dark btn btn-info mb-2" asp-area="Student" asp-controller="Contribution" asp-action="Create" asp-route-magID="@Model.Magazine.ID">New Article</a>
+        }
+        <a class="text-dark btn btn-info mb-2" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+                <h3>Contributions of Magazine</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Article name</th>
+                        @if (User.IsInRole("Coordinator"))
+                        {
+                            <th>Comment</th>
+                            <th>Status</th>
+                        }
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Contributions)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            @if (User.IsInRole("Coordinator"))
+                            {
+                                <td>@item.Comment</td>
+                                <th>@item.Contribution_Status</th>
+                            }
+                            <td><a asp-controller="Contribution" asp-action="Details" asp-area="Student" asp-route-id="@item.ID" class="btn btn-info">Details</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="text-md-end mt-4">
+            <a asp-controller="Home" asp-action="Index" asp-area="Student" class="btn btn-secondary">Back to List</a>
+        </div>
     </div>
 </div>
-<div class="table-responsive">
-    <!-- Ensures the table is responsive -->
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Article name</th>
-                @if (User.IsInRole("Coordinator"))
-                {
-                    <th>Comment</th>
-                    <th>Status</th>
-                }
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Contributions)
-            {
-                <tr>
-                    <td>@item.Title</td>
-                    @if (User.IsInRole("Coordinator"))
-                    {
-                        <td>@item.Comment</td>
-                        <th>@item.Contribution_Status</th>
-                    }
-                    <td><a asp-controller="Contribution" asp-action="Details" asp-area="Student" asp-route-id="@item.ID" class="btn btn-info">Details</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-<div class="text-md-end mt-4">
-    <!-- Right align the button on medium and larger screens -->
-    <a asp-controller="Home" asp-action="Index" asp-area="Student" class="btn btn-secondary">Back to List</a>
-</div>
+

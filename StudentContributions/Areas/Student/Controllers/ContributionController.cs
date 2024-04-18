@@ -108,6 +108,7 @@ namespace StudentContributions.Areas.Student.Controllers
                         return View(contribution);
                     }
                     contribution.Contribution_Status = "Pending";
+                    contribution.Comment = "None";
                     _unitOfWork.ContributionRepository.Add(contribution);
                     _unitOfWork.Save();
 
