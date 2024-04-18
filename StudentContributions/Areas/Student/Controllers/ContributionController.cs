@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using StudentContributions.Models.ViewModels;
 using StudentContributions.Utility.Interfaces;
 using System.IO.Compression;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
@@ -112,15 +114,29 @@ namespace StudentContributions.Areas.Student.Controllers
                     string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
                     if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
-                    foreach (var file in files)
+                    if (files != null)
                     {
-                        string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                        foreach (var filecheck in files)
                         {
-                            file.CopyTo(fileStream);
+                            var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                            var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
+
+                            if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                            {
+                                TempData["error"] = "You have chosen invalid file type, please choose again";
+                                return View(contribution);
+                            }
+                        }
+                        foreach (var file in files)
+                        {
+                          string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                          using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                          {
+                              file.CopyTo(fileStream);
+                          }
                         }
                     }
-
+                    
                     return RedirectToAction("Details", new {id = contribution.ID});
                 }
                 else
@@ -170,12 +186,26 @@ namespace StudentContributions.Areas.Student.Controllers
             string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString());
             if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
-            foreach (var file in files)
+            if (files != null)
             {
-                string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                foreach (var filecheck in files)
                 {
-                    file.CopyTo(fileStream);
+                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                    var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
+
+                    if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                    {
+                        TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
+                        return RedirectToAction("Details", new { id = id });
+                    }
+                }
+                foreach (var file in files)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
                 }
             }
             return RedirectToAction("Details", new { id = id });
@@ -306,6 +336,9 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 _unitOfWork.ContributionRepository.Remove(contribution);
                 _unitOfWork.Save();
+                string path = Path.Combine(this._webHost.WebRootPath, "Contributions", id.ToString());
+                var confolder = new DirectoryInfo(path);
+                confolder.Delete(true);
                 TempData["success"] = "Contribution deleted successfully.";
                 return RedirectToAction(nameof(Index));
             }
