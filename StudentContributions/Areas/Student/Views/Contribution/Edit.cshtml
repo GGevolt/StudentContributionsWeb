@@ -23,7 +23,9 @@
     </style>
 </head>
 <form asp-action="Edit" asp-area="Student" asp-controller="Contribution" method="post" class="edit-form">
-    <input type="hidden" asp-for="ID" />
+    <input asp-for="ID" hidden/>
+    <input asp-for="Contribution_Status" hidden/>
+    <input asp-for="MagazineID" class="form-control" hidden />
     <div class="form-group">
         <label asp-for="Title" class="control-label">Title</label>
         <input asp-for="Title" class="form-control" />
@@ -51,9 +53,7 @@
     }else{
     <input type="hidden" asp-for="Comment" />
     <input type="hidden" asp-for="UserID" />
-    <input type="hidden" asp-for="Contribution_Status" />
     }
-        <input asp-for="MagazineID" class="form-control" hidden/>
 
     <div class="form-group action-buttons">
 
