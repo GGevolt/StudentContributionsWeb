@@ -39,9 +39,8 @@
                         @if (User.IsInRole("Coordinator"))
                         {
                             <th>Comment</th>
-                            <th>Status</th>
                         }
-                        <th>Action</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,7 +51,6 @@
                             @if (User.IsInRole("Coordinator"))
                             {
                                 <td>@item.Comment</td>
-                                <th>@item.Contribution_Status</th>
                             }
                             <td><a asp-controller="Contribution" asp-action="Details" asp-area="Student" asp-route-id="@item.ID" class="btn btn-info">Details</a></td>
                         </tr>

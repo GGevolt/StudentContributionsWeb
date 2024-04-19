@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
+using StudentContributions.Models.ViewModels;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,11 +16,13 @@ namespace StudentContributions.Areas.Coordinator.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _webHost;
 
-        public ContributionController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        public ContributionController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IWebHostEnvironment webHost)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _webHost = webHost;
         }
 
         public async Task<IActionResult> Index()
@@ -42,23 +46,105 @@ namespace StudentContributions.Areas.Coordinator.Controllers
                 return NotFound();
             }
 
-            return View(contribution);
+            ConDetails conForm = new ConDetails();
+            conForm.Contribution = contribution;
+            conForm.Filenames = new List<string>();
+            string path = Path.Combine(this._webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
+            if (Directory.Exists(path))
+            {
+                string[] paths = Directory.GetFiles(Path.Combine(_webHost.WebRootPath, "Contributions", contribution.ID.ToString()));
+                foreach (string file in paths)
+                {
+                    conForm.Filenames.Add(Path.GetFileName(file));
+                }
+            }
+
+            return View(conForm);
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Contribution contribution)
+        public IActionResult Edit(ConDetails conForm, List<IFormFile>? files)
         {
-            if (id != contribution.ID)  
+
+            _unitOfWork.ContributionRepository.Update(conForm.Contribution);
+            _unitOfWork.Save();
+
+            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+            if (files != null)
             {
-                return NotFound();
+                foreach (var filecheck in files)
+                {
+                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                    var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
+
+                    if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                    {
+                        TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
+                        return RedirectToAction("Edit", new { id = conForm.Contribution.ID });
+                    }
+                }
+                foreach (var file in files)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                }
             }
 
-            _unitOfWork.ContributionRepository.Update(contribution);
-            _unitOfWork.Save();
             TempData["success"] = "Contribution updated successfully.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Edit", new {id = conForm.Contribution.ID});
         }
+
+        public FileResult DownloadFile(string fileName, int id)
+        {
+            string path = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString() + "/") + fileName;
+
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+
+            return File(bytes, "application/octet-stream", fileName);
+        }
+
+        public IActionResult DeleteFile(string fileName, int id)
+        {
+            string path = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString() + "/") + fileName;
+
+            FileInfo file = new FileInfo(path);
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+
+            return RedirectToAction("Edit", new { id = id });
+        }
+
+        public FileResult DownloadZip(int id)
+        {
+            string[] paths = Directory.GetFiles(Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString()));
+
+            MemoryStream memoryStream = new MemoryStream();
+
+            using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            {
+                foreach (var file in paths)
+                {
+                    zipArchive.CreateEntryFromFile(file, Path.GetFileName(file));
+                }
+            }
+
+            memoryStream.Position = 0;
+
+            var con = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            string filename = "Article_" + id.ToString() + "_" + con.Title + ".zip";
+            return File(memoryStream, "application/zip", filename);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> ChangeStatus(int id, string newStatus)
         {
