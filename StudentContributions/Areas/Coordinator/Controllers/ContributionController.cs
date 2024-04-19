@@ -53,6 +53,7 @@ namespace StudentContributions.Areas.Coordinator.Controllers
             {
                 return NotFound();
             }
+
             _unitOfWork.ContributionRepository.Update(contribution);
             _unitOfWork.Save();
             TempData["success"] = "Contribution updated successfully.";

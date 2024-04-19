@@ -8,7 +8,7 @@
 
 <div class="table-responsive">
     <table class="table table-striped">
-        <thead>
+        <thead class="table-dark">
             <tr>
                 <th>Title</th>
                 <th>Submission Date</th>
@@ -26,12 +26,12 @@
                     <td>@contribution.Comment</td>
                     <td>@contribution.Contribution_Status</td>
                     <td>
-                        <div class="btn-group" role="group" aria-label="Contribution Actions">
-                            <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@contribution.ID" class="btn btn-primary">Edit</a>
+                        <div class="btn-group" role="group">
+                            <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@contribution.ID" class="btn btn-primary btn-sm">Edit</a>
                             <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
                                 <input type="hidden" name="id" value="@contribution.ID" />
-                                <button type="submit" name="newStatus" value="Approved" class="btn btn-success">Approved</button>
-                                <button type="submit" name="newStatus" value="Deny" class="btn btn-danger">Deny</button>
+                                <button type="submit" name="newStatus" value="Approved" class="btn btn-success btn-sm">Approved</button>
+                                <button type="submit" name="newStatus" value="Deny" class="btn btn-danger btn-sm">Deny</button>
                             </form>
                         </div>
                     </td>

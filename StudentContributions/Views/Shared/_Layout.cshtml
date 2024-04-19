@@ -38,17 +38,22 @@
                         }
                         @if (User.IsInRole("Admin"))
                         {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Admin" asp-controller="Account" asp-action="Index">Account Management</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="Index">Account Management</a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Admin" asp-controller="Semester" asp-action="Index">Semester Management</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Semester" asp-action="Index">Semester Management</a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Admin" asp-controller="Faculty" asp-action="Index">Faculty Management</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Faculty" asp-action="Index">Faculty Management</a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Admin" asp-controller="Magazine" asp-action="Index"> Magazine Management</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Magazine" asp-action="Index"> Magazine Management</a>
+                            </li>
+                                </ul>
                             </li>
                         }
                     </ul>

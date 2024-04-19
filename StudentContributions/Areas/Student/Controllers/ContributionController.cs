@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using StudentContributions.Models.ViewModels;
 using StudentContributions.Utility.Interfaces;
 using System.IO.Compression;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
@@ -106,21 +108,36 @@ namespace StudentContributions.Areas.Student.Controllers
                         return View(contribution);
                     }
                     contribution.Contribution_Status = "Pending";
+                    contribution.Comment = "None";
                     _unitOfWork.ContributionRepository.Add(contribution);
                     _unitOfWork.Save();
 
                     string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
                     if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
-                    foreach (var file in files)
+                    if (files != null)
                     {
-                        string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                        foreach (var filecheck in files)
                         {
-                            file.CopyTo(fileStream);
+                            var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                            var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
+
+                            if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                            {
+                                TempData["error"] = "You have chosen invalid file type, please choose again";
+                                return View(contribution);
+                            }
+                        }
+                        foreach (var file in files)
+                        {
+                          string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                          using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                          {
+                              file.CopyTo(fileStream);
+                          }
                         }
                     }
-
+                    
                     return RedirectToAction("Details", new {id = contribution.ID});
                 }
                 else
@@ -170,12 +187,26 @@ namespace StudentContributions.Areas.Student.Controllers
             string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString());
             if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
-            foreach (var file in files)
+            if (files != null)
             {
-                string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                foreach (var filecheck in files)
                 {
-                    file.CopyTo(fileStream);
+                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                    var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
+
+                    if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                    {
+                        TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
+                        return RedirectToAction("Details", new { id = id });
+                    }
+                }
+                foreach (var file in files)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
                 }
             }
             return RedirectToAction("Details", new { id = id });
@@ -267,10 +298,17 @@ namespace StudentContributions.Areas.Student.Controllers
                 return NotFound();
             }
 
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
+            var contri = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            var SemesID = _unitOfWork.MagazineRepository.Get(m => m.ID == contri.MagazineID).SemesterID;
+            var Semes = _unitOfWork.SemesterRepository.Get(s => s.ID == SemesID);
+            if (Semes.IsActive == false || Semes == null)
+            {
+                TempData["error"] = "The semester is not active or don't exist.";
+                return RedirectToAction(nameof(Index));
+            }
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
 
-            if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            if (contribution == null  || DateTime.Now > Semes.EndDate)
             {
                 TempData["error"] = "The deletion period has ended or the contribution does not exist.";
                 return RedirectToAction(nameof(Index));
@@ -285,8 +323,10 @@ namespace StudentContributions.Areas.Student.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
-            if (activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            var contri = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            var SemesID = _unitOfWork.MagazineRepository.Get(m => m.ID == contri.MagazineID).SemesterID;
+            var Semes = _unitOfWork.SemesterRepository.Get(s => s.ID == SemesID);
+            if (Semes == null || DateTime.Now > Semes.EndDate)
             {
                 TempData["error"] = "The deletion period has ended.";
                 return RedirectToAction(nameof(Index));
@@ -297,6 +337,9 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 _unitOfWork.ContributionRepository.Remove(contribution);
                 _unitOfWork.Save();
+                string path = Path.Combine(this._webHost.WebRootPath, "Contributions", id.ToString());
+                var confolder = new DirectoryInfo(path);
+                confolder.Delete(true);
                 TempData["success"] = "Contribution deleted successfully.";
                 return RedirectToAction(nameof(Index));
             }
