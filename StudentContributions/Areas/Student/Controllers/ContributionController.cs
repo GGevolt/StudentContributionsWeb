@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
@@ -181,36 +182,6 @@ namespace StudentContributions.Areas.Student.Controllers
             return View(details);
         }
 
-        [HttpPost]
-        public IActionResult Details(List<IFormFile>? files, int id)
-        {
-            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString());
-            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
-            if (files != null)
-            {
-                foreach (var filecheck in files)
-                {
-                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
-                    var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
-
-                    if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
-                    {
-                        TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
-                        return RedirectToAction("Details", new { id = id });
-                    }
-                }
-                foreach (var file in files)
-                {
-                    string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
-                }
-            }
-            return RedirectToAction("Details", new { id = id });
-        }
 
         public FileResult DownloadFile(string fileName, int id)
         {
@@ -231,7 +202,7 @@ namespace StudentContributions.Areas.Student.Controllers
                 file.Delete();
             }
 
-            return RedirectToAction("Details", new { id =  id});
+            return RedirectToAction("Edit", new { id =  id});
         }
 
         public FileResult DownloadZip(int id)
@@ -264,6 +235,12 @@ namespace StudentContributions.Areas.Student.Controllers
             var contri = _unitOfWork.ContributionRepository.Get(c=>c.ID == id);
             var SemesID = _unitOfWork.MagazineRepository.Get(m=>m.ID== contri.MagazineID).SemesterID;
             var Semes = _unitOfWork.SemesterRepository.Get(s=>s.ID==SemesID);
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != contri.UserID)
+            {
+                TempData["error"] = "Unauthorized access";
+                return RedirectToAction(nameof(Index));
+            }
             if (Semes.IsActive== false || Semes == null)
             {
                 TempData["error"] = "The semester is not active or don't exist.";
@@ -277,19 +254,58 @@ namespace StudentContributions.Areas.Student.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(contribution);
+            ConDetails conForm = new ConDetails();
+            conForm.Contribution = contribution;
+            conForm.Filenames = new List<string>();
+            string path = Path.Combine(this._webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
+            if (Directory.Exists(path))
+            {
+                string[] paths = Directory.GetFiles(Path.Combine(_webHost.WebRootPath, "Contributions", contribution.ID.ToString()));
+                foreach (string file in paths)
+                {
+                    conForm.Filenames.Add(Path.GetFileName(file));
+                }
+            }
+
+            return View(conForm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Contribution contribution)
+        public IActionResult Edit(ConDetails conForm, List<IFormFile>? files)
         {
-            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
-            contribution.UserID = user.Id;
-            _unitOfWork.ContributionRepository.Update(contribution);
+            _unitOfWork.ContributionRepository.Update(conForm.Contribution);
             _unitOfWork.Save();
-            return View(contribution);
+
+            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+            if (files != null)
+            {
+                foreach (var filecheck in files)
+                {
+                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                    var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
+
+                    if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                    {
+                        TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
+                        return RedirectToAction("Edit", new { id = conForm.Contribution.ID });
+                    }
+                }
+                foreach (var file in files)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                }
+            }
+
+            return RedirectToAction("Details",  new { id = conForm.Contribution.ID });
         }
+
         [Authorize(Roles = "Student")]
         public IActionResult Delete(int? id)
         {
