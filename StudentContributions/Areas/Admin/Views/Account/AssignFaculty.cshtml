@@ -14,6 +14,7 @@
                                 {
                                     if (faculty.ID == Model.User.FacultyID)
                                     {
+                                        
                                         @faculty.Name
                                     }
                                 }
@@ -30,6 +31,13 @@
                                     </form>
                                 </li>
                             }
+                            <li>
+                                <form method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="userID" value="@Model.User.Id" />
+                                    <input type="hidden" name="nofalculty" value="true" />
+                                    <button type="submit" class="dropdown-item">No Falcuty</button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </div>

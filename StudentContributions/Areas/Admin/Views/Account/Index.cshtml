@@ -8,8 +8,11 @@
 			<thead class="table-active">
 				<tr>
 					<th>Email</th>
+					<th>Role</th>
 					<th>Assign Role</th>
+					<th>Falculty Name</th>
 					<th>Assign Faculty</th>
+
 				</tr>
 			</thead>
 			<tbody>
@@ -18,12 +21,15 @@
 					<tr>
 						<td>@account.User.Email</td>
 						<td>
+							@foreach (var role in account.Roles)
+							{
+								@role
+							}
+						</td>
+						<td>
 							<div class="btn-group">
 								<button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-									@foreach (var role in account.Roles)
-									{
-										@role
-									}
+									Assign Role
 								</button>
 								<ul class="dropdown-menu">
 									@using (Html.BeginForm("AssignRole", "Account"))
@@ -61,10 +67,11 @@
 								</ul>
 							</div>
 						</td>
+						<td>@(account.User.Faculty == null ? "N/A" : @account.User.Faculty.Name)</td>
 						<td>
 							@if (!account.Roles.Contains("Student"))
 							{
-								<a asp-controller="Account" asp-action="AssignFaculty" asp-route-userId="@account.User.Id" class="btn btn-primary">@account.User.Faculty.Name</a>
+								<a asp-controller="Account" asp-action="AssignFaculty" asp-route-userId="@account.User.Id" class="btn btn-primary">Assign Falculty</a>
 							}
 						</td>
 					</tr>
