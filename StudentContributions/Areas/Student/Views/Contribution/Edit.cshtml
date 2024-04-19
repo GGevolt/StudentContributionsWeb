@@ -25,23 +25,21 @@
 <form asp-action="Edit" asp-area="Student" asp-controller="Contribution" enctype="multipart/form-data" method="post" class="edit-form">
     <input asp-for="Contribution.ID" hidden/>
     <input asp-for="Contribution.Contribution_Status" hidden/>
-    <input asp-for="Contribution.MagazineID" class="form-control" hidden />
+    <input asp-for="Contribution.MagazineID" hidden />
     <input asp-for="Contribution.UserID" hidden/>
+    <input asp-for="Contribution.SubmissionDate" hidden/>
     <div class="form-group">
         <label asp-for="Contribution.Title" class="control-label">Title</label>
         <input asp-for="Contribution.Title" class="form-control" />
         <span asp-validation-for="Contribution.Title" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="Contribution.SubmissionDate" class="control-label">Submission Date</label>
-        <input asp-for="Contribution.SubmissionDate" class="form-control" type="datetime-local" />
-        <span asp-validation-for="Contribution.SubmissionDate" class="text-danger"></span>
+        <label asp-for="Contribution.Contribution_Status" class="control-label">Status</label>
+        <input asp-for="Contribution.Contribution_Status" class="form-control" readonly/>
     </div>
     <div class="form-group">
         <label asp-for="Contribution.Comment" class="control-label">Comments</label>
-        <textarea asp-for="Contribution.Comment" class="form-control"></textarea>
-        <span asp-validation-for="Contribution.Comment" class="text-danger"></span>
+        <textarea asp-for="Contribution.Comment" class="form-control" readonly></textarea>
     </div>
     <div class="form-group">
         <label for="files" class="form-label"><b>Upload Files</b></label>
