@@ -16,6 +16,7 @@ namespace StudentContributions.Areas.Manager.Controllers
         }
         public IActionResult Index()
         {
+
             return View(_unitOfWork.FacultyRepository.GetAll().ToList());
         }
         public IActionResult AcademicYear(int id)

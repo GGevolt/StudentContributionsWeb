@@ -22,7 +22,7 @@ namespace StudentContributions.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var userRoles = new List<AccountVM>();
-            var users = _unitOfWork.ApplicationUserRepository.getAllIncludeFaculty();
+            var users = _unitOfWork.ApplicationUserRepository.GetAll(includeProperty: "Faculty");
             foreach (var user in users)
             {
                 List<string> roles = (List<string>)_userManager.GetRolesAsync(user).GetAwaiter().GetResult();

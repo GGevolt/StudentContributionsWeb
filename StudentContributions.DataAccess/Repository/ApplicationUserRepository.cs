@@ -16,9 +16,5 @@ namespace StudentContributions.DataAccess.Repository
         {
             _dbContext.Update(applicationUser);
         }
-       public IEnumerable<ApplicationUser> getAllIncludeFaculty()
-        {
-            return _dbContext.Users.Include(u=>u.Faculty);
-        }
 	}
 }
