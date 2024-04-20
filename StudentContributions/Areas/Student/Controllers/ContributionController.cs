@@ -193,8 +193,16 @@ namespace StudentContributions.Areas.Student.Controllers
 
         public IActionResult DeleteFile(string fileName, int id)
         {
-            string path = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString() + "/") + fileName;
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            if (contribution == null)
+            {
+                return NotFound();
+            }
+            contribution.Contribution_Status = "Pending";
+            _unitOfWork.ContributionRepository.Update(contribution);
+            _unitOfWork.Save();
 
+            string path = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString() + "/") + fileName;
             FileInfo file = new FileInfo(path);
             if (file.Exists)
             {
@@ -273,6 +281,7 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ConDetails conForm, List<IFormFile>? files)
         {
+            conForm.Contribution.Contribution_Status = "Pending";
             _unitOfWork.ContributionRepository.Update(conForm.Contribution);
             _unitOfWork.Save();
 
