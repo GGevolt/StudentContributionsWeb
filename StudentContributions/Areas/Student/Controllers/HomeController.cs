@@ -29,10 +29,10 @@ namespace StudentContributions.Areas.Student.Controllers
             var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
             if (user != null && _userManager.IsInRoleAsync(user, "Coordinator").GetAwaiter().GetResult()) {
 
-                return View(_unitOfWork.MagazineRepository.GetAll(m => m.FacultyID == user.FacultyID).ToList());
+                return View(_unitOfWork.MagazineRepository.GetAll(m => m.FacultyID == user.FacultyID, includeProperty: "Faculty").ToList());
             }
 
-                return View(_unitOfWork.MagazineRepository.GetAll().ToList());
+                return View(_unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty").ToList());
         }
 
         public IActionResult Details(int? id)
