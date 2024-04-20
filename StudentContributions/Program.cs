@@ -19,7 +19,13 @@ builder.WebHost.ConfigureKestrel(c =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlServerOptionsAction: sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null);
+    }));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
 builder.Services.AddTransient<IEmailService, EmailService>();
@@ -65,9 +71,9 @@ using (var scope = app.Services.CreateScope())
     {
         if (!roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
         {
-           roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+            roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
         }
-   }
+    }
 }
 
 using (var scope = app.Services.CreateScope())
@@ -75,6 +81,12 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     string AD_email = "admin@email.com";
     string AD_pass = "!Admin123";
+    string ST1_email = "student1@email.com";
+    string St1_pass = "!Student123";
+    string ST2_email = "student2@email.com";
+    string St2_pass = "!Student123";
+    string MN_email = "manager@email.com";
+    string MN_pass = "!Manager123";
     if (userManager.FindByEmailAsync(AD_email).GetAwaiter().GetResult() == null)
     {
         var user = new ApplicationUser();
@@ -83,6 +95,33 @@ using (var scope = app.Services.CreateScope())
         user.UserName = AD_email;
         userManager.CreateAsync(user, AD_pass).GetAwaiter().GetResult();
         userManager.AddToRoleAsync(user, "Admin").GetAwaiter().GetResult();
+    }
+    if (userManager.FindByEmailAsync(ST1_email).GetAwaiter().GetResult() == null)
+    {
+        var user = new ApplicationUser();
+        user.Email = ST1_email;
+        user.EmailConfirmed = true;
+        user.UserName = ST1_email;
+        userManager.CreateAsync(user, St1_pass).GetAwaiter().GetResult();
+        userManager.AddToRoleAsync(user, "Student").GetAwaiter().GetResult();
+    }
+    if (userManager.FindByEmailAsync(ST2_email).GetAwaiter().GetResult() == null)
+    {
+        var user = new ApplicationUser();
+        user.Email = ST2_email;
+        user.EmailConfirmed = true;
+        user.UserName = ST2_email;
+        userManager.CreateAsync(user, St2_pass).GetAwaiter().GetResult();
+        userManager.AddToRoleAsync(user, "Student").GetAwaiter().GetResult();
+    }
+    if (userManager.FindByEmailAsync(MN_email).GetAwaiter().GetResult() == null)
+    {
+        var user = new ApplicationUser();
+        user.Email = MN_email;
+        user.EmailConfirmed = true;
+        user.UserName = MN_email;
+        userManager.CreateAsync(user, MN_pass).GetAwaiter().GetResult();
+        userManager.AddToRoleAsync(user, "Manager").GetAwaiter().GetResult();
     }
 }
 

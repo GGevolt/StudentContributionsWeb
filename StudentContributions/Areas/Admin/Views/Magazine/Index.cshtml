@@ -11,16 +11,16 @@
         <thead class="table-active">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.MagazineName)
+                    Magazine Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ClosureDate)
+                    Closure Date
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.FacultyID)
+                    Falculty Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.SemesterID)
+                    Semester End Date
                 </th>
                 <th></th>
             </tr>
@@ -36,10 +36,10 @@
                         @Html.DisplayFor(modelItem => item.ClosureDate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.FacultyID)
+                        @item.Faculty.Name
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SemesterID)
+                        @item.Semester.EndDate
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary">Edit</a>

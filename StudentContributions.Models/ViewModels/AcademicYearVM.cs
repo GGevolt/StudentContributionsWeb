@@ -10,9 +10,11 @@ namespace StudentContributions.Models.ViewModels
     public class AcademicYearVM
     {
        public Semester semester {  get; set; }
-       public double Percentage { get; set; }
+       public double PercentageOfContribution { get; set; }
+       public double PercentageOfApproved { get; set; }
        public int ContributionNum { get; set; }
-       public int ContributorNum { get; set; }
+        public int ApprovedContributionNum { get; set; }
+        public int ContributorNum { get; set; }
        public int FacultyId { get; set; }
     }
 }

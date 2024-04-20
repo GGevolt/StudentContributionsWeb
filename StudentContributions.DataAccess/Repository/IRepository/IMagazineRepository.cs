@@ -13,5 +13,6 @@ namespace StudentContributions.DataAccess.Repository.IRepository
         DateTime? GetClosureDate();
         Magazine GetById(int id);
         IEnumerable<Magazine> GetAllWithContributions(int facultyId);
+        IEnumerable<Magazine> MagazinesIncludeFacultySemester();
     }
 }

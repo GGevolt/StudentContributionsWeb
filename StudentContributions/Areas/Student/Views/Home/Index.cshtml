@@ -1,57 +1,70 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Contributions</title>
-    <!-- Add Bootstrap 5 CSS -->
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="~/Contribution/Home/Index.cshtml.js" asp-append-version="true"></script>
-    <script src="~/Contribution/Home/Index.cshtml.css" asp-append-version="true"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/StudentContributions.styles.css" asp-append-version="true" />
-    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="~/Home/Index.cshtml.css" asp-append-version="true"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+          integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+          crossorigin="anonymous" />
 </head>
 <body>
     <div class="container-fluid">
-        <div class="position-relative">
-            <img src="~/img/412312413_353803377352101_3573509045879812506_n.jpg" alt="boat" style="width:100%; height:auto; max-width:100%; max-height:600px; min-width:200px; min-height:200px;">
-            <button class="btn btn-success button position-absolute bottom-0 start-0" style="margin-bottom: 20px; margin-left:20px" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us</button>
+        <div class="row">
+            <div class="col-12 p-0">
+                <div class="w3-display-container w3-animate-opacity">
+            <img src="~/img/COMP1640.jpg" alt="boat" style="width:100%;min-height:200px;max-height:400px;">
+            <div class="w3-container w3-display-bottomleft w3-margin-bottom">
+                <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-xlarge w3-theme w3-hover-teal" title="Contact Us">Contact Us</button>
         </div>
     </div>
-    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="contactModalLabel">Contacts:</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Phone: 123456789</p>
-                    <p>Email: Buku@gmail.com</p>
-                </div>
+    </div>
+    </div>
+    </div>
+    <!-- Modal -->
+    <div id="id01" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-top">
+            <header class="w3-container w3-teal w3-display-container">
+                <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-teal w3-display-topright"><i class="fa fa-remove"></i></span>
+                <h4>Oh Hello There! We just showed you our information</h4>
+                <h5>We are BuKhu team <i class="fa fa-smile-o"></i></h5>
+            </header>
+            <div class="w3-container">
+                <p>Not bad right?</p>
+                <p>Go to our <a class="w3-text-teal" href="https://www.youtube.com/watch?v=xvFZjo5PgG0&ab_channel=Duran">Discord Sever</a> to enjoy the moment</p>
+            </div>
+            <footer class="w3-container w3-teal">
+                <p>BuKhu@gmail.com</p>
+            </footer>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var magazine in Model){
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card">
+            <div>
+                    <img src="~/img/modern-education.png" class="card-img-top" alt="magazineImg" />
+            </div>
+            <div class="card-body">
+                    <span class="tag tag-teal">@magazine.Faculty.Name</span>
+                <h4>
+                        @magazine.MagazineName
+                </h4>
+                    <a href="@Url.Action("Details", "Home", new { id=magazine.ID })" class="btn btn-primary">Read More</a>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            @foreach (var magazine in Model)
-            {
-                <div class="col-md-3 mb-3">
-                    <div class="card">
-                        <img src="~/img/db46gljkep171.png" class="card-img-top" alt="The Magazine">
-                        <div class="card-body">
-                            <h5 class="card-title">@magazine.MagazineName</h5>
-                            <p class="card-text">This is @magazine.MagazineName</p>
-                            <a href="@Url.Action("Details", "Home", new { id=magazine.ID })" class="btn btn-primary">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            }
         </div>
+        }
     </div>
+    <a id="back-to-top" href="#" class="btn btn-light btn-lg back-to-top" role="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z" />
+        </svg>
+    </a>
 </body>
 </html>
 

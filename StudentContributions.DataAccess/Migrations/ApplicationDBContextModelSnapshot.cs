@@ -233,9 +233,6 @@ namespace StudentContributions.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
@@ -255,13 +252,13 @@ namespace StudentContributions.DataAccess.Migrations
 
                     b.Property<string>("UserID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("MagazineID");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("Contributions");
                 });
@@ -326,6 +323,10 @@ namespace StudentContributions.DataAccess.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<string>("SemesterName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -397,13 +398,15 @@ namespace StudentContributions.DataAccess.Migrations
 
             modelBuilder.Entity("StudentContributions.Models.Models.Contribution", b =>
                 {
-                    b.HasOne("StudentContributions.Models.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("Contributions")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("StudentContributions.Models.Models.Magazine", "Magazine")
                         .WithMany("Contributions")
                         .HasForeignKey("MagazineID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudentContributions.Models.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Contributions")
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

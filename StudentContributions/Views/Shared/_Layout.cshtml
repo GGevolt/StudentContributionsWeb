@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StudentContributions.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Shared/_Layout.cshtml.css" asp-append-version="true" />
 </head>
 <body style="background-color:ghostwhite">
     <header>
@@ -33,22 +34,30 @@
                         @if (User.IsInRole("Manager"))
                         {
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Statistic</a>
+                                <a class="navbar-brand" asp-area="Manager" asp-controller="Analysis" asp-action="Index">Statistic</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="navbar-brand" asp-area="Manager" asp-controller="Magazine" asp-action="Index">Ended Magazines</a>
                             </li>
                         }
                         @if (User.IsInRole("Admin"))
                         {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Admin" asp-controller="Account" asp-action="Index">Account Management</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Account" asp-action="Index">Account Management</a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Admin" asp-controller="Semester" asp-action="Index">Semester Management</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Semester" asp-action="Index">Semester Management</a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Admin" asp-controller="Faculty" asp-action="Index">Faculty Management</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Faculty" asp-action="Index">Faculty Management</a>
                             </li>
                             <li class="nav-item">
-                                <a class="navbar-brand" asp-area="Admin" asp-controller="Magazine" asp-action="Index"> Magazine Management</a>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Magazine" asp-action="Index"> Magazine Management</a>
+                            </li>
+                                </ul>
                             </li>
                         }
                     </ul>

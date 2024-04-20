@@ -23,7 +23,10 @@ namespace StudentContributions.DataAccess.Repository
         {
             _dbContext.Update(contribution);
         }
-
-        
+        public IEnumerable<Contribution> IncludeUserToCon(IEnumerable<Contribution> contributions)
+        {
+            var contributionIds = contributions.Select(c => c.ID).ToList();
+            return _dbContext.Contributions.Include(c => c.ApplicationUser).Where(c => contributionIds.Contains(c.ID)).ToList();
+        }
     }
 }

@@ -1,0 +1,62 @@
+﻿@model StudentContributions.Models.ViewModels.ConOfMagVM;
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="row" style="margin-inline:10%;">
+    <div class="col-md-6">
+        <h1>Magazine Details</h1>
+        <hr class="border-dark" style="margin:5px" />
+        <dl class="row">
+            <dt class="col-sm-4">
+                Magazine name
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Magazine.MagazineName
+            </dd>
+            <dt class="col-sm-4">
+                Contributions ended on
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Magazine.ClosureDate
+            </dd>
+            <dt class="col-sm-4">
+                Final closure date
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Magazine.Semester.EndDate
+            </dd>
+        </dl>
+  
+        <a class="text-dark btn btn-info mb-2" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <h3>Contributions of Magazine</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Article name</th>
+                        <th>Comment</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Contributions)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Comment</td>
+                            <td><a asp-controller="Article" asp-action="Details" asp-area="Manager" asp-route-id="@item.ID" class="btn btn-info">Details</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="text-md-end mt-4">
+            <a asp-controller="Magazine" asp-action="Index" asp-area="Manager" class="btn btn-secondary">Back to Magazine List</a>
+        </div>
+    </div>
+</div>

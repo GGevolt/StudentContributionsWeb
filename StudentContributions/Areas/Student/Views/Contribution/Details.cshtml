@@ -45,7 +45,7 @@
         <thead>
             <tr>
                 <th>Attachments</th>
-                <th>Actions</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -57,27 +57,17 @@
                     <td><a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file">@file</a></td>
                     <td>
                         <a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-primary btn-sm">Download</a>
-                        @* <a asp-action="DeleteFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-danger btn-sm">Delete</a> *@
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 
-@*     <form method="post" asp-action="Details" asp-route-id="@Model.Contribution.ID" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="fileInput" class="form-label">Choose File(s)</label>
-            <input type="file" id="fileInput" name="files" class="form-control" multiple>
-        </div>
-        <button type="submit" class="btn btn-primary">Upload</button>
-    </form> *@
-
     <div class="mt-3">
         <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.Contribution.MagazineID" class="btn btn-secondary">Back to List</a>
-        <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@Model.Contribution.ID" class="btn btn-warning">Edit Info</a>
+        @if (Model.IsSubmitPerson)
+        {
+            <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@Model.Contribution.ID" class="btn btn-warning">Edit Info</a>
+        }
     </div>
 </div>
-
-@section Scripts{
-    <partial name="_ValidationScriptsPartial"/>
-}

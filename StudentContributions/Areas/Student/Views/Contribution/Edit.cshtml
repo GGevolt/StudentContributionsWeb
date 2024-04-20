@@ -1,51 +1,98 @@
-﻿@model StudentContributions.Models.Models.Contribution
+﻿@model StudentContributions.Models.ViewModels.ConDetails
 
 @{
     ViewData["Title"] = "Edit Contribution";
 }
 
 <h2 class="page-title">@ViewData["Title"]</h2>
-
-<form asp-action="Edit" asp-area="Student" asp-controller="Contribution" method="post" class="edit-form">
-    <input type="hidden" asp-for="ID" />
+<head>
+    <style>
+        /* Style for notification */
+        .notification {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+    </style>
+</head>
+<form asp-action="Edit" asp-area="Student" asp-controller="Contribution" enctype="multipart/form-data" method="post" class="edit-form">
+    <input asp-for="Contribution.ID" hidden/>
+    <input asp-for="Contribution.Contribution_Status" hidden/>
+    <input asp-for="Contribution.MagazineID" hidden />
+    <input asp-for="Contribution.UserID" hidden/>
+    <input asp-for="Contribution.SubmissionDate" hidden/>
     <div class="form-group">
-        <label asp-for="Title" class="control-label">Title</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <label asp-for="Contribution.Title" class="control-label">Title</label>
+        <input asp-for="Contribution.Title" class="form-control" />
+        <span asp-validation-for="Contribution.Title" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="SubmissionDate" class="control-label">Submission Date</label>
-        <input asp-for="SubmissionDate" class="form-control" type="datetime-local" />
-        <span asp-validation-for="SubmissionDate" class="text-danger"></span>
+        <label asp-for="Contribution.Contribution_Status" class="control-label">Status</label>
+        <input asp-for="Contribution.Contribution_Status" class="form-control" readonly/>
     </div>
-    @if (this.User.IsInRole("Coordinator"))
-    {
-        <div class="form-group">
-            <label asp-for="Comment" class="control-label">Comments</label>
-            <textarea asp-for="Comment" class="form-control"></textarea>
-            <span asp-validation-for="Comment" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            
-        
-        
-    </div>
-    }else{
-    <input type="hidden" asp-for="Comment" />
-    <input type="hidden" asp-for="UserID" />
-    <input type="hidden" asp-for="Contribution_Status" />
-    }
     <div class="form-group">
-        <label asp-for="MagazineID" class="control-label">Magazine ID</label>
-        <input asp-for="MagazineID" class="form-control" />
-        <span asp-validation-for="MagazineID" class="text-danger"></span>
+        <label asp-for="Contribution.Comment" class="control-label">Comments</label>
+        <textarea asp-for="Contribution.Comment" class="form-control" readonly></textarea>
     </div>
+    <div class="form-group">
+        <label for="files" class="form-label"><b>Upload Files</b></label>
+        <input type="file" name="files" id="files" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" multiple>
+    </div>
+        <input type="hidden" asp-for="Contribution.Comment" />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Attachments</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
 
+            @foreach (var file in Model.Filenames)
+            {
+
+                <tr>
+                    <td><a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file">@file</a></td>
+                    <td><a asp-action="DeleteFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-danger btn-sm">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
     <div class="form-group action-buttons">
 
-        <button class="btn btn-primary" type="submit">Save</button>
-        <a asp-controller="Contribution" asp-action="Details" asp-route-id="@Model.ID" class="btn btn-secondary">Cancel</a>
+        <button class="btn btn-primary" id="saveBtn" type="submit">Save</button>
+        <a asp-controller="Contribution" asp-action="Details" asp-route-id="@Model.Contribution.ID" class="btn btn-secondary">Cancel</a>
     </div>
+    <div id="notification" class="notification"></div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var er = '@TempData["error"]';
+        if (er.length) {
+            alert(er);
+        }
+    </script>
+    <script>
+        document.getElementById("saveBtn").addEventListener("click", function () {
+            // Show notification
+            var notification = document.getElementById("notification");
+            notification.style.display = "block";
+            notification.innerHTML = "Save successful";
+
+            setTimeout(function () {
+                notification.style.display = "none";
+            }, 30000);
+        });
+    </script>
+
+}

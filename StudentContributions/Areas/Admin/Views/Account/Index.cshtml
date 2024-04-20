@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<AccountVM>
 <partial name="_Notification" />
 <div class="col-md-8 offset-md-2">
-	<h2>List of Customer account</h2>
+	<h2>List of User  account</h2>
 
 	<div>
 		<table class="table table-borderless table-hover rounded-table border shadow">
@@ -10,7 +10,9 @@
 					<th>Email</th>
 					<th>Role</th>
 					<th>Assign Role</th>
+					<th>Falculty Name</th>
 					<th>Assign Faculty</th>
+
 				</tr>
 			</thead>
 			<tbody>
@@ -65,10 +67,11 @@
 								</ul>
 							</div>
 						</td>
+						<td>@(account.User.Faculty == null ? "N/A" : @account.User.Faculty.Name)</td>
 						<td>
 							@if (!account.Roles.Contains("Student"))
 							{
-								<a asp-controller="Account" asp-action="AssignFaculty" asp-route-userId="@account.User.Id" class="btn btn-primary">Assign Faculty</a>
+								<a asp-controller="Account" asp-action="AssignFaculty" asp-route-userId="@account.User.Id" class="btn btn-primary">Assign Falculty</a>
 							}
 						</td>
 					</tr>

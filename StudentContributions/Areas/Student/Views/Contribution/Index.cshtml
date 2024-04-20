@@ -8,17 +8,14 @@
 }
 
 <head>
-    <title>Table 09</title>
+    <title>My Article</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="~css/style.css">
-
 </head>
+<partial name="_Notification" />
 @if (canCreate)
 {
     <a class="nav-link text-dark" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
@@ -27,80 +24,60 @@
 <body>
     <section class="ftco-section">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center mb-5">
-                    <h2 class="heading-section">My Article</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table align-middle">
-                            <tr>
-                                <th scope="col">
-                                    @Html.DisplayNameFor(model => model.Title)
-                                </th>
-                                <th scope="col">
-                                    @Html.DisplayNameFor(model => model.Contribution_Status)
-                                </th>
-                                <th scope="col">
-                                    @Html.DisplayNameFor(model => model.Comment)
-                                </th>
-                                <th scope="col">Magazine_ID</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td scope="col">
-                                            @Html.DisplayFor(modelItem => item.Title)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Contribution_Status)
-                                        </td>
-                                        <td>
-                                            @if (item.Comment != null && item.Comment.Any())
-                                            {
-                                                <p id="myText">@item.Comment</p>
-                                            }
-                                            else
-                                            {
-                                                <p>No comments</p>
-                                            }
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.MagazineID)
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a>
-                                        </td>
-                                        @if (this.User.IsInRole("Student") || this.User.IsInRole("Coordinator"))
-                                        {
-                                            <td>
-                                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                                            </td>
-                                            <td>
-                                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="row justify-content-center text-center">
+                <h2 class="heading-section">My Article</h2>
             </div>
         </div>
+        <div class="container">
+            <div class="table">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Comment</th>
+                            <th scope="col">Magazine Name</th>
+                            <th scope="col">Submission Date</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Contribution_Status)</td>
+                                <td>
+                                    @if (item.Comment != null && item.Comment.Any())
+                                    {
+                                        @item.Comment
+                                        ;
+                                    }
+                                    else
+                                    {
+                                        <p>No comment</p>
+                                    }
+                                </td>
+                                <td>@item.Magazine.MagazineName</td>
+                                <td>@Html.DisplayFor(modelItem => item.SubmissionDate)</td>
+                                <td><a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a></td>
+                                <td><a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a></td>
+                                <td><a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ID">Edit</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </section>
     <script>
         window.onload = function () {
             var p = document.getElementById('myText');
             var text = p.innerText;
-            var maxLength = 80; // Đặt giới hạn kí tự tại đây
+            var maxLength = 30; // Đặt giới hạn kí tự tại đây
             var newText = '';
             var lines = text.split('\n');
             for (var i = 0; i < lines.length; i++) {
@@ -118,6 +95,5 @@
     <script src="js/popper.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
-
 </body>
-</html>
+

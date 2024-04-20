@@ -22,7 +22,7 @@ namespace StudentContributions.Areas.Admin.Controllers
         public IActionResult Index()
         {
             var userRoles = new List<AccountVM>();
-            var users = _userManager.Users.ToList();
+            var users = _unitOfWork.ApplicationUserRepository.GetAll(includeProperty: "Faculty");
             foreach (var user in users)
             {
                 List<string> roles = (List<string>)_userManager.GetRolesAsync(user).GetAwaiter().GetResult();
@@ -65,13 +65,21 @@ namespace StudentContributions.Areas.Admin.Controllers
             return View(assign);
         }
         [HttpPost]
-        public IActionResult AssignFaculty(string userID, int FacultyID)
+        public IActionResult AssignFaculty(string userID, int FacultyID, bool? nofalculty = false)
         {
             var user = _userManager.FindByIdAsync(userID).GetAwaiter().GetResult();
             if(user!=null)
             {
-                user.FacultyID = FacultyID;
-                _userManager.UpdateAsync(user).GetAwaiter().GetResult();
+                if (nofalculty == false)
+                {
+                    user.FacultyID = FacultyID;
+                    _userManager.UpdateAsync(user).GetAwaiter().GetResult();
+                }
+                else
+                {
+                    user.FacultyID = null;
+                    _userManager.UpdateAsync(user).GetAwaiter().GetResult();
+                }
             }
             return RedirectToAction("Index");
         }

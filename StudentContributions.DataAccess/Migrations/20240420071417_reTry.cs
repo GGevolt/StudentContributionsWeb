@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StudentContributions.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class create : Migration
+    public partial class reTry : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,6 +44,7 @@ namespace StudentContributions.DataAccess.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    SemesterName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
@@ -226,20 +227,20 @@ namespace StudentContributions.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SubmissionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Contribution_Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MagazineID = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserID = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contributions", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Contributions_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_Contributions_AspNetUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Contributions_Magazines_MagazineID",
                         column: x => x.MagazineID,
@@ -293,14 +294,14 @@ namespace StudentContributions.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contributions_ApplicationUserId",
-                table: "Contributions",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Contributions_MagazineID",
                 table: "Contributions",
                 column: "MagazineID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contributions_UserID",
+                table: "Contributions",
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Magazines_FacultyID",

@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
 using StudentContributions.Models.ViewModels;
 using StudentContributions.Utility.Interfaces;
 using System.IO.Compression;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
@@ -29,6 +32,7 @@ namespace StudentContributions.Areas.Student.Controllers
             _webHost = webhost;
         }
 
+        [Authorize(Roles = "Student")]
         public IActionResult Index()
         {
             var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
@@ -39,15 +43,12 @@ namespace StudentContributions.Areas.Student.Controllers
             ViewBag.Timestamp2 = semesterClosureDate;
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var contributions = _unitOfWork.ContributionRepository.GetAll().Where(c => c.UserID.Equals(userId)).ToList();
+            var contributions = _unitOfWork.ContributionRepository.GetAll(includeProperty: "Magazine").Where(c => c.UserID.Equals(userId)).ToList();
             return View(contributions);
 
         }
 
-        /*public IActionResult Create()
-        {
-            return View();
-        }*/
+        [Authorize(Roles = "Student")]
         public IActionResult Create(int? magID)
         {
             if (magID == null || magID == 0)
@@ -66,6 +67,7 @@ namespace StudentContributions.Areas.Student.Controllers
             return View(con);
         }
 
+        [Authorize(Roles = "Student")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Contribution contribution, List<IFormFile>? files)
@@ -109,22 +111,36 @@ namespace StudentContributions.Areas.Student.Controllers
                         ModelState.AddModelError("Error: ", "The contribution period for the selected magazine has ended.");
                         return View(contribution);
                     }
-
+                    contribution.Contribution_Status = "Pending";
                     _unitOfWork.ContributionRepository.Add(contribution);
                     _unitOfWork.Save();
 
                     string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
                     if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
-                    foreach (var file in files)
+                    if (files != null)
                     {
-                        string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                        foreach (var filecheck in files)
                         {
-                            file.CopyTo(fileStream);
+                            var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                            var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
+
+                            if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                            {
+                                TempData["error"] = "You have chosen invalid file type, please choose again";
+                                return View(contribution);
+                            }
+                        }
+                        foreach (var file in files)
+                        {
+                          string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                          using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                          {
+                              file.CopyTo(fileStream);
+                          }
                         }
                     }
-
+                    
                     return RedirectToAction("Details", new {id = contribution.ID});
                 }
                 else
@@ -154,6 +170,8 @@ namespace StudentContributions.Areas.Student.Controllers
             ConDetails details = new ConDetails();
             details.Filenames = new List<string>();
             details.Contribution = contribution;
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            details.IsSubmitPerson = user != null && user.Id == contribution.UserID;
             string path = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
             if (Directory.Exists(path))
             {
@@ -166,22 +184,6 @@ namespace StudentContributions.Areas.Student.Controllers
             return View(details);
         }
 
-        [HttpPost]
-        public IActionResult Details(List<IFormFile>? files, int id)
-        {
-            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString());
-            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
-            foreach (var file in files)
-            {
-                string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-            }
-            return RedirectToAction("Details", new { id = id });
-        }
 
         public FileResult DownloadFile(string fileName, int id)
         {
@@ -192,17 +194,36 @@ namespace StudentContributions.Areas.Student.Controllers
             return File(bytes, "application/octet-stream", fileName);
         }
 
+        [Authorize(Roles = "Student")]
         public IActionResult DeleteFile(string fileName, int id)
         {
-            string path = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString() + "/") + fileName;
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            var magSem = _unitOfWork.MagazineRepository.Get(m => m.ID == contribution.MagazineID, includeProperty: "Semester");
+            if (contribution == null || DateTime.Now > magSem.Semester.EndDate)
+            {
+                TempData["error"] = "The editing period has ended or the contribution does not exist.";
+                return RedirectToAction("Edit", new { id = id });
+            }
 
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != contribution.UserID)
+            {
+                TempData["error"] = "Unauthorized access, use Pending Articles if you're Coordinator";
+                return RedirectToAction("Edit", new { id = id });
+            }
+
+            contribution.Contribution_Status = "Pending";
+            _unitOfWork.ContributionRepository.Update(contribution);
+            _unitOfWork.Save();
+
+            string path = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString() + "/") + fileName;
             FileInfo file = new FileInfo(path);
             if (file.Exists)
             {
                 file.Delete();
             }
 
-            return RedirectToAction("Details", new { id =  id});
+            return RedirectToAction("Edit", new { id =  id});
         }
 
         public FileResult DownloadZip(int id)
@@ -232,33 +253,88 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 return NotFound();
             }
-
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
+            var contri = _unitOfWork.ContributionRepository.Get(c=>c.ID == id);
+            var SemesID = _unitOfWork.MagazineRepository.Get(m=>m.ID== contri.MagazineID).SemesterID;
+            var Semes = _unitOfWork.SemesterRepository.Get(s=>s.ID==SemesID);
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != contri.UserID)
+            {
+                TempData["error"] = "Unauthorized access, use Pending Articles if you're Coordinator";
+                return RedirectToAction(nameof(Index));
+            }
+            if (Semes.IsActive== false || Semes == null)
+            {
+                TempData["error"] = "The semester is not active or don't exist.";
+                return RedirectToAction(nameof(Index));
+            }
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
 
-            if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            if (contribution == null || DateTime.Now > Semes.EndDate)
             {
                 TempData["error"] = "The editing period has ended or the contribution does not exist.";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(contribution);
+            ConDetails conForm = new ConDetails();
+            conForm.Contribution = contribution;
+            conForm.Filenames = new List<string>();
+            string path = Path.Combine(this._webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
+            if (Directory.Exists(path))
+            {
+                string[] paths = Directory.GetFiles(Path.Combine(_webHost.WebRootPath, "Contributions", contribution.ID.ToString()));
+                foreach (string file in paths)
+                {
+                    conForm.Filenames.Add(Path.GetFileName(file));
+                }
+            }
+
+            return View(conForm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Contribution contribution)
+        public IActionResult Edit(ConDetails conForm, List<IFormFile>? files)
         {
             var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
-            
-            
-            
-                
-                _unitOfWork.ContributionRepository.Update(contribution);
-                _unitOfWork.Save();
-            
-            return View(contribution);
+            if (user == null || user.Id != conForm.Contribution.UserID)
+            {
+                TempData["error"] = "Unauthorized access, use Pending Articles if you're Coordinator";
+                return RedirectToAction(nameof(Index));
+            }
+
+            conForm.Contribution.Contribution_Status = "Pending";
+            _unitOfWork.ContributionRepository.Update(conForm.Contribution);
+            _unitOfWork.Save();
+
+            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+            if (files != null)
+            {
+                foreach (var filecheck in files)
+                {
+                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                    var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
+
+                    if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                    {
+                        TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
+                        return RedirectToAction("Edit", new { id = conForm.Contribution.ID });
+                    }
+                }
+                foreach (var file in files)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                }
+            }
+
+            return RedirectToAction("Details",  new { id = conForm.Contribution.ID });
         }
+
         [Authorize(Roles = "Student")]
         public IActionResult Delete(int? id)
         {
@@ -267,16 +343,29 @@ namespace StudentContributions.Areas.Student.Controllers
                 return NotFound();
             }
 
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
-            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            var contri = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            var SemesID = _unitOfWork.MagazineRepository.Get(m => m.ID == contri.MagazineID).SemesterID;
+            var Semes = _unitOfWork.SemesterRepository.Get(s => s.ID == SemesID);
+            if (Semes.IsActive == false || Semes == null)
+            {
+                TempData["error"] = "The semester is not active or don't exist.";
+                return RedirectToAction(nameof(Index));
+            }
 
-            if (contribution == null || activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != contri.UserID)
+            {
+                TempData["error"] = "Unauthorized access.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (contri == null  || DateTime.Now > Semes.EndDate)
             {
                 TempData["error"] = "The deletion period has ended or the contribution does not exist.";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(contribution);
+            return View(contri);
 
         }
 
@@ -285,18 +374,29 @@ namespace StudentContributions.Areas.Student.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
-            if (activeSemester == null || DateTime.Now > activeSemester.EndDate)
+            var contri = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
+            var SemesID = _unitOfWork.MagazineRepository.Get(m => m.ID == contri.MagazineID).SemesterID;
+            var Semes = _unitOfWork.SemesterRepository.Get(s => s.ID == SemesID);
+            if (Semes == null || DateTime.Now > Semes.EndDate)
             {
                 TempData["error"] = "The deletion period has ended.";
                 return RedirectToAction(nameof(Index));
             }
 
-            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
-            if (contribution != null)
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != contri.UserID)
             {
-                _unitOfWork.ContributionRepository.Remove(contribution);
+                TempData["error"] = "Unauthorized access.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (contri != null)
+            {
+                _unitOfWork.ContributionRepository.Remove(contri);
                 _unitOfWork.Save();
+                string path = Path.Combine(this._webHost.WebRootPath, "Contributions", id.ToString());
+                var confolder = new DirectoryInfo(path);
+                confolder.Delete(true);
                 TempData["success"] = "Contribution deleted successfully.";
                 return RedirectToAction(nameof(Index));
             }

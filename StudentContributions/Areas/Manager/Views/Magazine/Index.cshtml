@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Magazine>
+<partial name="_Notification" />
+<div class="col-md-8 offset-md-2">
+	<h2>List of ended magazines</h2>
+
+	<div>
+		<table class="table table-borderless table-hover rounded-table border shadow">
+			<thead class="table-active">
+				<tr>
+					<th>Name</th>
+					<th>Falcuty</th>
+					<th>Semester</th>
+					<th>Final closure date</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var magazine in Model)
+				{
+					<tr>
+						<td>@magazine.MagazineName</td>
+						<td>@magazine.Faculty.Name</td>
+						<td>@magazine.Semester.SemesterName</td>
+						<td>@magazine.Semester.EndDate</td>
+						<td><a asp-controller="Magazine" asp-action="Details" asp-route-id="@magazine.ID" class="btn btn-info">View approved articles</a></td>
+						<td><a asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@magazine.ID" class="btn btn-primary">Download all articles' files</a></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+</div>
