@@ -81,13 +81,16 @@ namespace StudentContributions.Areas.Admin.Controllers
         public IActionResult Edit(Semester semester)
         {
             ModelState.Remove("Magazines");
-            
-          _unitOfWork.SemesterRepository.Update(semester);
+            if (semester.EndDate < semester.StartDate)
+            {
+                ModelState.AddModelError("EndDate", "EndDate must be greater than StartDate.");
+            }
+            _unitOfWork.SemesterRepository.Update(semester);
             ValidateActiveSem(semester);
             if (ModelState.IsValid)
             {
                 
-                
+
                 _unitOfWork.Save();
                 
                 return RedirectToAction(nameof(Index));
