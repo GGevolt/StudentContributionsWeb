@@ -20,7 +20,7 @@ namespace StudentContributions.Areas.Admin.Controllers
 
 		public IActionResult Index()
 		{
-			var magazines = _unitOfWork.MagazineRepository.MagazinesIncludeFacultySemester().ToList();
+			var magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty", moreProperty: "Semester").ToList();
 			return View(magazines);
 		}
 
