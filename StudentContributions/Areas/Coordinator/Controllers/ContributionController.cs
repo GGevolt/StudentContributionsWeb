@@ -31,13 +31,13 @@ namespace StudentContributions.Areas.Coordinator.Controllers
             var userFacultyId = user.FacultyID;
 
             var contributions = _unitOfWork.ContributionRepository.GetAll(includeProperty: "Magazine")
-                               .Where(c => c.Magazine.FacultyID == userFacultyId)
+                               .Where(c => c.Magazine.FacultyID == userFacultyId && c.Contribution_Status.Contains("Pending"))
                                .ToList();
 
             return View(contributions);
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var contribution = _unitOfWork.ContributionRepository.GetAll(c => c.ID == id, includeProperty: "Magazine")
                                        .FirstOrDefault();  
@@ -46,6 +46,16 @@ namespace StudentContributions.Areas.Coordinator.Controllers
                 return NotFound();
             }
 
+            var user = await _userManager.GetUserAsync(User);
+            var userFacultyId = user.FacultyID;
+
+            if (contribution.Magazine.FacultyID != userFacultyId)
+            {
+                TempData["error"] = "Unauthorized access";
+                return RedirectToAction("Index");
+            }
+
+            if (contribution.Magazine.FacultyID != id) { }
             ConDetails conForm = new ConDetails();
             conForm.Contribution = contribution;
             conForm.Filenames = new List<string>();

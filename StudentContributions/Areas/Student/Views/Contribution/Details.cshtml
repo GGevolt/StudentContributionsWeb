@@ -71,14 +71,3 @@
         }
     </div>
 </div>
-
-@section Scripts{
-    <partial name="_ValidationScriptsPartial"/>
-    <script>
-        var er = '@TempData["error"]';
-        if (er.length) {
-            alert(er);
-        }
-    </script>
-
-}

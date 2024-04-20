@@ -56,8 +56,23 @@ namespace StudentContributions.DataAccess.Repository
             return query.ToList();
         }
 
+		public IEnumerable<T> GetAllMore(string? includeProperty = null, string? moreProperty = null)
+		{
 
-        public void Remove(T entity)
+			IQueryable<T> query = dbSet;
+			if (!string.IsNullOrEmpty(includeProperty))
+			{
+				query = query.Include(includeProperty);
+			}
+			if (!string.IsNullOrEmpty(moreProperty))
+			{
+				query = query.Include(moreProperty);
+			}
+			return query.ToList();
+		}
+
+
+		public void Remove(T entity)
         {
             dbSet.Remove(entity);
         }

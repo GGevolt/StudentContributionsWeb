@@ -35,24 +35,24 @@ namespace StudentContributions.Areas.Student.Controllers
                 return View(_unitOfWork.MagazineRepository.GetAll().ToList());
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Details(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id);
+            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id, includeProperty:"Semester");
             if (magazine == null)
             {
                 return NotFound();
             }
             ConOfMagVM conOfMagVM = new ConOfMagVM();
             conOfMagVM.Magazine = magazine;
-            var contributions = _unitOfWork.ContributionRepository.GetAll().ToList().Where(c => c.MagazineID == id);
+            var contributions = _unitOfWork.ContributionRepository.GetAll(c => c.MagazineID == id && c.Contribution_Status.Contains("Approved"));
             //var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
             //if (user == null)
             //{
-                contributions = contributions.Where(c => c.Contribution_Status.Contains("Approved"));
+            //  contributions = contributions.Where(c => c.Contribution_Status.Contains("Approved"));
             //}
             //else if (_userManager.IsInRoleAsync(user, "Student").GetAwaiter().GetResult())
             //{

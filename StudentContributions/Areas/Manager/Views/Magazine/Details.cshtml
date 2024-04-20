@@ -6,7 +6,7 @@
 <div class="row" style="margin-inline:10%;">
     <div class="col-md-6">
         <h1>Magazine Details</h1>
-        <hr class="border-dark" style="margin:5px"/>
+        <hr class="border-dark" style="margin:5px" />
         <dl class="row">
             <dt class="col-sm-4">
                 Magazine name
@@ -15,40 +15,31 @@
                 @Model.Magazine.MagazineName
             </dd>
             <dt class="col-sm-4">
-                New contribution deadline
+                Contributions ended on
             </dt>
             <dd class="col-sm-8">
                 @Model.Magazine.ClosureDate
             </dd>
             <dt class="col-sm-4">
-                Final edit deadline
+                Final closure date
             </dt>
             <dd class="col-sm-8">
                 @Model.Magazine.Semester.EndDate
             </dd>
         </dl>
-        @if (User.IsInRole("Student"))
-        {
-            <a class="text-dark btn btn-info mb-2" asp-area="Student" asp-controller="Contribution" asp-action="Create" asp-route-magID="@Model.Magazine.ID">New Article</a>
-        }
-        @if (User.IsInRole("Manager"))
-        {
-            <a class="text-dark btn btn-info mb-2" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
-        }    
+  
+        <a class="text-dark btn btn-info mb-2" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
     </div>
     <div class="col-md-6">
         <div class="row">
-                <h3>Contributions of Magazine</h3>
+            <h3>Contributions of Magazine</h3>
         </div>
         <div class="table-responsive">
             <table class="table">
                 <thead>
                     <tr>
                         <th>Article name</th>
-                        @if (User.IsInRole("Coordinator"))
-                        {
-                            <th>Comment</th>
-                        }
+                        <th>Comment</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -57,19 +48,15 @@
                     {
                         <tr>
                             <td>@item.Title</td>
-                            @if (User.IsInRole("Coordinator"))
-                            {
-                                <td>@item.Comment</td>
-                            }
-                            <td><a asp-controller="Contribution" asp-action="Details" asp-area="Student" asp-route-id="@item.ID" class="btn btn-info">Details</a></td>
+                            <td>@item.Comment</td>
+                            <td><a asp-controller="Article" asp-action="Details" asp-area="Manager" asp-route-id="@item.ID" class="btn btn-info">Details</a></td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
         <div class="text-md-end mt-4">
-            <a asp-controller="Home" asp-action="Index" asp-area="Student" class="btn btn-secondary">Back to List</a>
+            <a asp-controller="Magazine" asp-action="Index" asp-area="Manager" class="btn btn-secondary">Back to Magazine List</a>
         </div>
     </div>
 </div>
-

@@ -19,9 +19,10 @@ namespace StudentContributions.Areas.Manager.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var magazines = _unitOfWork.MagazineRepository.GetAllMore(includeProperty: "Semester", moreProperty: "Faculty").Where(m => DateTime.Now > m.Semester.EndDate);
+            return View(magazines);
         }
-        public IActionResult DownloadZipMagazine(int id)
+        public IActionResult DownloadZipMagazine(int? id)
         {
             if (id == null || id == 0)
             {
