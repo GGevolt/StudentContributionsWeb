@@ -176,6 +176,12 @@ namespace StudentContributions.Areas.Coordinator.Controllers
                 return RedirectToAction("Index");
             }
 
+            if (contribution.Comment == null)
+            {
+                TempData["error"] = "Must comment on contribution before decision.";
+                return RedirectToAction("Index");
+            }
+
             contribution.Contribution_Status = newStatus;
             _unitOfWork.ContributionRepository.Update(contribution);
             _unitOfWork.Save();
