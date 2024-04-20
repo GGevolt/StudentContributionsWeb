@@ -41,7 +41,7 @@ namespace StudentContributions.DataAccess.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperty = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperty = null, string? moreProperty = null)
         {
 
             IQueryable<T> query = dbSet;
@@ -53,23 +53,13 @@ namespace StudentContributions.DataAccess.Repository
             {
                 query = query.Include(includeProperty);
             }
+            if (!string.IsNullOrEmpty(moreProperty))
+            {
+                query = query.Include(moreProperty);
+            }
             return query.ToList();
         }
 
-		public IEnumerable<T> GetAllMore(string? includeProperty = null, string? moreProperty = null)
-		{
-
-			IQueryable<T> query = dbSet;
-			if (!string.IsNullOrEmpty(includeProperty))
-			{
-				query = query.Include(includeProperty);
-			}
-			if (!string.IsNullOrEmpty(moreProperty))
-			{
-				query = query.Include(moreProperty);
-			}
-			return query.ToList();
-		}
 
 
 		public void Remove(T entity)

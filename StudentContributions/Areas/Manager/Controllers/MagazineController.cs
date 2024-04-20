@@ -20,7 +20,7 @@ namespace StudentContributions.Areas.Manager.Controllers
         }
         public IActionResult Index()
         {
-            var magazines = _unitOfWork.MagazineRepository.GetAllMore(includeProperty: "Semester", moreProperty: "Faculty").Where(m => DateTime.Now > m.Semester.EndDate);
+            var magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Semester", moreProperty: "Faculty").Where(m => DateTime.Now > m.Semester.EndDate);
             return View(magazines);
         }
 

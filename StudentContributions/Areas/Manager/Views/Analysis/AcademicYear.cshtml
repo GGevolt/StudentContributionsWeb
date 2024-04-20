@@ -11,6 +11,7 @@
             <th>Number of contributor</th>
             <th>Number of Contribution</th>
             <th>Percentage of Contribution</th>
+            <th>Percentage of Approved Contribution</th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +23,8 @@
                 <td>@item.semester.StartDate to @item.semester.EndDate</td>
                 <td>@item.ContributorNum</td> 
                 <td>@item.ContributionNum</td>
-                <td>@item.Percentage %</td>
+                <td>@item.PercentageOfContribution %</td>
+                <td>@item.PercentageOfApproved %</td>
             </tr>
         }
     </tbody>
@@ -39,7 +41,7 @@
         var yValues = [];
         @foreach (var item in Model)
         {
-            @:yValues.push("@item.Percentage")
+            @:yValues.push("@item.PercentageOfContribution")
         }
     var barColors = [
         "#b91d47",
