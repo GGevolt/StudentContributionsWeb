@@ -29,7 +29,7 @@ namespace StudentContributions.Areas.Manager.Controllers
                 int contributionsBySF = 0;
                 int contributorsBySF = 0;
                 int approvedContributionsInF = 0;
-
+                int approvedContributionsBySF = 0;
                 var magazinesInF = _unitOfWork.MagazineRepository.GetAllWithContributions(id);
                 if (magazinesInF != null)
                 {
@@ -41,11 +41,12 @@ namespace StudentContributions.Areas.Manager.Controllers
                 if (magazinesInSF != null)
                 {
                     contributionsBySF = magazinesInSF.Where(m => m.Contributions != null).SelectMany(m => m.Contributions).Count();
+                    approvedContributionsBySF = magazinesInSF.Where(m => m.Contributions != null).SelectMany(m => m.Contributions).Where(c => c.Contribution_Status == "Approved").Count();
                     contributorsBySF = magazinesInSF.Where(m => m.Contributions != null).SelectMany(m => m.Contributions).Select(c => c.UserID).Distinct().Count();
                 }
 
                 double percentageOfContribution = contributionsInF != 0 ? (contributionsBySF / (double)contributionsInF) * 100 : 0;
-                double percentageOfApproved = approvedContributionsInF != 0 ? (contributionsBySF / (double)approvedContributionsInF) * 100 : 0;
+                double percentageOfApproved = approvedContributionsInF != 0 ? (approvedContributionsBySF / (double)approvedContributionsInF) * 100 : 0;
                 academics.Add(new AcademicYearVM
                 {
                     semester = semester,
