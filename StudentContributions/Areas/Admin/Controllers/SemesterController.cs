@@ -99,25 +99,17 @@ namespace StudentContributions.Areas.Admin.Controllers
         public IActionResult Edit(Semester semester)
         {
             ModelState.Remove("Magazines");
-            if (semester.EndDate <= semester.StartDate)
+            if (semester.EndDate < semester.StartDate)
             {
                 ModelState.AddModelError("EndDate", "EndDate must be greater than StartDate.");
             }
+
+            // Validate StartDate cannot be in the past.
             if (semester.StartDate < DateTime.Today)
             {
                 ModelState.AddModelError("StartDate", "StartDate cannot be in the past.");
             }
-            if (semester.IsActive)
-            {
-
-                var isActiveSemesterExists = _unitOfWork.SemesterRepository.GetAll()
-                    .Any(s => s.IsActive && s.ID != semester.ID);
-
-                if (isActiveSemesterExists)
-                {
-                    ModelState.AddModelError("IsActive", "There is already an active semester. Only one semester can be active at a time.");
-                }
-            }
+           
 
             if (ModelState.IsValid)
             {
