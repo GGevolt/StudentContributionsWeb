@@ -13,7 +13,8 @@ namespace StudentContributions.Models.ViewModels
        public double PercentageOfContribution { get; set; }
        public double PercentageOfApproved { get; set; }
        public int ContributionNum { get; set; }
-       public int ContributorNum { get; set; }
+        public int ApprovedContributionNum { get; set; }
+        public int ContributorNum { get; set; }
        public int FacultyId { get; set; }
     }
 }

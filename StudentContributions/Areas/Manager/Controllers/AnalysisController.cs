@@ -51,6 +51,7 @@ namespace StudentContributions.Areas.Manager.Controllers
                 {
                     semester = semester,
                     ContributionNum = contributionsBySF,
+                    ApprovedContributionNum = approvedContributionsBySF,
                     PercentageOfContribution = percentageOfContribution,
                     PercentageOfApproved = percentageOfApproved,
                     ContributorNum = contributorsBySF,
