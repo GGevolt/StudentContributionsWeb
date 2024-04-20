@@ -26,7 +26,12 @@ namespace StudentContributions.Areas.Admin.Controllers
         public IActionResult Create()
         {
             PopulateFacultyAndSemesterLists();
-            var model = new Magazine { ClosureDate = DateTime.Now };
+            var activeSemester = _unitOfWork.SemesterRepository.Get(s => s.IsActive);
+            var model = new Magazine
+            {
+                ClosureDate = DateTime.Now,
+                SemesterID = activeSemester?.ID ?? 0  
+            };
             return View(model);
         }
 
@@ -66,6 +71,15 @@ namespace StudentContributions.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Magazine magazine)
         {
+            var originalMagazine = _unitOfWork.MagazineRepository.Get(m => m.ID == magazine.ID);
+            if (originalMagazine == null)
+            {
+                return NotFound();
+            }
+
+            
+            magazine.SemesterID = originalMagazine.SemesterID;
+
             if (!ValidateClosureDate(magazine.ClosureDate, magazine.SemesterID))
             {
                 PopulateFacultyAndSemesterLists();
@@ -76,6 +90,7 @@ namespace StudentContributions.Areas.Admin.Controllers
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
+
 
         public IActionResult Delete(int? id)
         {
