@@ -18,19 +18,12 @@ namespace StudentContributions.Areas.Admin.Controllers
             _unitOfWork = unitOfWork;
         }
 
-<<<<<<< HEAD
-        public IActionResult Index()
-        {
-            var magazines = _unitOfWork.MagazineRepository.GetAll().ToList();
-            return View(magazines);
-        }
-=======
 		public IActionResult Index()
 		{
 			var magazines = _unitOfWork.MagazineRepository.MagazinesIncludeFacultySemester().ToList();
 			return View(magazines);
 		}
->>>>>>> main
+
 
         public IActionResult Create()
         {
