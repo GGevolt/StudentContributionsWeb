@@ -11,6 +11,7 @@
         <thead class="table-dark">
             <tr>
                 <th>Title</th>
+                <th>Magazine Name</th>
                 <th>Submission Date</th>
                 <th>Comments</th>
                 <th>Status</th>
@@ -22,6 +23,7 @@
             {
                 <tr>
                     <td>@contribution.Title</td>
+                    <td>@contribution.Magazine.MagazineName</td>
                     <td>@contribution.SubmissionDate.ToShortDateString()</td>
                     <td>@contribution.Comment</td>
                     <td>@contribution.Contribution_Status</td>

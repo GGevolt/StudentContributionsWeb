@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<AcademicYearVM>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<body>
 <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
     <thead class="table-active">
         <tr>
@@ -24,3 +27,43 @@
         }
     </tbody>
 </table>
+
+    <canvas id="myChart" style="width:100%;max-width:600px;"></canvas>
+
+<script>
+        var xValues = [];
+        @foreach (var item in Model)
+        {
+            @:xValues.push("@item.semester.SemesterName")
+        }
+        var yValues = [];
+        @foreach (var item in Model)
+        {
+            @:yValues.push("@item.Percentage")
+        }
+    var barColors = [
+        "#b91d47",
+        "#00aba9",
+        "#2b5797",
+        "#e8c3b9",
+        "#1e7145"
+    ];
+
+    new Chart("myChart", {
+        type: "pie",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                    text: "Percentage of Contribution (%)"
+            }
+        }
+    });
+</script>
+</body>

@@ -12,6 +12,5 @@ namespace StudentContributions.DataAccess.Repository.IRepository
     {
         void Update(Contribution contribution);
         IEnumerable<Contribution> IncludeUserToCon(IEnumerable<Contribution> contributions);
-        IEnumerable<Contribution> IncludeMaga();
     }
 }

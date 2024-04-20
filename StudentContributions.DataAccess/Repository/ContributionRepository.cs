@@ -28,9 +28,5 @@ namespace StudentContributions.DataAccess.Repository
             var contributionIds = contributions.Select(c => c.ID).ToList();
             return _dbContext.Contributions.Include(c => c.ApplicationUser).Where(c => contributionIds.Contains(c.ID)).ToList();
         }
-        public IEnumerable<Contribution> IncludeMaga()
-        {
-            return _dbContext.Contributions.Include(c => c.Magazine).ToList();
-        }
     }
 }
