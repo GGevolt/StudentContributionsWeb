@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
+using StudentContributions.Models.ViewModels;
 using System.IO.Compression;
 
 namespace StudentContributions.Areas.Manager.Controllers
@@ -21,6 +22,24 @@ namespace StudentContributions.Areas.Manager.Controllers
         {
             var magazines = _unitOfWork.MagazineRepository.GetAllMore(includeProperty: "Semester", moreProperty: "Faculty").Where(m => DateTime.Now > m.Semester.EndDate);
             return View(magazines);
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id, includeProperty: "Semester");
+            if (magazine == null)
+            {
+                return NotFound();
+            }
+            ConOfMagVM conOfMagVM = new ConOfMagVM();
+            conOfMagVM.Magazine = magazine;
+            var contributions = _unitOfWork.ContributionRepository.GetAll(c => c.MagazineID == id && c.Contribution_Status.Contains("Approved"));
+            conOfMagVM.Contributions = contributions;
+            return View(conOfMagVM);
         }
         public IActionResult DownloadZipMagazine(int? id)
         {
