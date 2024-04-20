@@ -47,6 +47,7 @@ namespace StudentContributions.Areas.Student.Controllers
 
         }
 
+        [Authorize(Roles = "Student")]
         public IActionResult Create(int? magID)
         {
             if (magID == null || magID == 0)
@@ -65,6 +66,7 @@ namespace StudentContributions.Areas.Student.Controllers
             return View(con);
         }
 
+        [Authorize(Roles = "Student")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Contribution contribution, List<IFormFile>? files)
@@ -194,10 +196,13 @@ namespace StudentContributions.Areas.Student.Controllers
         public IActionResult DeleteFile(string fileName, int id)
         {
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
-            if (contribution == null)
+            var magSem = _unitOfWork.MagazineRepository.Get(m => m.ID == contribution.MagazineID, includeProperty: "Semester");
+            if (contribution == null || DateTime.Now > magSem.Semester.EndDate)
             {
-                return NotFound();
+                TempData["error"] = "The editing period has ended or the contribution does not exist.";
+                return RedirectToAction("Edit", new { id = id });
             }
+
             contribution.Contribution_Status = "Pending";
             _unitOfWork.ContributionRepository.Update(contribution);
             _unitOfWork.Save();
