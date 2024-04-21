@@ -30,10 +30,11 @@ namespace StudentContributions.Areas.Coordinator.Controllers
             var user = await _userManager.GetUserAsync(User);
             var userFacultyId = user.FacultyID;
 
-            var contributions = _unitOfWork.ContributionRepository.GetAll(includeProperty: "Magazine")
+            var contributions = _unitOfWork.ContributionRepository.GetAll(includeProperty: "Magazine.Semester")
                                .Where(c => c.Magazine.FacultyID == userFacultyId &&
                                            c.Contribution_Status.Contains("Pending") &&
-                                           (DateTime.Now - c.SubmissionDate).Days < 14);
+                                           ((DateTime.Now - c.SubmissionDate).Days < 14) &&
+                                           DateTime.Now < c.Magazine.Semester.EndDate);
 
             return View(contributions);
         }
