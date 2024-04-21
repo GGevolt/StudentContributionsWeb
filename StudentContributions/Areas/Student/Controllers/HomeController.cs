@@ -29,7 +29,7 @@ namespace StudentContributions.Areas.Student.Controllers
         {
             int pageSize = 8;
             HomeTestVM homeTestVM = new HomeTestVM();
-            homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty").ToList();
+            homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty").OrderByDescending(m => m.ClosureDate).ToList();
             if (!string.IsNullOrEmpty(search))
             {
                 homeTestVM.Magazines = homeTestVM.Magazines.Where(m => m.MagazineName.ToLower().Contains(search.ToLower())).ToList();
