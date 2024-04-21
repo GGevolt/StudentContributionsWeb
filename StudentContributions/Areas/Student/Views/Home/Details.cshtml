@@ -29,7 +29,7 @@
                 @Model.Magazine.Semester.EndDate
             </dd>
         </dl>
-        @if (User.IsInRole("Student"))
+        @if (User.IsInRole("Student") && Model.SubmitStarted == true)
         {
             <a class="text-dark btn btn-info mb-2" asp-area="Student" asp-controller="Contribution" asp-action="Create" asp-route-magID="@Model.Magazine.ID">New Article</a>
         }

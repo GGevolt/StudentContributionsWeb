@@ -56,6 +56,14 @@ namespace StudentContributions.Areas.Student.Controllers
                 return NotFound();
             }
             ConOfMagVM conOfMagVM = new ConOfMagVM();
+            if (magazine.Semester.StartDate > DateTime.Now)
+            {
+                conOfMagVM.SubmitStarted = false;
+            }
+            else
+            {
+                conOfMagVM.SubmitStarted = true;
+            }
             conOfMagVM.Magazine = magazine;
             var contributions = _unitOfWork.ContributionRepository.GetAll(c => c.MagazineID == id && c.Contribution_Status.Contains("Approved"));
             //var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
