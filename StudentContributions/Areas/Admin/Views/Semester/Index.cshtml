@@ -12,6 +12,7 @@
         <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
             <thead class="table-active">
                 <tr>
+                    <th>Start Name</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Is Active?</th>
@@ -22,6 +23,7 @@
                 @foreach (var item in Model)
                 {
                     <tr>
+                        <td>@Html.DisplayFor(modelItem => item.SemesterName)</td>
                         <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
                         <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
                         <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
