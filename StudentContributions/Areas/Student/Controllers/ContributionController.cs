@@ -213,6 +213,7 @@ namespace StudentContributions.Areas.Student.Controllers
             }
 
             contribution.Contribution_Status = "Pending";
+            contribution.SubmissionDate = DateTime.Now;
             _unitOfWork.ContributionRepository.Update(contribution);
             _unitOfWork.Save();
 
@@ -303,6 +304,7 @@ namespace StudentContributions.Areas.Student.Controllers
             }
 
             conForm.Contribution.Contribution_Status = "Pending";
+            conForm.Contribution.SubmissionDate = DateTime.Now;
             _unitOfWork.ContributionRepository.Update(conForm.Contribution);
             _unitOfWork.Save();
 

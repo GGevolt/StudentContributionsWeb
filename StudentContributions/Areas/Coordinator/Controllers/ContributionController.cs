@@ -31,8 +31,9 @@ namespace StudentContributions.Areas.Coordinator.Controllers
             var userFacultyId = user.FacultyID;
 
             var contributions = _unitOfWork.ContributionRepository.GetAll(includeProperty: "Magazine")
-                               .Where(c => c.Magazine.FacultyID == userFacultyId && c.Contribution_Status.Contains("Pending"))
-                               .ToList();
+                               .Where(c => c.Magazine.FacultyID == userFacultyId &&
+                                           c.Contribution_Status.Contains("Pending") &&
+                                           (DateTime.Now - c.SubmissionDate).Days < 14);
 
             return View(contributions);
         }
@@ -54,7 +55,6 @@ namespace StudentContributions.Areas.Coordinator.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (contribution.Magazine.FacultyID != id) { }
             ConDetails conForm = new ConDetails();
             conForm.Contribution = contribution;
             conForm.Filenames = new List<string>();
