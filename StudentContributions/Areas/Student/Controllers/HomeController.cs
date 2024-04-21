@@ -29,7 +29,7 @@ namespace StudentContributions.Areas.Student.Controllers
         {
             int pageSize = 8;
             HomeTestVM homeTestVM = new HomeTestVM();
-            homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty").ToList();
+            homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty").OrderByDescending(m => m.ClosureDate).ToList();
             if (!string.IsNullOrEmpty(search))
             {
                 homeTestVM.Magazines = homeTestVM.Magazines.Where(m => m.MagazineName.ToLower().Contains(search.ToLower())).ToList();
@@ -56,6 +56,14 @@ namespace StudentContributions.Areas.Student.Controllers
                 return NotFound();
             }
             ConOfMagVM conOfMagVM = new ConOfMagVM();
+            if (magazine.Semester.StartDate > DateTime.Now || DateTime.Now > magazine.ClosureDate)
+            {
+                conOfMagVM.SubmitStarted = false;
+            }
+            else
+            {
+                conOfMagVM.SubmitStarted = true;
+            }
             conOfMagVM.Magazine = magazine;
             var contributions = _unitOfWork.ContributionRepository.GetAll(c => c.MagazineID == id && c.Contribution_Status.Contains("Approved"));
             //var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();

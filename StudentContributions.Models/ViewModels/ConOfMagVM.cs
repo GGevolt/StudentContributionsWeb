@@ -11,5 +11,6 @@ namespace StudentContributions.Models.ViewModels
     {
         public Magazine Magazine { get; set; }
         public IEnumerable<Contribution> Contributions { get; set;}
+        public bool SubmitStarted { get; set; }
     }
 }
