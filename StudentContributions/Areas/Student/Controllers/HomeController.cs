@@ -56,7 +56,7 @@ namespace StudentContributions.Areas.Student.Controllers
                 return NotFound();
             }
             ConOfMagVM conOfMagVM = new ConOfMagVM();
-            if (magazine.Semester.StartDate > DateTime.Now)
+            if (magazine.Semester.StartDate > DateTime.Now || DateTime.Now > magazine.ClosureDate)
             {
                 conOfMagVM.SubmitStarted = false;
             }

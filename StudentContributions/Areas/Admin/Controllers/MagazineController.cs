@@ -129,9 +129,9 @@ namespace StudentContributions.Areas.Admin.Controllers
         private bool ValidateClosureDate(DateTime closureDate, int semesterId)
         {
             var semester = _unitOfWork.SemesterRepository.Get(s => s.ID == semesterId);
-            if (semester == null)
+            if (semester == null || semester.IsActive != true)
             {
-                ModelState.AddModelError("SemesterID", "Selected semester does not exist.");
+                ModelState.AddModelError("SemesterID", "Selected semester does not exist or inactive.");
                 return false;
             }
 
