@@ -31,13 +31,5 @@ namespace StudentContributions.DataAccess.Repository
             
             return _dbContext.Magazines.Find(id);
         }
-        public IEnumerable<Magazine> GetAllWithContributions(int facultyId)
-        {
-            return _dbContext.Magazines.Include(m => m.Contributions).Where(m => m.FacultyID == facultyId).ToList();
-        }
-        public IEnumerable<Magazine> MagazinesIncludeFacultySemester()
-        {
-            return _dbContext.Magazines.Include(m => m.Faculty).Include(m => m.Semester).ToList();
-        }
     }
 }

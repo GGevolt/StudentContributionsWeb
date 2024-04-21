@@ -12,8 +12,8 @@ using StudentContributions.DataAccess.Data;
 namespace StudentContributions.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240420071417_reTry")]
-    partial class reTry
+    [Migration("20240420172124_sead")]
+    partial class sead
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
