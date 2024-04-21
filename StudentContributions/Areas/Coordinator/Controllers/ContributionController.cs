@@ -77,7 +77,12 @@ namespace StudentContributions.Areas.Coordinator.Controllers
         public async Task<IActionResult> Edit(ConDetails conForm, List<IFormFile>? files)
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null || conForm.Contribution.Magazine.FacultyID != user.FacultyID)
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == conForm.Contribution.ID, includeProperty: "Magazine");
+            if (contribution == null)
+            {
+                return NotFound();
+            }
+            if (user == null || contribution.Magazine.FacultyID != user.FacultyID)
             {
                 TempData["error"] = "Unauthorized access";
                 return RedirectToAction("Index");
