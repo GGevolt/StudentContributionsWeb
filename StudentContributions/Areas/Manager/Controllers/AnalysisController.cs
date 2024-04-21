@@ -52,8 +52,8 @@ namespace StudentContributions.Areas.Manager.Controllers
                     semester = semester,
                     ContributionNum = contributionsBySF,
                     ApprovedContributionNum = approvedContributionsBySF,
-                    PercentageOfContribution = percentageOfContribution,
-                    PercentageOfApproved = percentageOfApproved,
+                    PercentageOfContribution = Math.Round(percentageOfContribution, 2),
+                    PercentageOfApproved = Math.Round(percentageOfApproved,2),
                     ContributorNum = contributorsBySF,
                     FacultyId = id
                 });
