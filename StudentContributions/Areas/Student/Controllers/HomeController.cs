@@ -24,15 +24,24 @@ namespace StudentContributions.Areas.Student.Controllers
 
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Index(string? search, int currentPage = 1)
         {
-            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
-            if (user != null && _userManager.IsInRoleAsync(user, "Coordinator").GetAwaiter().GetResult()) {
-
-                return View(_unitOfWork.MagazineRepository.GetAll(m => m.FacultyID == user.FacultyID, includeProperty: "Faculty").ToList());
+            int pageSize = 8;
+            HomeTestVM homeTestVM = new HomeTestVM();
+            homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty").ToList();
+            if (!string.IsNullOrEmpty(search))
+            {
+                homeTestVM.Magazines = homeTestVM.Magazines.Where(m => m.MagazineName.ToLower().Contains(search.ToLower())).ToList();
+                homeTestVM.Search = search;
             }
-
-                return View(_unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty").ToList());
+            var totalRecords = homeTestVM.Magazines.Count;
+            var totalPages = (totalRecords + pageSize - 1) / pageSize;
+            homeTestVM.Magazines = homeTestVM.Magazines.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            homeTestVM.CurrentPage = currentPage;
+            homeTestVM.TotalPages = totalPages;
+            homeTestVM.PageSize = pageSize;
+            return View(homeTestVM);
         }
 
         public IActionResult Details(int? id)
@@ -41,7 +50,7 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 return NotFound();
             }
-            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id, includeProperty:"Semester");
+            var magazine = _unitOfWork.MagazineRepository.Get(c => c.ID == id, includeProperty: "Semester");
             if (magazine == null)
             {
                 return NotFound();

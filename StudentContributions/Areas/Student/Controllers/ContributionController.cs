@@ -32,6 +32,7 @@ namespace StudentContributions.Areas.Student.Controllers
             _webHost = webhost;
         }
 
+        [Authorize(Roles = "Student")]
         public IActionResult Index()
         {
             var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
@@ -47,6 +48,7 @@ namespace StudentContributions.Areas.Student.Controllers
 
         }
 
+        [Authorize(Roles = "Student")]
         public IActionResult Create(int? magID)
         {
             if (magID == null || magID == 0)
@@ -65,6 +67,7 @@ namespace StudentContributions.Areas.Student.Controllers
             return View(con);
         }
 
+        [Authorize(Roles = "Student")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Contribution contribution, List<IFormFile>? files)
@@ -191,13 +194,24 @@ namespace StudentContributions.Areas.Student.Controllers
             return File(bytes, "application/octet-stream", fileName);
         }
 
+        [Authorize(Roles = "Student")]
         public IActionResult DeleteFile(string fileName, int id)
         {
             var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
-            if (contribution == null)
+            var magSem = _unitOfWork.MagazineRepository.Get(m => m.ID == contribution.MagazineID, includeProperty: "Semester");
+            if (contribution == null || DateTime.Now > magSem.Semester.EndDate)
             {
-                return NotFound();
+                TempData["error"] = "The editing period has ended or the contribution does not exist.";
+                return RedirectToAction("Edit", new { id = id });
             }
+
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != contribution.UserID)
+            {
+                TempData["error"] = "Unauthorized access, use Pending Articles if you're Coordinator";
+                return RedirectToAction("Edit", new { id = id });
+            }
+
             contribution.Contribution_Status = "Pending";
             _unitOfWork.ContributionRepository.Update(contribution);
             _unitOfWork.Save();
@@ -245,7 +259,7 @@ namespace StudentContributions.Areas.Student.Controllers
             var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
             if (user == null || user.Id != contri.UserID)
             {
-                TempData["error"] = "Unauthorized access";
+                TempData["error"] = "Unauthorized access, use Pending Articles if you're Coordinator";
                 return RedirectToAction(nameof(Index));
             }
             if (Semes.IsActive== false || Semes == null)
@@ -281,6 +295,13 @@ namespace StudentContributions.Areas.Student.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ConDetails conForm, List<IFormFile>? files)
         {
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != conForm.Contribution.UserID)
+            {
+                TempData["error"] = "Unauthorized access, use Pending Articles if you're Coordinator";
+                return RedirectToAction(nameof(Index));
+            }
+
             conForm.Contribution.Contribution_Status = "Pending";
             _unitOfWork.ContributionRepository.Update(conForm.Contribution);
             _unitOfWork.Save();
@@ -330,15 +351,21 @@ namespace StudentContributions.Areas.Student.Controllers
                 TempData["error"] = "The semester is not active or don't exist.";
                 return RedirectToAction(nameof(Index));
             }
-            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
 
-            if (contribution == null  || DateTime.Now > Semes.EndDate)
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != contri.UserID)
+            {
+                TempData["error"] = "Unauthorized access.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (contri == null  || DateTime.Now > Semes.EndDate)
             {
                 TempData["error"] = "The deletion period has ended or the contribution does not exist.";
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(contribution);
+            return View(contri);
 
         }
 
@@ -356,10 +383,16 @@ namespace StudentContributions.Areas.Student.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id);
-            if (contribution != null)
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+            if (user == null || user.Id != contri.UserID)
             {
-                _unitOfWork.ContributionRepository.Remove(contribution);
+                TempData["error"] = "Unauthorized access.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (contri != null)
+            {
+                _unitOfWork.ContributionRepository.Remove(contri);
                 _unitOfWork.Save();
                 string path = Path.Combine(this._webHost.WebRootPath, "Contributions", id.ToString());
                 var confolder = new DirectoryInfo(path);

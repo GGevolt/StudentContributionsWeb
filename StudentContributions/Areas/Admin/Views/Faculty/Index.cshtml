@@ -3,14 +3,14 @@
 @{
     ViewData["Title"] = "Faculty list";
 }
-
-<div class="col-md-8 offset-md-2" style="padding-top:5px">
-    <div style="display: flex; justify-content: space-between;">
-        <h2>@ViewData["Title"]</h2>
-        <a asp-action="Create" class="btn btn-primary" style="margin-bottom: 5px">Create New Faculty</a>
-    </div>
-    <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
-        <thead class="table-active">
+<div class="table-responsive-lg ">
+    <div class="col-md-8 offset-md-2" style="padding-top:5px">
+        <div style="display: flex; justify-content: space-between;">
+            <h2>@ViewData["Title"]</h2>
+            <a asp-action="Create" class="btn btn-primary" style="margin-bottom: 5px">Create New Faculty</a>
+        </div>
+        <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
+            <thead class="table-active">
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
@@ -32,3 +32,4 @@
             </tbody>
         </table>
     </div>
+</div>

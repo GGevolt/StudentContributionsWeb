@@ -39,8 +39,7 @@ namespace StudentContributions.Areas.Coordinator.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var contribution = _unitOfWork.ContributionRepository.GetAll(c => c.ID == id, includeProperty: "Magazine")
-                                       .FirstOrDefault();  
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id, includeProperty: "Magazine");
             if (contribution == null)
             {
                 return NotFound();
@@ -75,8 +74,14 @@ namespace StudentContributions.Areas.Coordinator.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(ConDetails conForm, List<IFormFile>? files)
+        public async Task<IActionResult> Edit(ConDetails conForm, List<IFormFile>? files)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null || conForm.Contribution.Magazine.FacultyID != user.FacultyID)
+            {
+                TempData["error"] = "Unauthorized access";
+                return RedirectToAction("Index");
+            }
 
             _unitOfWork.ContributionRepository.Update(conForm.Contribution);
             _unitOfWork.Save();
@@ -120,10 +125,18 @@ namespace StudentContributions.Areas.Coordinator.Controllers
             return File(bytes, "application/octet-stream", fileName);
         }
 
-        public IActionResult DeleteFile(string fileName, int id)
+        public async Task<IActionResult> DeleteFile(string fileName, int id)
         {
-            string path = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString() + "/") + fileName;
+            var user = await _userManager.GetUserAsync(User);
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id, includeProperty: "Magazine");
 
+            if (user == null || contribution.Magazine.FacultyID != user.FacultyID)
+            {
+                TempData["error"] = "Unauthorized access";
+                return RedirectToAction("Index");
+            }
+
+            string path = Path.Combine(_webHost.WebRootPath, "Contributions", id.ToString() + "/") + fileName;
             FileInfo file = new FileInfo(path);
             if (file.Exists)
             {
@@ -167,8 +180,13 @@ namespace StudentContributions.Areas.Coordinator.Controllers
             var user = await _userManager.GetUserAsync(User);
             var userFacultyId = user.FacultyID;
 
-            var contribution = _unitOfWork.ContributionRepository.GetAll(c => c.ID == id, includeProperty: "Magazine")
-                                        .FirstOrDefault();
+            var contribution = _unitOfWork.ContributionRepository.Get(c => c.ID == id, includeProperty: "Magazine");
+
+            if (user == null || contribution.Magazine.FacultyID != user.FacultyID)
+            {
+                TempData["error"] = "Unauthorized access";
+                return RedirectToAction("Index");
+            }
 
             if (contribution == null || (DateTime.Now - contribution.SubmissionDate).Days > 14)
             {

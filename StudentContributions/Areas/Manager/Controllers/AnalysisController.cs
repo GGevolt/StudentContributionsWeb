@@ -30,7 +30,7 @@ namespace StudentContributions.Areas.Manager.Controllers
                 int contributorsBySF = 0;
                 int approvedContributionsInF = 0;
                 int approvedContributionsBySF = 0;
-                var magazinesInF = _unitOfWork.MagazineRepository.GetAllWithContributions(id);
+                var magazinesInF = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Contributions").Where(m => m.FacultyID == id);
                 if (magazinesInF != null)
                 {
                     contributionsInF = magazinesInF.Where(m => m.Contributions != null).SelectMany(m => m.Contributions).Count();
@@ -51,6 +51,7 @@ namespace StudentContributions.Areas.Manager.Controllers
                 {
                     semester = semester,
                     ContributionNum = contributionsBySF,
+                    ApprovedContributionNum = approvedContributionsBySF,
                     PercentageOfContribution = percentageOfContribution,
                     PercentageOfApproved = percentageOfApproved,
                     ContributorNum = contributorsBySF,
@@ -61,7 +62,7 @@ namespace StudentContributions.Areas.Manager.Controllers
         }
 		public IActionResult ExceptionReport(int id)
         {
-			var magazinesInF = _unitOfWork.MagazineRepository.GetAllWithContributions(id);
+			var magazinesInF = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Contributions").Where(m => m.FacultyID == id);
             var contribution = magazinesInF.Where(m=>m.Contributions !=null).SelectMany(m=>m.Contributions).ToList();
 			ExceptionReportVM ERvm = new ExceptionReportVM
 			{
