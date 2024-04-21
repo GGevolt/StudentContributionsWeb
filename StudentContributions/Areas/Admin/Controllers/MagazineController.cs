@@ -23,8 +23,6 @@ namespace StudentContributions.Areas.Admin.Controllers
 			var magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty", moreProperty: "Semester").ToList();
 			return View(magazines);
 		}
-
-
         public IActionResult Create()
         {
             PopulateFacultyAndSemesterLists();
