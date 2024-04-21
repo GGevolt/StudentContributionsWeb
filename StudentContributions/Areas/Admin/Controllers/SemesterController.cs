@@ -24,43 +24,37 @@ namespace StudentContributions.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            var latestSemester = _unitOfWork.SemesterRepository.GetAll().ToList().OrderByDescending(s => s.EndDate).FirstOrDefault();
-            var newSemester = new Semester();
-            if (latestSemester != null)
+            var latestSemester = _unitOfWork.SemesterRepository.GetAll()
+                                    .OrderByDescending(s => s.EndDate).FirstOrDefault();
+            var newSemester = new Semester
             {
-               
+                EndDate = DateTime.Today
+            };
+
+            if (latestSemester == null)
+            {
+                newSemester.StartDate = DateTime.Today;
+            }
+            else
+            {
                 newSemester.StartDate = latestSemester.EndDate.AddDays(1);
             }
 
-            return View(newSemester); 
+            return View(newSemester);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Semester semester)
         {
             ModelState.Remove("Magazines");
+            ValidateSemester(semester);
+            
+            
+
             if (ModelState.IsValid)
             {
-               
-                var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
-                if (activeSemester != null)
-                {
-                   
-                    semester.IsActive = false;
-                }
-                else
-                {
-                   
-                    semester.IsActive = true;
-                }
-                var latestSemester = _unitOfWork.SemesterRepository.GetAll().ToList().OrderByDescending(s => s.EndDate).FirstOrDefault();
-                if (latestSemester != null && semester.StartDate <= latestSemester.EndDate)
-                {
-                    ModelState.AddModelError("StartDate", "StartDate phải sau ngày kết thúc của semester gần nhất.");
-                }
-
+                semester.IsActive = false;
                 _unitOfWork.SemesterRepository.Add(semester);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
@@ -74,7 +68,7 @@ namespace StudentContributions.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var semester = _unitOfWork.SemesterRepository.Get(c => c.ID == id);
+            var semester = _unitOfWork.SemesterRepository.Get(s => s.ID == id);
             if (semester == null)
             {
                 return NotFound();
@@ -87,14 +81,23 @@ namespace StudentContributions.Areas.Admin.Controllers
         public IActionResult Edit(Semester semester)
         {
             ModelState.Remove("Magazines");
+            if (semester.EndDate < semester.StartDate)
+            {
+                ModelState.AddModelError("EndDate", "EndDate must be greater than StartDate.");
+            }
+            _unitOfWork.SemesterRepository.Update(semester);
+            ValidateActiveSem(semester);
             if (ModelState.IsValid)
             {
-                _unitOfWork.SemesterRepository.Update(semester);
+                
+
                 _unitOfWork.Save();
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(semester);
         }
+
 
 
 
@@ -125,5 +128,28 @@ namespace StudentContributions.Areas.Admin.Controllers
             }
             return NotFound();
         }
+
+        private void ValidateSemester(Semester semester)
+        {
+            if (semester.EndDate < semester.StartDate)
+                ModelState.AddModelError("EndDate", "EndDate must be greater than StartDate.");
+
+            if (semester.StartDate < DateTime.Today)
+                ModelState.AddModelError("StartDate", "StartDate cannot be in the past.");
+
+            var latestSemester = _unitOfWork.SemesterRepository.GetAll()
+                                       .OrderByDescending(s => s.EndDate).FirstOrDefault();
+            if (latestSemester != null && semester.StartDate <= latestSemester.EndDate)
+                ModelState.AddModelError("StartDate", "StartDate must be after the end date of the most recent semester.");
+
+        }
+
+        private void ValidateActiveSem(Semester semester)
+        {
+
+            if (semester.IsActive && _unitOfWork.SemesterRepository.GetAll().Any(s => s.IsActive && s.ID != semester.ID))
+                ModelState.AddModelError("IsActive", "There can only be one active semester at a time.");
+        }
+
     }
 }
