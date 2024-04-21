@@ -35,7 +35,7 @@
             </header>
             <div class="w3-container">
                 <p>Not bad right?</p>
-                <p>Click <a class="w3-text-teal" href="https://www.youtube.com/watch?v=xvFZjo5PgG0&ab_channel=Duran">here</a> to enjoy the moment</p>
+                <p>Click <a class="w3-text-teal" href="https://www.youtube.com/watch?v=xvFZjo5PgG0&ab_channel=Duran" target="_blank">here</a> to enjoy the moment</p>
             </div>
             <footer class="w3-container w3-teal">
                 <p>BuKhu@gmail.com</p>
@@ -54,20 +54,22 @@
         @foreach (var magazine in Model.Magazines)
         {
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card">
-                    <div>
-                        <img src="~/img/modern-education.png" class="card-img-top" alt="magazineImg" />
+                <a href="@Url.Action("Details", "Home", new { id = magazine.ID })" class="card-link">
+                    <div class="card">
+                        <div>
+                            <img src="~/img/modern-education.png" class="card-img-top" alt="magazineImg" />
+                        </div>
+                        <div class="card-body">
+                            <span class="tag tag-teal">@magazine.Faculty.Name</span>
+                            <h4>
+                                @magazine.MagazineName
+                            </h4>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <span class="tag tag-teal">@magazine.Faculty.Name</span>
-                        <h4>
-                            @magazine.MagazineName
-                        </h4>
-                        <a href="@Url.Action("Details", "Home", new { id=magazine.ID })" class="btn btn-primary">Read More</a>
-                    </div>
-                </div>
+                </a>
             </div>
         }
+
     </div>
     <nav aria-label="Page navigation" style="margin-bottom:4%">
         <ul class="pagination" style="display: flex; justify-content: center;">

@@ -41,13 +41,19 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4" style="width: 50%;">
                 <canvas id="pieChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
             </div>
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4" style="width: 50%;">
+                <canvas id="doughChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4" style="width: 50%;">
                 <canvas id="mixedChartID" style="width:100%;max-width:700px;margin: 15px auto;"></canvas>
             </div>
         </div>
+
     </div>
 </body>
 
@@ -96,6 +102,35 @@
             }
         }
     });
+    //
+    //Doughnut Chart variables
+    var xDoughValues = [];
+    @foreach (var item in Model)
+    {
+        @:xDoughValues.push("@item.semester.SemesterName")
+    }
+                var yDoughValues = [];
+    @foreach (var item in Model)
+    {
+        @:yDoughValues.push("@item.PercentageOfApproved")
+    }
+        //Dough Chart draw
+        new Chart("doughChart", {
+            type: "doughnut",
+            data: {
+                labels: xDoughValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yDoughValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Percentage of Approved Contribution in Faluty(%)"
+                }
+            }
+        });
 
     //Mixed Chart Variables
     var xMixedValues = [];
