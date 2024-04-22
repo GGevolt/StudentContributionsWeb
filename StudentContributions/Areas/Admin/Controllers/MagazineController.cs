@@ -23,16 +23,12 @@ namespace StudentContributions.Areas.Admin.Controllers
 			var magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty", moreProperty: "Semester").ToList();
 			return View(magazines);
 		}
-
-
         public IActionResult Create()
         {
             PopulateFacultyAndSemesterLists();
-            var activeSemester = _unitOfWork.SemesterRepository.Get(s => s.IsActive);
             var model = new Magazine
             {
-                ClosureDate = DateTime.Now,
-                SemesterID = activeSemester?.ID ?? 0  
+                ClosureDate = DateTime.Now
             };
             return View(model);
         }
@@ -126,16 +122,16 @@ namespace StudentContributions.Areas.Admin.Controllers
 
         private void PopulateFacultyAndSemesterLists()
         {
-            ViewBag.FacultyList = _unitOfWork.FacultyRepository.GetAll().ToList().Select(f => new SelectListItem { Value = f.ID.ToString(), Text = $"{f.ID}. {f.Name}" });
-            ViewBag.SemesterList = _unitOfWork.SemesterRepository.GetAll().ToList().Select(s => new SelectListItem { Value = s.ID.ToString(), Text = $"{s.ID}. {s.StartDate.ToShortDateString()} - {s.EndDate.ToShortDateString()}" });
+            ViewBag.FacultyList = _unitOfWork.FacultyRepository.GetAll().ToList().Select(f => new SelectListItem { Value = f.ID.ToString(), Text = $"{f.Name}" });
+            ViewBag.SemesterList = _unitOfWork.SemesterRepository.GetAll(s => s.IsActive == true).ToList().Select(s => new SelectListItem { Value = s.ID.ToString(), Text = $"{s.SemesterName}: {s.StartDate.ToShortDateString()} - {s.EndDate.ToShortDateString()}" });
         }
 
         private bool ValidateClosureDate(DateTime closureDate, int semesterId)
         {
             var semester = _unitOfWork.SemesterRepository.Get(s => s.ID == semesterId);
-            if (semester == null)
+            if (semester == null || semester.IsActive != true)
             {
-                ModelState.AddModelError("SemesterID", "Selected semester does not exist.");
+                ModelState.AddModelError("SemesterID", "Selected semester does not exist or inactive.");
                 return false;
             }
 

@@ -10,6 +10,7 @@
 					<th>Name</th>
 					<th>Falcuty</th>
 					<th>Semester</th>
+					<th>Available on</th>
 					<th>Final closure date</th>
 					<th></th>
 					<th></th>
@@ -22,6 +23,7 @@
 						<td>@magazine.MagazineName</td>
 						<td>@magazine.Faculty.Name</td>
 						<td>@magazine.Semester.SemesterName</td>
+						<td>@magazine.Semester.StartDate</td>
 						<td>@magazine.Semester.EndDate</td>
 						<td><a asp-controller="Magazine" asp-action="Details" asp-route-id="@magazine.ID" class="btn btn-info">View approved articles</a></td>
 						<td><a asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@magazine.ID" class="btn btn-primary">Download all articles' files</a></td>

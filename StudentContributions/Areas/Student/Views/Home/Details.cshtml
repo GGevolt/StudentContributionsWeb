@@ -16,6 +16,13 @@
             </dd>
             <div class="w-100"></div>
             <dt class="col">
+                Available on
+            </dt>
+            <dd class="col">
+                @Model.Magazine.Semester.StartDate
+            </dd>
+            <div class="w-100"></div>
+            <dt class="col">
                 New contribution deadline
             </dt>
             <dd class="col">
@@ -29,7 +36,7 @@
                 @Model.Magazine.Semester.EndDate
             </dd>
         </dl>
-        @if (User.IsInRole("Student") && Model.Magazine.ClosureDate > DateTime.Today)
+        @if (User.IsInRole("Student") && Model.Magazine.ClosureDate > DateTime.Today || Model.SubmitStarted == true)
         {
             <a class="text-dark btn btn-info mb-2" asp-area="Student" asp-controller="Contribution" asp-action="Create" asp-route-magID="@Model.Magazine.ID">New Article</a>
         }

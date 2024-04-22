@@ -55,10 +55,15 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 return NotFound();
             }
-            var mag = _unitOfWork.MagazineRepository.Get(m => m.ID == magID);
+            var mag = _unitOfWork.MagazineRepository.Get(m => m.ID == magID, includeProperty: "Semester");
             if (mag == null)
             {
                 return NotFound();
+            }
+            if (mag.Semester.StartDate > DateTime.Now || mag.ClosureDate < DateTime.Now)
+            {
+                TempData["error"] = "Magazine not in submit period";
+                return RedirectToAction("Details", "Home", new {id = magID});
             }
             Contribution con = new Contribution();
             con.MagazineID = (int) magID;
@@ -104,11 +109,11 @@ namespace StudentContributions.Areas.Student.Controllers
                 }
                 if (coordinatorFound)
                 {
-                    var magazine = _unitOfWork.MagazineRepository.GetById(contribution.MagazineID);
+                    var magazine = _unitOfWork.MagazineRepository.Get(m => m.ID == contribution.MagazineID, includeProperty: "Semester");
 
-                    if (magazine == null || DateTime.Now > magazine.ClosureDate)
+                    if (magazine == null || DateTime.Now > magazine.ClosureDate || magazine.Semester.StartDate > DateTime.Now)
                     {
-                        ModelState.AddModelError("Error: ", "The contribution period for the selected magazine has ended.");
+                        ModelState.AddModelError("Error: ", "Magazine not in submit period");
                         return View(contribution);
                     }
                     contribution.Contribution_Status = "Pending";
@@ -213,6 +218,7 @@ namespace StudentContributions.Areas.Student.Controllers
             }
 
             contribution.Contribution_Status = "Pending";
+            contribution.SubmissionDate = DateTime.Now;
             _unitOfWork.ContributionRepository.Update(contribution);
             _unitOfWork.Save();
 
@@ -303,6 +309,7 @@ namespace StudentContributions.Areas.Student.Controllers
             }
 
             conForm.Contribution.Contribution_Status = "Pending";
+            conForm.Contribution.SubmissionDate = DateTime.Now;
             _unitOfWork.ContributionRepository.Update(conForm.Contribution);
             _unitOfWork.Save();
 

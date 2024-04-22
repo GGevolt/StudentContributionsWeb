@@ -1,40 +1,60 @@
 ﻿@model IEnumerable<AcademicYearVM>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-<body>
-    <div class="table-responsive">
-        <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
-            <thead class="table-active">
-                <tr>
-                    <th>Faculty ID</th>
-                    <th>Semester Name</th>
-                    <th>Semester</th>
-                    <th>Number of contributor</th>
-                    <th>Number of Contribution</th>
-                    <th>Total of Approved Contribution</th>
-                    <th>Percentage of Contribution</th>
-                    <th>Percentage of Approved Contribution</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.FacultyId</td>
-                        <td>@item.semester.SemesterName</td>
-                        <td>@item.semester.StartDate to @item.semester.EndDate</td>
-                        <td>@item.ContributorNum</td>
-                        <td>@item.ContributionNum</td>
-                        <td>@item.ApprovedContributionNum</td>
-                        <td>@item.PercentageOfContribution %</td>
-                        <td>@item.PercentageOfApproved %</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+<html lang="en">
+<head>
+</head>
+            width: 100%;
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
+                        <thead class="table-active">
+                            <tr>
+                                <th>Faculty ID</th>
+                                <th>Semester Name</th>
+                                <th>Semester</th>
+                                <th>Number of contributors</th>
+                                <th>Number of Contributions</th>
+                                <th>Total of Approved Contributions</th>
+                                <th>Percentage of Contribution</th>
+                                <th>Percentage of Approved Contribution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.FacultyId</td>
+                                    <td>@item.semester.SemesterName</td>
+                                    <td>@item.semester.StartDate to @item.semester.EndDate</td>
+                                    <td>@item.ContributorNum</td>
+                                    <td>@item.ContributionNum</td>
+                                    <td>@item.ApprovedContributionNum</td>
+                                    <td>@item.PercentageOfContribution %</td>
+                                    <td>@item.PercentageOfApproved %</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4" style="width: 50%;">
+                <canvas id="pieChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
+            </div>
+            <div class="col-md-6 col-lg-4" style="width: 50%;">
+                <canvas id="doughChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
+            </div>
         <div style="width: 50%;">
-            <canvas id="pieChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4" style="width: 50%;">
+                <canvas id="mixedChartID" style="width:100%;max-width:700px;margin: 15px auto;"></canvas>
+            </div>
+        </div>
+
+    </div>
         </div>
         <div style="width: 50%;">
             <canvas id="doughnutChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
@@ -43,8 +63,9 @@
             <canvas id="barChart" style="width:100%;max-width:700px;margin: 15px auto;"></canvas>
         </div>
     </div>
-    <a asp-controller="Analysis" asp-action="Index" asp-area="Manager" class="btn btn-secondary">Back to List</a>
 </body>
+
+</html>
 <script>
     // Color
     var barColors = [
@@ -64,50 +85,51 @@
     //Pie Chart variables
     var xPieValues = [];
     @foreach (var item in Model)
-    {
-        @:xPieValues.push("@item.semester.SemesterName")
-    }
-                    var yPieValues = [];
-    @foreach (var item in Model)
-    {
-        @:yPieValues.push("@item.PercentageOfContribution")
-    }
-        //Pie Chart draw
-        new Chart("pieChart", {
-            type: "pie",
-            data: {
-                labels: xPieValues,
-                datasets: [{
-                    backgroundColor: barColors,
-                    data: yPieValues
-                }]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: "Percentage of Contribution in Faluty(%)"
-                }
+    //Pie Chart draw
+    new Chart("pieChart", {
+        type: "pie",
+        data: {
+            labels: xPieValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yPieValues
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Percentage of Contribution in Faluty(%)"
             }
-        });
+        }
+    });
+    //
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Percentage of Contribution in Faluty(%)"
+            }
+                var yDoughValues = [];
+    });
     //Doughnut Chart variables
-    var xDoughnutValues = [];
+    var xDoughValues = [];
     @foreach (var item in Model)
     {
-        @:xDoughnutValues.push("@item.semester.SemesterName")
+        @:xDoughValues.push("@item.semester.SemesterName")
     }
-                            var yDoughnutValues = [];
+                    var yDoughnutValues = [];
     @foreach (var item in Model)
     {
-        @:yDoughnutValues.push("@item.PercentageOfApproved")
+        @:yDoughValues.push("@item.PercentageOfApproved")
     }
-        //Doughtnut Chart draw
-        new Chart("doughnutChart", {
+        //Dough Chart draw
+        new Chart("doughChart", {
             type: "doughnut",
             data: {
-                labels: xDoughnutValues,
+                labels: xDoughValues,
                 datasets: [{
                     backgroundColor: barColors,
-                    data: yDoughnutValues
+                    data: yDoughValues
                 }]
             },
             options: {
@@ -116,44 +138,94 @@
                     text: "Percentage of Approved Contribution in Faluty(%)"
                 }
             }
-        });
-    //Bar Chart Variables
-    var xBarValues = [];
+    var y1MixedValues = [];
+    var y2MixedValues = [];
+    //Mixed Chart Variables
+    var xMixedValues = [];
     @foreach (var item in Model)
     {
-        @:xBarValues.push("@item.semester.SemesterName")
+        @:xMixedValues.push("@item.semester.SemesterName")
     }
-            var y1BarValues = [];
+    var y1BarValues = [];
     var y2BarValues = [];
-    @foreach (var item in Model)
-    {
-        @:y1BarValues.push("@item.ContributorNum")
+            // Mixed Chart Draw
+     const data = {
+        labels:
+            xMixedValues,
+        datasets: [
+            {
     }
-    @foreach (var item in Model)
-    {
-        @:y2BarValues.push("@item.ContributionNum")
-    }
-                    // Bar Chart Draw
-                    var ctx = document.getElementById("barChart").getContext('2d');
+            // Bar Chart Draw
+            var ctx = document.getElementById("barChart").getContext('2d');
     var barChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: xBarValues,
             datasets: [{
                 label: 'Contributor',
-                data: y1BarValues,
-                backgroundColor: "rgba(153,255,51,1)"
-            }, {
+                data:
+                    y1MixedValues,
+                yAxisID: 'y-axis-1',
+                data:
+                    y2MixedValues,
+                yAxisID: 'y-axis-2',
+                backgroundColor:
+                    'rgba(255, 99, 132, 0.2)',
+                borderColor:
+                    'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }
+        ]
+    };
+    const maxPadding = 0.1; // Adjust the padding as needed (e.g., 0.1 for 10% padding)
+    const max1 = Math.max(...y1MixedValues);
+    const max2 = Math.max(...y2MixedValues);
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            },
+            {
                 label: 'Contribution',
                 data: y2BarValues,
                 backgroundColor: "rgba(255,153,0,1)"
             }]
         },
-        options: {
+            options: {
             title: {
                 display: true,
-                text: "Number of contributor and contribution each Semester"
+                text: "Number of Contributor and Contribution each Semester"
+            },
+            scales: {
+                yAxes: [
+                    {
+                        type: 'linear',
+                        position: 'left',
+                        id: 'y-axis-1',
+                        ticks: {
+                            beginAtZero: true, // Always start from zero
+                            stepSize: 1, // Forces only integers
+                            precision: 0, // Forces no decimal places
+                            suggestedMin: 0, // Ensure the minimum value is always 0
+                            suggestedMax: max1 + max1 * maxPadding // Adjusted maximum value
+                        }
+                    },
+                    {
+                        type: 'linear',
+                        position: 'right',
+                        id: 'y-axis-2',
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1,
+                            precision: 0,
+                            suggestedMin: 0,
+                            suggestedMax: max2 + max2 * maxPadding
+                        }
+                    },
+                ]
             }
         }
-    });
+    };
+    const mixedChartID = new Chart(
+        document.getElementById('mixedChartID'), config);
 </script>

@@ -24,22 +24,11 @@ namespace StudentContributions.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            var latestSemester = _unitOfWork.SemesterRepository.GetAll()
-                                    .OrderByDescending(s => s.EndDate).FirstOrDefault();
             var newSemester = new Semester
             {
-                EndDate = DateTime.Today
+                EndDate = DateTime.Today,
+                StartDate= DateTime.Today
             };
-
-            if (latestSemester == null)
-            {
-                newSemester.StartDate = DateTime.Today;
-            }
-            else
-            {
-                newSemester.StartDate = latestSemester.EndDate.AddDays(1);
-            }
-
             return View(newSemester);
         }
 
@@ -54,7 +43,6 @@ namespace StudentContributions.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                semester.IsActive = false;
                 _unitOfWork.SemesterRepository.Add(semester);
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
@@ -86,7 +74,6 @@ namespace StudentContributions.Areas.Admin.Controllers
                 ModelState.AddModelError("EndDate", "EndDate must be greater than StartDate.");
             }
             _unitOfWork.SemesterRepository.Update(semester);
-            ValidateActiveSem(semester);
             if (ModelState.IsValid)
             {
                 
@@ -136,20 +123,6 @@ namespace StudentContributions.Areas.Admin.Controllers
 
             if (semester.StartDate < DateTime.Today)
                 ModelState.AddModelError("StartDate", "StartDate cannot be in the past.");
-
-            var latestSemester = _unitOfWork.SemesterRepository.GetAll()
-                                       .OrderByDescending(s => s.EndDate).FirstOrDefault();
-            if (latestSemester != null && semester.StartDate <= latestSemester.EndDate)
-                ModelState.AddModelError("StartDate", "StartDate must be after the end date of the most recent semester.");
-
         }
-
-        private void ValidateActiveSem(Semester semester)
-        {
-
-            if (semester.IsActive && _unitOfWork.SemesterRepository.GetAll().Any(s => s.IsActive && s.ID != semester.ID))
-                ModelState.AddModelError("IsActive", "There can only be one active semester at a time.");
-        }
-
     }
 }

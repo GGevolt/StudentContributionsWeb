@@ -14,9 +14,14 @@
             <dd class="col">
                 @Model.Magazine.MagazineName
             </dd>
-            <div class="w-100"></div>
-            <dt class="col">
-                New contribution deadline
+            <dt class="col-sm-4">
+                Available on
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Magazine.Semester.StartDate
+            </dd>
+            <dt class="col-sm-4">
+                New Contributions ended on
             </dt>
             <dd class="col">
                 @Model.Magazine.ClosureDate
