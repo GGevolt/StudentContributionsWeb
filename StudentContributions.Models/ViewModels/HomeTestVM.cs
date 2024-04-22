@@ -12,6 +12,7 @@ namespace StudentContributions.Models.ViewModels
     {
         public string FileName { get; set; }
         public List<Magazine> Magazines { get; set; }
+        public List<Semester> Semesters { get; set; }
         public int PageSize { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }

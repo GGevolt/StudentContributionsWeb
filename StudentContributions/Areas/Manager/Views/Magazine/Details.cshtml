@@ -3,15 +3,15 @@
 @{
     ViewData["Title"] = "Details";
 }
-<div class="row" style="margin-inline:10%;">
-    <div class="col-md-6">
+<div class="row shadow" style="margin-inline:10%; padding-top:5px">
+    <div class="col-md-6 border border-dark">
         <h1>Magazine Details</h1>
-        <hr class="border-dark" style="margin:5px" />
+        <hr style="margin:5px" />
         <dl class="row">
-            <dt class="col-sm-4">
+            <dt class="col">
                 Magazine name
             </dt>
-            <dd class="col-sm-8">
+            <dd class="col">
                 @Model.Magazine.MagazineName
             </dd>
             <dt class="col-sm-4">
@@ -23,20 +23,21 @@
             <dt class="col-sm-4">
                 New Contributions ended on
             </dt>
-            <dd class="col-sm-8">
+            <dd class="col">
                 @Model.Magazine.ClosureDate
             </dd>
-            <dt class="col-sm-4">
-                Final closure date
+            <div class="w-100"></div>
+            <dt class="col">
+                Final edit deadline
             </dt>
-            <dd class="col-sm-8">
+            <dd class="col">
                 @Model.Magazine.Semester.EndDate
             </dd>
         </dl>
   
         <a class="text-dark btn btn-info mb-2" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 border border-dark">
         <div class="row">
             <h3>Contributions of Magazine</h3>
         </div>
