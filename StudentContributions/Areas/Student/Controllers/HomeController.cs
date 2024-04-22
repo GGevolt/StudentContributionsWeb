@@ -29,18 +29,47 @@ namespace StudentContributions.Areas.Student.Controllers
         {
             int pageSize = 8;
             HomeTestVM homeTestVM = new HomeTestVM();
-            homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty").ToList();
+
+            // Get the current user
+            var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
+
+            // Retrieve all magazines or filter based on the user's role
+            if (user != null && _userManager.IsInRoleAsync(user, "Coordinator").GetAwaiter().GetResult())
+            {
+                // Filter the magazines based on the FacultyID
+                homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty")
+                    .Where(m => m.FacultyID == user.Faculty.ID)
+                    .ToList();
+            }
+            else
+            {
+                // Retrieve all magazines
+                homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty")
+                    .ToList();
+            }
+
+            // Apply search filter if provided
             if (!string.IsNullOrEmpty(search))
             {
-                homeTestVM.Magazines = homeTestVM.Magazines.Where(m => m.MagazineName.ToLower().Contains(search.ToLower())).ToList();
+                homeTestVM.Magazines = homeTestVM.Magazines
+                    .Where(m => m.MagazineName.ToLower().Contains(search.ToLower()))
+                    .ToList();
                 homeTestVM.Search = search;
             }
+
             var totalRecords = homeTestVM.Magazines.Count;
             var totalPages = (totalRecords + pageSize - 1) / pageSize;
-            homeTestVM.Magazines = homeTestVM.Magazines.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+
+            // Apply pagination
+            homeTestVM.Magazines = homeTestVM.Magazines
+                .Skip((currentPage - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
             homeTestVM.CurrentPage = currentPage;
             homeTestVM.TotalPages = totalPages;
             homeTestVM.PageSize = pageSize;
+            homeTestVM.Semesters = _unitOfWork.SemesterRepository.GetAll().ToList();
             return View(homeTestVM);
         }
 
