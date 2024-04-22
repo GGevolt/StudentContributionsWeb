@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 </head>
-            width: 100%;
+<body>
     <div class="container-fluid">
         <div class="row">
             <div class="col">
@@ -47,21 +47,13 @@
             <div class="col-md-6 col-lg-4" style="width: 50%;">
                 <canvas id="doughChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
             </div>
-        <div style="width: 50%;">
+        </div>
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-4" style="width: 50%;">
                 <canvas id="mixedChartID" style="width:100%;max-width:700px;margin: 15px auto;"></canvas>
             </div>
         </div>
 
-    </div>
-        </div>
-        <div style="width: 50%;">
-            <canvas id="doughnutChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
-        </div>
-        <div style="width: 60%;">
-            <canvas id="barChart" style="width:100%;max-width:700px;margin: 15px auto;"></canvas>
-        </div>
     </div>
 </body>
 
@@ -85,6 +77,14 @@
     //Pie Chart variables
     var xPieValues = [];
     @foreach (var item in Model)
+    {
+        @:xPieValues.push("@item.semester.SemesterName")
+    }
+            var yPieValues = [];
+    @foreach (var item in Model)
+    {
+        @:yPieValues.push("@item.PercentageOfContribution")
+    }
     //Pie Chart draw
     new Chart("pieChart", {
         type: "pie",
@@ -103,21 +103,13 @@
         }
     });
     //
-        },
-        options: {
-            title: {
-                display: true,
-                text: "Percentage of Contribution in Faluty(%)"
-            }
-                var yDoughValues = [];
-    });
     //Doughnut Chart variables
     var xDoughValues = [];
     @foreach (var item in Model)
     {
         @:xDoughValues.push("@item.semester.SemesterName")
     }
-                    var yDoughnutValues = [];
+                var yDoughValues = [];
     @foreach (var item in Model)
     {
         @:yDoughValues.push("@item.PercentageOfApproved")
@@ -138,34 +130,42 @@
                     text: "Percentage of Approved Contribution in Faluty(%)"
                 }
             }
-    var y1MixedValues = [];
-    var y2MixedValues = [];
+        });
+
     //Mixed Chart Variables
     var xMixedValues = [];
     @foreach (var item in Model)
     {
         @:xMixedValues.push("@item.semester.SemesterName")
     }
-    var y1BarValues = [];
-    var y2BarValues = [];
+    var y1MixedValues = [];
+    var y2MixedValues = [];
+    @foreach (var item in Model)
+    {
+        @:y1MixedValues.push("@item.ContributorNum")
+    }
+    @foreach (var item in Model)
+    {
+        @:y2MixedValues.push("@item.ContributionNum")
+    }
             // Mixed Chart Draw
      const data = {
         labels:
             xMixedValues,
         datasets: [
             {
-    }
-            // Bar Chart Draw
-            var ctx = document.getElementById("barChart").getContext('2d');
-    var barChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: xBarValues,
-            datasets: [{
                 label: 'Contributor',
                 data:
                     y1MixedValues,
                 yAxisID: 'y-axis-1',
+                backgroundColor:
+                    'rgba(75, 192, 192, 0.2)',
+                borderColor:
+                    'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Contribution',
                 data:
                     y2MixedValues,
                 yAxisID: 'y-axis-2',
@@ -184,14 +184,6 @@
         type: 'bar',
         data: data,
         options: {
-            },
-            {
-                label: 'Contribution',
-                data: y2BarValues,
-                backgroundColor: "rgba(255,153,0,1)"
-            }]
-        },
-            options: {
             title: {
                 display: true,
                 text: "Number of Contributor and Contribution each Semester"

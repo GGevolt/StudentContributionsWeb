@@ -29,26 +29,19 @@ namespace StudentContributions.Areas.Student.Controllers
         {
             int pageSize = 8;
             HomeTestVM homeTestVM = new HomeTestVM();
-
-            // Get the current user
             var user = _userManager.GetUserAsync(User).GetAwaiter().GetResult();
 
-            // Retrieve all magazines or filter based on the user's role
             if (user != null && _userManager.IsInRoleAsync(user, "Coordinator").GetAwaiter().GetResult())
             {
-                // Filter the magazines based on the FacultyID
                 homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty")
                     .Where(m => m.FacultyID == user.Faculty.ID)
                     .ToList();
             }
             else
             {
-                // Retrieve all magazines
                 homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty")
                     .ToList();
             }
-
-            // Apply search filter if provided
             if (!string.IsNullOrEmpty(search))
             {
                 homeTestVM.Magazines = homeTestVM.Magazines
@@ -60,7 +53,6 @@ namespace StudentContributions.Areas.Student.Controllers
             var totalRecords = homeTestVM.Magazines.Count;
             var totalPages = (totalRecords + pageSize - 1) / pageSize;
 
-            // Apply pagination
             homeTestVM.Magazines = homeTestVM.Magazines
                 .Skip((currentPage - 1) * pageSize)
                 .Take(pageSize)
