@@ -4,17 +4,17 @@
 <head>
 </head>
 <body>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col">
                 <div class="table-responsive">
-                    <table class="table table-borderless table-hover overflow-hidden rounded-table border shadow">
-                        <thead class="table-active">
+                    <table class="table table-bordered table-hover rounded shadow">
+                        <thead class="table-primary">
                             <tr>
                                 <th>Faculty ID</th>
                                 <th>Semester Name</th>
                                 <th>Semester</th>
-                                <th>Number of contributors</th>
+                                <th>Number of Contributors</th>
                                 <th>Number of Contributions</th>
                                 <th>Total of Approved Contributions</th>
                                 <th>Percentage of Contribution</th>
@@ -41,20 +41,21 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4" style="width: 50%;">
+            <div class="col-md-6 col-lg-4">
                 <canvas id="pieChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
             </div>
-            <div class="col-md-6 col-lg-4" style="width: 50%;">
+            <div class="col-md-6 col-lg-4">
                 <canvas id="doughChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4" style="width: 50%;">
+            <div class="col-md-6 col-lg-8">
                 <canvas id="mixedChartID" style="width:100%;max-width:700px;margin: 15px auto;"></canvas>
             </div>
         </div>
-
     </div>
+
+
 </body>
 
 </html>
