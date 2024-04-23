@@ -1,10 +1,6 @@
 ﻿@model IEnumerable<StudentContributions.Models.Models.Contribution>
 @{
     ViewData["Title"] = "My Articles";
-    DateTime? timestamp1 = ViewBag.Timestamp1;
-    DateTime? timestamp2 = ViewBag.Timestamp2;
-    bool canEdit = DateTime.Now <= timestamp2; // Allow edits until the semester closure date
-    bool canCreate = DateTime.Now <= timestamp1; // Allow creation until the magazine closure date
 }
 
 <head>
@@ -16,10 +12,6 @@
     <link rel="stylesheet" href="~css/style.css">
 </head>
 <partial name="_Notification" />
-@if (canCreate)
-{
-    <a class="nav-link text-dark" asp-area="Student" asp-controller="Contribution" asp-action="Create">New Article</a>
-}
 
 <body>
     <section class="ftco-section">
