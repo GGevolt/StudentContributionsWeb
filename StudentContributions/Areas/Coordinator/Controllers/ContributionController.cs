@@ -89,12 +89,6 @@ namespace StudentContributions.Areas.Coordinator.Controllers
                 return RedirectToAction("Index");
             }
 
-            _unitOfWork.ContributionRepository.Update(conForm.Contribution);
-            _unitOfWork.Save();
-
-            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
-            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
             if (files != null)
             {
                 foreach (var filecheck in files)
@@ -108,6 +102,17 @@ namespace StudentContributions.Areas.Coordinator.Controllers
                         return RedirectToAction("Edit", new { id = conForm.Contribution.ID });
                     }
                 }
+            }
+                
+
+            _unitOfWork.ContributionRepository.Update(conForm.Contribution);
+            _unitOfWork.Save();
+
+            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+            if (files != null)
+            {
                 foreach (var file in files)
                 {
                     string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);

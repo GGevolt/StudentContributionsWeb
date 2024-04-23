@@ -109,12 +109,6 @@ namespace StudentContributions.Areas.Student.Controllers
                         ModelState.AddModelError("Error: ", "Magazine not in submit period");
                         return View(contribution);
                     }
-                    contribution.Contribution_Status = "Pending";
-                    _unitOfWork.ContributionRepository.Add(contribution);
-                    _unitOfWork.Save();
-
-                    string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
-                    if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
                     if (files != null)
                     {
@@ -125,10 +119,21 @@ namespace StudentContributions.Areas.Student.Controllers
 
                             if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
                             {
-                                TempData["error"] = "You have chosen invalid file type, please choose again";
-                                return View(contribution);
+                                TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
+                                return RedirectToAction("Edit", new { id = contribution.ID });
                             }
                         }
+                    }
+
+                    contribution.Contribution_Status = "Pending";
+                    _unitOfWork.ContributionRepository.Add(contribution);
+                    _unitOfWork.Save();
+
+                    string uploadPath = Path.Combine(this._webHost.WebRootPath, "Contributions", contribution.ID.ToString());
+                    if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                    if (files != null)
+                    {
                         foreach (var file in files)
                         {
                           string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
@@ -301,14 +306,6 @@ namespace StudentContributions.Areas.Student.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            conForm.Contribution.Contribution_Status = "Pending";
-            conForm.Contribution.SubmissionDate = DateTime.Now;
-            _unitOfWork.ContributionRepository.Update(conForm.Contribution);
-            _unitOfWork.Save();
-
-            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
-            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
             if (files != null)
             {
                 foreach (var filecheck in files)
@@ -322,6 +319,18 @@ namespace StudentContributions.Areas.Student.Controllers
                         return RedirectToAction("Edit", new { id = conForm.Contribution.ID });
                     }
                 }
+            }
+
+            conForm.Contribution.Contribution_Status = "Pending";
+            conForm.Contribution.SubmissionDate = DateTime.Now;
+            _unitOfWork.ContributionRepository.Update(conForm.Contribution);
+            _unitOfWork.Save();
+
+            string uploadPath = Path.Combine(_webHost.WebRootPath, "Contributions", conForm.Contribution.ID.ToString());
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+            if (files != null)
+            {
                 foreach (var file in files)
                 {
                     string fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
