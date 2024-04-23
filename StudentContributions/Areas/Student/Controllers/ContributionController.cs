@@ -120,7 +120,7 @@ namespace StudentContributions.Areas.Student.Controllers
                             if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
                             {
                                 TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
-                                return RedirectToAction("Create", new { magID = contribution.ID });
+                                return RedirectToAction("Create", new { MagID = contribution.MagazineID });
                             }
                         }
                     }
