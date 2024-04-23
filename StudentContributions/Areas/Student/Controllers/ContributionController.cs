@@ -35,15 +35,8 @@ namespace StudentContributions.Areas.Student.Controllers
         [Authorize(Roles = "Student")]
         public IActionResult Index()
         {
-            var activeSemester = _unitOfWork.SemesterRepository.GetAll().ToList().FirstOrDefault(s => s.IsActive);
-            var magazineClosureDate = activeSemester?.Magazines?.FirstOrDefault()?.ClosureDate;
-            var semesterClosureDate = activeSemester?.EndDate;
-
-            ViewBag.Timestamp1 = magazineClosureDate;
-            ViewBag.Timestamp2 = semesterClosureDate;
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var contributions = _unitOfWork.ContributionRepository.GetAll(includeProperty: "Magazine").Where(c => c.UserID.Equals(userId)).ToList();
+            var contributions = _unitOfWork.ContributionRepository.GetAll(c => c.UserID.Equals(userId), includeProperty: "Magazine").OrderByDescending(c => c.SubmissionDate);
             return View(contributions);
 
         }
