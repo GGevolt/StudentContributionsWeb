@@ -10,7 +10,7 @@
         <thead class="table-dark">
             <tr>
                 <th scope="col">Title</th>
-                <th scope ="col">Magazine Name</th>
+                <th scope="col">Magazine Name</th>
                 <th scope="col">Submission Date</th>
                 <th scope="col">Comments</th>
                 <th scope="col">Status</th>
@@ -31,7 +31,13 @@
                             <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@contribution.ID" class="btn btn-primary btn-sm">Edit</a>
                             <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
                                 <input type="hidden" name="id" value="@contribution.ID" />
-                                <button type="submit" name="newStatus" value="Approved" class="btn btn-success btn-sm" style="margin-left:4px">Approved</button>
+                            </form>
+                            <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
+                                <input type="hidden" name="id" value="@contribution.ID" />
+                                <button type="submit" name="newStatus" value="Approved" class="btn btn-success btn-sm">Approved</button>
+                            </form>
+                            <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
+                                <input type="hidden" name="id" value="@contribution.ID" />
                                 <button type="submit" name="newStatus" value="Deny" class="btn btn-danger btn-sm">Deny</button>
                             </form>
                         </div>

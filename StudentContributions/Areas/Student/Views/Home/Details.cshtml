@@ -46,9 +46,8 @@
         }
     </div>
     <div class="col-md-6 border border-dark">
-        <div class="row">
-            <h3>Contributions of Magazine</h3>
-        </div>
+        <h1>Contributions of Magazine</h1>
+        <hr style="margin:5px" />
         <div class="table-responsive">
             <table class="table">
                 <thead class="table-active">
@@ -58,7 +57,9 @@
                         {
                             <th>Comment</th>
                         }
+                        <th></th>
                     </tr>
+                    
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Contributions)
