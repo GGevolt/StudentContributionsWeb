@@ -93,7 +93,7 @@ namespace StudentContributions.Areas.Coordinator.Controllers
             {
                 foreach (var filecheck in files)
                 {
-                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx", ".pdf" };
                     var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
 
                     if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))

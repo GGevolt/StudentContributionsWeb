@@ -114,13 +114,13 @@ namespace StudentContributions.Areas.Student.Controllers
                     {
                         foreach (var filecheck in files)
                         {
-                            var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                            var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx", ".pdf" };
                             var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
 
                             if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
                             {
                                 TempData["error"] = "File chosen must be.pdf,.doc,.docx,.jpg,.jpeg,.png";
-                                return RedirectToAction("Edit", new { id = contribution.ID });
+                                return RedirectToAction("Create", new { magID = contribution.ID });
                             }
                         }
                     }
@@ -149,7 +149,7 @@ namespace StudentContributions.Areas.Student.Controllers
                 else
                 {
                     TempData["error"] = "There currently no coordinator in faculty. Please check with admin.";
-                    return View(contribution);
+                    return RedirectToAction("Index", "Home");
                 }
             }
             else
@@ -310,7 +310,7 @@ namespace StudentContributions.Areas.Student.Controllers
             {
                 foreach (var filecheck in files)
                 {
-                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx" };
+                    var permittedExtensions = new[] { ".jpg", ".png", ".jpeg", ".doc", ".docx", ".pdf" };
                     var extension = Path.GetExtension(filecheck.FileName).ToLowerInvariant();
 
                     if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
