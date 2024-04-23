@@ -40,27 +40,26 @@
                 </div>
             </div>
         </div>
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Attachments</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-
-                @foreach (var file in Model.Filenames)
-                {
-
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td><a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Coordinator" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file">@file</a></td>
-                        <td><a asp-action="DeleteFile" asp-controller="Contribution" asp-area="Coordinator" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-danger btn-sm">Delete</a></td>
+                        <th>Attachments</th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var file in Model.Filenames)
+                    {
 
+                        <tr>
+                            <td><a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Coordinator" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" style="word-wrap:anywhere">@file</a></td>
+                            <td><a asp-action="DeleteFile" asp-controller="Contribution" asp-area="Coordinator" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-danger btn-sm">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group action-buttons">

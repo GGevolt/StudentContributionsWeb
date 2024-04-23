@@ -8,66 +8,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <h1>Contribution Details</h1>
-    
-<div class="container mt-4">
-    <ul class="list-group">
-    <dt class="col-sm-2">
-        Article name
-    </dt>
-    <h6></h6>
-        <li class="list-group-item">
-@Model.Contribution.Title</li>
-<p></p>
-    <dt class="col-sm-2">
-        Status
-    </dt>
-    <h6></h6>
-        <li class="list-group-item">
-    @Model.Contribution.Contribution_Status</li>
-    <p></p>
-    <dt class="col-sm-2">
-        Comment
-    </dt>
-    <h6></h6>
-        <li class="list-group-item">
-@Model.Contribution.Comment</li>
-    <p></p>
 
-
-    </ul>
+<div class="container shadow-lg" style="padding-block:1rem;">
+    <dt class="col-sm-2">Article name</dt>
+    <dl class="list-group-item">@Model.Contribution.Title</dl>
+    <dt class="col-sm-2">Status</dt>
+    <dl class="list-group-item">@Model.Contribution.Contribution_Status</dl>
+    <dt class="col-sm-2">Comment</dt>
+    <dl class="list-group-item">@Model.Contribution.Comment</dl>
     <th>
         @if (Model.Filenames.Count != 0)
         {
-            <button  id="myButton" class="btn btn-primary" style="margin-right" onclick="location.href='@Url.Action("DownloadZip", "Contribution", new { id = Model.Contribution.ID })'">Download As Zip</button>
+            <button id="myButton" class="btn btn-primary" style="margin-right" onclick="location.href='@Url.Action("DownloadZip", "Contribution", new { id = Model.Contribution.ID })'">Download As Zip</button>
         }
     </th>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Attachments</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @foreach (var file in Model.Filenames)
-            {
-
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td><a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file">@file</a></td>
-                    <td>
-                        <a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-primary btn-sm">Download</a>
-                    </td>
+                    <th>Attachments</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
 
-    <div class="mt-3">
-        <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.Contribution.MagazineID" class="btn btn-secondary">Back to List</a>
-        @if (Model.IsSubmitPerson)
-        {
-            <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@Model.Contribution.ID" class="btn btn-warning">Edit Info</a>
-        }
+                @foreach (var file in Model.Filenames)
+                {
+
+                    <tr>
+                        <td><a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" style="word-wrap:anywhere">@file</a></td>
+                        <td>
+                            <a asp-action="DownloadFile" asp-controller="Contribution" asp-area="Student" asp-route-id="@Model.Contribution.ID" asp-route-fileName="@file" class="btn btn-primary btn-sm">Download</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="mt-3">
+            <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.Contribution.MagazineID" class="btn btn-secondary">Back to List</a>
+            @if (Model.IsSubmitPerson)
+            {
+                <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@Model.Contribution.ID" class="btn btn-warning">Edit Info</a>
+            }
+        </div>
     </div>
 </div>
