@@ -6,7 +6,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col-12">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover rounded shadow">
                         <thead class="table-primary">
@@ -41,15 +41,15 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6">
                 <canvas id="pieChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
             </div>
-            <div class="col-md-6 col-lg-4">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6">
                 <canvas id="doughChart" style="width:100%;max-width:350px;margin: 15px auto;"></canvas>
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-8">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6">
                 <canvas id="mixedChartID" style="width:100%;max-width:700px;margin: 15px auto;"></canvas>
             </div>
         </div>
@@ -178,7 +178,7 @@
             }
         ]
     };
-    const maxPadding = 0.1; // Adjust the padding as needed (e.g., 0.1 for 10% padding)
+    const maxPadding = 0.2; // Adjust the padding as needed (e.g., 0.1 for 10% padding)
     const max1 = Math.max(...y1MixedValues);
     const max2 = Math.max(...y2MixedValues);
     const config = {
@@ -209,7 +209,7 @@
                         id: 'y-axis-2',
                         ticks: {
                             beginAtZero: true,
-                            stepSize: 1,
+                            stepSize: 2,
                             precision: 0,
                             suggestedMin: 0,
                             suggestedMax: max2 + max2 * maxPadding
