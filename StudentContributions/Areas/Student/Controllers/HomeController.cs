@@ -34,13 +34,13 @@ namespace StudentContributions.Areas.Student.Controllers
 
             if (user != null && _userManager.IsInRoleAsync(user, "Coordinator").GetAwaiter().GetResult())
             {
-                homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty")
+                homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty" + "Semester")
                     .Where(m => m.FacultyID == user.Faculty.ID)
                     .ToList();
             }
             else
             {
-                homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty")
+                homeTestVM.Magazines = _unitOfWork.MagazineRepository.GetAll(includeProperty: "Faculty" + "Semester")
                     .ToList();
             }
             if (!string.IsNullOrEmpty(search))
@@ -62,7 +62,6 @@ namespace StudentContributions.Areas.Student.Controllers
             homeTestVM.CurrentPage = currentPage;
             homeTestVM.TotalPages = totalPages;
             homeTestVM.PageSize = pageSize;
-            homeTestVM.Semesters = _unitOfWork.SemesterRepository.GetAll().ToList();
             return View(homeTestVM);
         }
 

@@ -64,6 +64,10 @@
                                 @magazine.MagazineName
                             </h4>
                             <a href="@Url.Action("Details", "Home", new { id = magazine.ID })" class="btn btn-primary">Read More</a>
+                            @if (magazine.Semester.EndDate < DateTime.Now)
+                            {
+                                <h4><span class="text-danger">Closed</span></h4>
+                            }
                         </div>
                     </div>
                 </a>
