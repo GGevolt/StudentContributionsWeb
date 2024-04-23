@@ -49,12 +49,12 @@
             </button>
         </div>
     </form>
-    <div class="row">
+    <div class="row justify-content-start">
         @foreach (var magazine in Model.Magazines)
         {
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <a href="@Url.Action("Details", "Home", new { id = magazine.ID })" class="card-link">
-                    <div class="card">
+                    <div class="card mx-auto" style="max-width: 300px;">
                         <div>
                             <img src="~/img/modern-education.png" class="card-img-top" alt="magazineImg" />
                         </div>
@@ -69,8 +69,8 @@
                 </a>
             </div>
         }
-
     </div>
+
     <nav aria-label="Page navigation">
         <ul class="pagination" style="display: flex; justify-content: center;">
             @if (Model.CurrentPage > 1)
