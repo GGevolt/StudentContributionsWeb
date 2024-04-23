@@ -34,8 +34,10 @@
                 @Model.Magazine.Semester.EndDate
             </dd>
         </dl>
-  
-        <a class="text-dark btn btn-info mb-2" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
+        @if (Model.Contributions.Count() == 0)
+        {
+            <a class="text-dark btn btn-info mb-2" asp-area="Manager" asp-controller="Magazine" asp-action="DownloadZipMagazine" asp-route-id="@Model.Magazine.ID">Download approved articles</a>
+        }
     </div>
     <div class="col-md-6 border border-dark">
         <div class="row">

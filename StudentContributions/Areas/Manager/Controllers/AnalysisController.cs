@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentContributions.DataAccess.Repository.IRepository;
 using StudentContributions.Models.Models;
@@ -7,6 +8,7 @@ using StudentContributions.Models.ViewModels;
 namespace StudentContributions.Areas.Manager.Controllers
 {
     [Area("Manager")]
+    [Authorize(Roles = "Manager")]
     public class AnalysisController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
