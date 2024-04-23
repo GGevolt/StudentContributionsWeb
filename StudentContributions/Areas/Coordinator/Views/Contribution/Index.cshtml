@@ -15,6 +15,8 @@
                 <th scope="col">Comments</th>
                 <th scope="col">Status</th>
                 <th scope="col">Actions</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -27,20 +29,19 @@
                     <td>@contribution.Comment</td>
                     <td>@contribution.Contribution_Status</td>
                     <td>
-                        <div class="btn-group" role="group">
-                            <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@contribution.ID" class="btn btn-primary btn-sm">Edit</a>
-                            <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
-                                <input type="hidden" name="id" value="@contribution.ID" />
-                            </form>
-                            <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
-                                <input type="hidden" name="id" value="@contribution.ID" />
-                                <button type="submit" name="newStatus" value="Approved" class="btn btn-success btn-sm">Approved</button>
-                            </form>
-                            <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
-                                <input type="hidden" name="id" value="@contribution.ID" />
-                                <button type="submit" name="newStatus" value="Deny" class="btn btn-danger btn-sm">Deny</button>
-                            </form>
-                        </div>
+                        <a asp-controller="Contribution" asp-action="Edit" asp-route-id="@contribution.ID" class="btn btn-primary btn-sm">Edit</a>
+                    </td>
+                    <td>
+                        <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
+                            <input type="hidden" name="id" value="@contribution.ID" />
+                            <button type="submit" name="newStatus" value="Approved" class="btn btn-success btn-sm">Approved</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-controller="Contribution" asp-action="ChangeStatus" method="post">
+                            <input type="hidden" name="id" value="@contribution.ID" />
+                            <button type="submit" name="newStatus" value="Deny" class="btn btn-danger btn-sm">Deny</button>
+                        </form>
                     </td>
                 </tr>
             }
